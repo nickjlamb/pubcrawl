@@ -1,0 +1,27 @@
+{
+  "name": "pubcrawl",
+  "version": "1.0.0",
+  "description": "A peer-reviewed pub crawl through the literature — MCP server for PubMed & biomedical literature search",
+  "author": "PharmaTools.AI",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "fast-xml-parser": "^4.3.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nickjlamb/pubcrawl"
+  }
+}
