@@ -1,15 +1,36 @@
 {
-  "name": "pubcrawl",
+  "name": "@pharmatools/pubcrawl",
   "version": "2.0.0",
-  "description": "A peer-reviewed pub crawl through the literature — MCP server for PubMed & biomedical literature search",
+  "description": "MCP server for PubMed literature search and US/UK drug labelling — built by PharmaTools.AI",
+  "mcpName": "io.github.nickjlamb/pubcrawl",
   "author": "PharmaTools.AI",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "pubcrawl": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "server.json"
+  ],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "pubmed",
+    "ncbi",
+    "biomedical",
+    "literature",
+    "drug-labelling",
+    "openfda",
+    "dailymed",
+    "pharma"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
