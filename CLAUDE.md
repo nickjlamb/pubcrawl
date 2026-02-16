@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PubCrawl is an MCP (Model Context Protocol) server that gives LLM clients (Claude Desktop, Cursor, etc.) access to PubMed and biomedical literature via NCBI E-utilities. Built by PharmaTools.AI.
+PubCrawl is an MCP (Model Context Protocol) server that gives LLM clients (Claude Desktop, Cursor, etc.) access to PubMed, FDA/UK drug labelling, and ClinicalTrials.gov. Built by PharmaTools.AI.
 
 ## Commands
 
@@ -24,20 +24,24 @@ The server has three layers:
 
 **XML Parser** (`src/lib/xml-parser.ts`) — Configures `fast-xml-parser` with `isArray` for elements that can appear once or multiple times in PubMed XML (Author, AbstractText, MeshHeading, Keyword, sec, fig, table-wrap, ref, etc.). This list is critical — if a new XML element needs consistent array handling, it must be added here. Provides two distinct author parsers: `parseAuthors` for efetch XML (`LastName`/`ForeName` elements) and `parseSummaryAuthors` for esummary JSON (`name` property).
 
-**Cache** (`src/lib/cache.ts`) — Singleton LRU cache (500 entries). TTLs: search/related/summary = 1 hour, abstracts/fulltext = 24 hours.
+**ClinicalTrials.gov Client** (`src/lib/clinicaltrials.ts`) — Wraps ClinicalTrials.gov API v2 (free, no auth). Rate-limited to 1.2s between requests (~50 req/min). `searchTrials` queries `/studies` with condition/intervention/term filters and field limiting. `getTrialDetail` fetches a single study by NCT ID with full parsing of eligibility, design, arms, outcomes, and associated PMIDs. Both functions use the shared `studyToSummary` helper to parse the nested API response.
 
-**Entry point** (`src/index.ts`) — Creates `McpServer`, loads optional `NCBI_API_KEY` from env, registers all six tools, connects via `StdioServerTransport`.
+**Cache** (`src/lib/cache.ts`) — Singleton LRU cache (500 entries). TTLs: search/related/summary = 1 hour, trial details = 4 hours, abstracts/fulltext/labels = 24 hours.
+
+**Entry point** (`src/index.ts`) — Creates `McpServer`, loads optional `NCBI_API_KEY` from env, registers all 12 tools, connects via `StdioServerTransport`.
 
 ## Tool → API Mapping
 
-| Tool | NCBI Pipeline |
-|------|--------------|
+| Tool | Pipeline |
+|------|----------|
 | `search_pubmed` | esearch → esummary |
 | `get_abstract` | efetch rettype=xml, parse `AbstractText` with `@_Label` attributes |
 | `get_full_text` | elink (PMID→PMCID) → efetch db=pmc rettype=xml, parse JATS `<sec>` elements |
 | `find_related` | elink cmd=neighbor_score → esummary |
 | `format_citation` | efetch rettype=xml, format as APA/Vancouver/Harvard/BibTeX |
 | `trending_papers` | esearch (date-sorted) → esummary |
+| `search_trials` | ClinicalTrials.gov `/studies` with condition/intervention/term/status/phase filters |
+| `get_trial` | ClinicalTrials.gov `/studies/{nctId}`, parses eligibility, design, arms, outcomes, PMIDs |
 
 ## Key Conventions
 
