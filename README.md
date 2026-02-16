@@ -1,6 +1,6 @@
 # PubCrawl
 
-An [MCP server](https://modelcontextprotocol.io) that gives LLM clients access to PubMed, FDA drug labelling, and UK medicines data. A peer-reviewed pub crawl through the literature — and the label.
+An [MCP server](https://modelcontextprotocol.io) that gives LLM clients access to PubMed, FDA drug labelling, UK medicines data, and ClinicalTrials.gov. A peer-reviewed pub crawl through the literature — the label — and the trial.
 
 Built by [PharmaTools.AI](https://pharmatools.ai).
 
@@ -25,6 +25,13 @@ Built by [PharmaTools.AI](https://pharmatools.ai).
 | `get_smpc` | Retrieve UK Summary of Product Characteristics from the eMC — the UK equivalent of US prescribing information, with numbered SmPC sections. |
 | `compare_labels` | Side-by-side comparison of US (USPI) and UK (SmPC) labelling for the same drug. Spot regulatory differences in indications, warnings, and dosing. |
 | `search_by_indication` | Find drugs approved for a medical condition. Searches FDA labelling via OpenFDA, then cross-references UK availability on the eMC. |
+
+### Clinical Trials
+
+| Tool | What it does |
+|------|-------------|
+| `search_trials` | Search ClinicalTrials.gov for clinical trials. Filter by condition, intervention, recruitment status, and phase. Returns NCT IDs, sponsors, enrollment, and links. |
+| `get_trial` | Get full details for a clinical trial by NCT ID — eligibility criteria, study design, arms, primary/secondary outcomes, locations, and associated PubMed IDs. |
 
 ## Setup
 
@@ -114,6 +121,8 @@ Once connected, just ask naturally:
 - "Pull the UK SmPC for atorvastatin"
 - "Compare US and UK labelling for lisinopril"
 - "What drugs are approved for type 2 diabetes?"
+- "Find recruiting Phase 3 trials for pembrolizumab in breast cancer"
+- "Get details on clinical trial NCT03086486"
 
 ## Development
 
