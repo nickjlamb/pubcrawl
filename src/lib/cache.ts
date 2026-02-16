@@ -10,6 +10,7 @@ export const TTL = {
   FULLTEXT: ONE_DAY_MS,
   RELATED: ONE_HOUR_MS,
   SUMMARY: ONE_HOUR_MS,
+  LABEL: ONE_DAY_MS,
 } as const;
 
 export class LRUCache {

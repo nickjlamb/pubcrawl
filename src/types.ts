@@ -53,3 +53,53 @@ export interface CacheEntry<T> {
   timestamp: number;
   ttl: number;
 }
+
+// Drug labelling types
+
+export interface LabelSection {
+  code: string;
+  title: string;
+  content: string;
+}
+
+export interface USPIResult {
+  drug_name: string;
+  setid: string;
+  spl_version: string;
+  published_date: string;
+  sections: LabelSection[];
+  dailymed_url: string;
+}
+
+export interface SmPCResult {
+  drug_name: string;
+  product_id: string;
+  sections: LabelSection[];
+  url: string;
+}
+
+export interface LabelComparison {
+  topic: string;
+  us_section: LabelSection | null;
+  uk_section: LabelSection | null;
+}
+
+export interface CompareLabelsResult {
+  drug: string;
+  comparisons: LabelComparison[];
+  us_source: string | null;
+  uk_source: string | null;
+}
+
+export interface DrugApprovalEntry {
+  name: string;
+  us_approved: boolean;
+  uk_approved: boolean;
+  us_setid?: string;
+  uk_product_id?: string;
+}
+
+export interface IndicationSearchResult {
+  condition: string;
+  drugs: DrugApprovalEntry[];
+}

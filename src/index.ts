@@ -8,10 +8,14 @@ import { registerFullTextTool } from "./tools/fulltext.js";
 import { registerRelatedTool } from "./tools/related.js";
 import { registerCiteTool } from "./tools/cite.js";
 import { registerTrendingTool } from "./tools/trending.js";
+import { registerUspiTool } from "./tools/uspi.js";
+import { registerSmpcTool } from "./tools/smpc.js";
+import { registerCompareLabelsTool } from "./tools/compare-labels.js";
+import { registerSearchIndicationTool } from "./tools/search-indication.js";
 
 const server = new McpServer({
   name: "pubcrawl",
-  version: "1.0.0",
+  version: "2.0.0",
 });
 
 // Configure NCBI API key if available (10 req/s vs 3 req/s)
@@ -26,6 +30,10 @@ registerFullTextTool(server);
 registerRelatedTool(server);
 registerCiteTool(server);
 registerTrendingTool(server);
+registerUspiTool(server);
+registerSmpcTool(server);
+registerCompareLabelsTool(server);
+registerSearchIndicationTool(server);
 
 // Start server
 async function main() {

@@ -18,6 +18,19 @@ const parser = new XMLParser({
       "IdList",
       "Link",
       "LinkSet",
+      // SPL (DailyMed) tags
+      "component",
+      "section",
+      "paragraph",
+      "table",
+      "list",
+      "item",
+      "tbody",
+      "tr",
+      "td",
+      "thead",
+      "content",
+      "linkHtml",
     ];
     return arrayTags.includes(name);
   },
@@ -196,6 +209,67 @@ export function countReferences(back: unknown): number {
   if (!back) return 0;
   const refs = findAllElements(back, "ref");
   return refs.length;
+}
+
+export function parseSplSections(
+  structuredBody: unknown,
+  requestedCodes?: string[]
+): Array<{ code: string; title: string; content: string }> {
+  if (!structuredBody) return [];
+
+  const obj = structuredBody as Record<string, unknown>;
+  const components = ensureArray(obj.component);
+  const results: Array<{ code: string; title: string; content: string }> = [];
+
+  for (const comp of components) {
+    const c = comp as Record<string, unknown>;
+    const sections = ensureArray(c.section);
+    for (const sec of sections) {
+      extractSplSection(sec, results, requestedCodes);
+    }
+  }
+
+  return results;
+}
+
+function extractSplSection(
+  section: unknown,
+  results: Array<{ code: string; title: string; content: string }>,
+  requestedCodes?: string[]
+): void {
+  if (!section || typeof section !== "object") return;
+
+  const s = section as Record<string, unknown>;
+
+  // Extract LOINC code from <code @_code>
+  const codeNode = s.code as Record<string, unknown> | undefined;
+  const code = codeNode?.["@_code"] ? String(codeNode["@_code"]) : "";
+  const title = s.title ? extractText(s.title) : "";
+
+  // Extract text content from <text> > <paragraph> elements
+  const textNode = s.text as Record<string, unknown> | undefined;
+  let content = "";
+  if (textNode) {
+    const paragraphs = ensureArray(textNode.paragraph);
+    content = paragraphs.map(extractText).filter(Boolean).join("\n\n");
+    if (!content) {
+      content = extractText(textNode);
+    }
+  }
+
+  if (code && (!requestedCodes || requestedCodes.includes(code))) {
+    results.push({ code, title, content });
+  }
+
+  // Recurse into nested components > sections
+  const nestedComponents = ensureArray(s.component);
+  for (const nc of nestedComponents) {
+    const ncObj = nc as Record<string, unknown>;
+    const nestedSections = ensureArray(ncObj.section);
+    for (const ns of nestedSections) {
+      extractSplSection(ns, results, requestedCodes);
+    }
+  }
 }
 
 function findAllElements(node: unknown, tagName: string): unknown[] {
