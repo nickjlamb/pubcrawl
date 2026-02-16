@@ -3,3 +3,6 @@ dist/
 .env
 .DS_Store
 *.tsbuildinfo
+
+# Webflow embed pages (not part of the MCP server)
+*.html
