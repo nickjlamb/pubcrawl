@@ -13,6 +13,8 @@ import { registerUspiTool } from "./tools/uspi.js";
 import { registerSmpcTool } from "./tools/smpc.js";
 import { registerCompareLabelsTool } from "./tools/compare-labels.js";
 import { registerSearchIndicationTool } from "./tools/search-indication.js";
+import { registerTrialsSearchTool } from "./tools/trials-search.js";
+import { registerTrialDetailTool } from "./tools/trials-detail.js";
 
 const server = new McpServer({
   name: "pubcrawl",
@@ -35,6 +37,8 @@ registerUspiTool(server);
 registerSmpcTool(server);
 registerCompareLabelsTool(server);
 registerSearchIndicationTool(server);
+registerTrialsSearchTool(server);
+registerTrialDetailTool(server);
 
 // Start server
 async function main() {

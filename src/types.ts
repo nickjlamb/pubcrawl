@@ -105,3 +105,66 @@ export interface IndicationSearchResult {
   condition: string;
   drugs: DrugApprovalEntry[];
 }
+
+// Clinical trials types
+
+export interface TrialIntervention {
+  type: string;
+  name: string;
+}
+
+export interface ClinicalTrialSummary {
+  nct_id: string;
+  title: string;
+  status: string;
+  phase: string;
+  conditions: string[];
+  interventions: TrialIntervention[];
+  enrollment: number | null;
+  sponsor: string;
+  start_date: string;
+  completion_date: string;
+  study_type: string;
+  url: string;
+}
+
+export interface TrialOutcome {
+  measure: string;
+  description: string;
+  time_frame: string;
+}
+
+export interface TrialArmGroup {
+  label: string;
+  type: string;
+  description: string;
+  intervention_names: string[];
+}
+
+export interface TrialDesign {
+  allocation: string;
+  intervention_model: string;
+  primary_purpose: string;
+  masking: string;
+  who_masked: string[];
+}
+
+export interface ClinicalTrialDetail extends ClinicalTrialSummary {
+  official_title: string;
+  summary: string;
+  eligibility: {
+    criteria: string;
+    gender: string;
+    minimum_age: string;
+    maximum_age: string;
+    healthy_volunteers: string;
+  };
+  design: TrialDesign;
+  arms: TrialArmGroup[];
+  primary_outcomes: TrialOutcome[];
+  secondary_outcomes: TrialOutcome[];
+  locations_count: number;
+  lead_investigator: string;
+  associated_pmids: string[];
+  url: string;
+}

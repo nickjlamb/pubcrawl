@@ -2,6 +2,7 @@ import { CacheEntry } from "../types.js";
 
 const DEFAULT_MAX_ENTRIES = 500;
 const ONE_HOUR_MS = 60 * 60 * 1000;
+const FOUR_HOURS_MS = 4 * 60 * 60 * 1000;
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 export const TTL = {
@@ -11,6 +12,7 @@ export const TTL = {
   RELATED: ONE_HOUR_MS,
   SUMMARY: ONE_HOUR_MS,
   LABEL: ONE_DAY_MS,
+  TRIAL: FOUR_HOURS_MS,
 } as const;
 
 export class LRUCache {
