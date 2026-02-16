@@ -1,10 +1,12 @@
 # PubCrawl
 
-A peer-reviewed pub crawl through the literature — an [MCP server](https://modelcontextprotocol.io) that gives LLM clients access to PubMed and biomedical literature via NCBI E-utilities.
+An [MCP server](https://modelcontextprotocol.io) that gives LLM clients access to PubMed, FDA drug labelling, and UK medicines data. A peer-reviewed pub crawl through the literature — and the label.
 
 Built by [PharmaTools.AI](https://pharmatools.ai).
 
 ## Tools
+
+### Literature
 
 | Tool | What it does |
 |------|-------------|
@@ -14,6 +16,15 @@ Built by [PharmaTools.AI](https://pharmatools.ai).
 | `find_related` | Find similar articles using PubMed's neighbor algorithm, ranked by relevance score. |
 | `format_citation` | Generate a formatted citation in APA, Vancouver, Harvard, or BibTeX style. |
 | `trending_papers` | Find recent papers on a topic, with optional filtering to high-impact journals (Nature, Science, Cell, NEJM, Lancet, JAMA, etc.). |
+
+### Drug Labelling
+
+| Tool | What it does |
+|------|-------------|
+| `get_uspi` | Pull US Prescribing Information sections from DailyMed — indications, dosing, warnings, contraindications, and more. Parsed from FDA structured product labels. |
+| `get_smpc` | Retrieve UK Summary of Product Characteristics from the eMC — the UK equivalent of US prescribing information, with numbered SmPC sections. |
+| `compare_labels` | Side-by-side comparison of US (USPI) and UK (SmPC) labelling for the same drug. Spot regulatory differences in indications, warnings, and dosing. |
+| `search_by_indication` | Find drugs approved for a medical condition. Searches FDA labelling via OpenFDA, then cross-references UK availability on the eMC. |
 
 ## Setup
 
@@ -82,6 +93,10 @@ Once connected, just ask naturally:
 - "Find papers related to this one and format citations in APA"
 - "What are the trending papers on CRISPR gene therapy this month?"
 - "Get the full text of that paper from PMC"
+- "Get the FDA prescribing information for metformin — just the indications and warnings"
+- "Pull the UK SmPC for atorvastatin"
+- "Compare US and UK labelling for lisinopril"
+- "What drugs are approved for type 2 diabetes?"
 
 ## Development
 
