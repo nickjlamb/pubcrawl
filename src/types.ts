@@ -93,6 +93,8 @@ export interface CompareLabelsResult {
 
 export interface DrugApprovalEntry {
   name: string;
+  brand_name?: string;
+  manufacturer?: string;
   us_approved: boolean;
   uk_approved: boolean;
   us_setid?: string;

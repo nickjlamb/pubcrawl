@@ -64,36 +64,6 @@ export async function searchDrugLabels(drugName: string): Promise<DailyMedSearch
   return results;
 }
 
-export async function searchByIndication(
-  indication: string,
-  pagesize = 10
-): Promise<DailyMedSearchResult[]> {
-  const cacheKey = `dailymed:indication:${indication.toLowerCase()}`;
-  const cached = cache.get<DailyMedSearchResult[]>(cacheKey);
-  if (cached) return cached;
-
-  const params = new URLSearchParams({
-    indication: indication,
-    pagesize: String(pagesize),
-  });
-
-  const url = `${BASE_URL}/spls.json?${params}`;
-  const response = await rateLimitedFetch(url);
-  const data = await response.json();
-
-  const results: DailyMedSearchResult[] = (data.data ?? []).map(
-    (item: Record<string, unknown>) => ({
-      setid: String(item.setid ?? ""),
-      title: String(item.title ?? ""),
-      published_date: String(item.published_date ?? ""),
-      spl_version: String(item.spl_version ?? ""),
-    })
-  );
-
-  cache.set(cacheKey, results, TTL.SEARCH);
-  return results;
-}
-
 export async function fetchSplXml(setid: string): Promise<string> {
   const cacheKey = `dailymed:spl:${setid}`;
   const cached = cache.get<string>(cacheKey);
