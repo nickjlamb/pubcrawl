@@ -50,6 +50,10 @@ interface OpenFdaResponse {
   results?: OpenFdaResult[];
 }
 
+// OpenFDA max per request (unauthenticated)
+const MAX_PER_PAGE = 99;
+const MAX_PAGES = 3;
+
 export async function searchByIndication(
   condition: string,
   limit = 20
@@ -58,35 +62,56 @@ export async function searchByIndication(
   const cached = cache.get<OpenFdaDrug[]>(cacheKey);
   if (cached) return cached;
 
-  const query = encodeURIComponent(`indications_and_usage:"${condition}"`);
-  const url = `${BASE_URL}?search=${query}&limit=${limit}`;
-  const response = await rateLimitedFetch(url);
-  const data: OpenFdaResponse = await response.json();
+  // Use AND of individual terms so "rheumatoid arthritis" matches labels
+  // that say "moderately to severely active rheumatoid arthritis" etc.
+  const terms = condition.trim().split(/\s+/);
+  const query = terms
+    .map((t) => `indications_and_usage:${encodeURIComponent(t)}`)
+    .join("+AND+");
 
-  if (!data.results) return [];
-
-  // Deduplicate by generic_name (many generics of the same drug)
   const seen = new Map<string, OpenFdaDrug>();
 
-  for (const result of data.results) {
-    const openfda = result.openfda;
-    if (!openfda) continue;
+  // Always fetch all pages to maximise drug diversity, then trim.
+  // Page 1 is mostly NSAIDs; biologics appear on later pages.
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const skip = page * MAX_PER_PAGE;
+    const url = `${BASE_URL}?search=${query}&limit=${MAX_PER_PAGE}&skip=${skip}`;
 
-    const genericName = openfda.generic_name?.[0] ?? "";
-    if (!genericName) continue;
+    let data: OpenFdaResponse;
+    try {
+      const response = await rateLimitedFetch(url);
+      data = await response.json();
+    } catch {
+      break;
+    }
 
-    const key = genericName.toLowerCase();
-    if (seen.has(key)) continue;
+    if (!data.results || data.results.length === 0) break;
 
-    seen.set(key, {
-      generic_name: genericName,
-      brand_name: openfda.brand_name?.[0] ?? "",
-      manufacturer: openfda.manufacturer_name?.[0] ?? "",
-      set_id: openfda.spl_set_id?.[0] ?? "",
-    });
+    for (const result of data.results) {
+      const openfda = result.openfda;
+      if (!openfda) continue;
+
+      const genericName = openfda.generic_name?.[0] ?? "";
+      if (!genericName) continue;
+
+      // Skip multi-ingredient kits/combos (e.g. "methylprednisolone acetate,
+      // lidocaine hydrochloride, bupivacaine hydrochloride") — these fill
+      // slots that should go to distinct therapeutic agents
+      if (genericName.includes(",")) continue;
+
+      const key = genericName.toLowerCase();
+      if (seen.has(key)) continue;
+
+      seen.set(key, {
+        generic_name: genericName,
+        brand_name: openfda.brand_name?.[0] ?? "",
+        manufacturer: openfda.manufacturer_name?.[0] ?? "",
+        set_id: openfda.spl_set_id?.[0] ?? "",
+      });
+    }
   }
 
-  const drugs = [...seen.values()];
+  const drugs = [...seen.values()].slice(0, limit);
   cache.set(cacheKey, drugs, TTL.SEARCH);
   return drugs;
 }
