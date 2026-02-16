@@ -30,16 +30,13 @@ Built by [PharmaTools.AI](https://pharmatools.ai).
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - An MCP-compatible client (Claude Desktop, Cursor, etc.)
 
-### Install and build
+### Install via npm
 
 ```bash
-git clone https://github.com/nickjlamb/pubcrawl.git
-cd pubcrawl
-npm install
-npm run build
+npm install -g @pharmatools/pubcrawl
 ```
 
 ### Configure Claude Desktop
@@ -53,14 +50,35 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "pubcrawl": {
-      "command": "node",
-      "args": ["/path/to/pubcrawl/dist/index.js"]
+      "command": "pubcrawl"
     }
   }
 }
 ```
 
 Restart Claude Desktop. PubCrawl will appear under **+ → Connectors**.
+
+### Install from source
+
+```bash
+git clone https://github.com/nickjlamb/pubcrawl.git
+cd pubcrawl
+npm install
+npm run build
+```
+
+Then point the config at the built file:
+
+```json
+{
+  "mcpServers": {
+    "pubcrawl": {
+      "command": "node",
+      "args": ["/path/to/pubcrawl/dist/index.js"]
+    }
+  }
+}
+```
 
 ### NCBI API key (optional)
 
@@ -74,8 +92,7 @@ Without an API key, requests are rate-limited to 3/second. With one, you get 10/
 {
   "mcpServers": {
     "pubcrawl": {
-      "command": "node",
-      "args": ["/path/to/pubcrawl/dist/index.js"],
+      "command": "pubcrawl",
       "env": {
         "NCBI_API_KEY": "your_key_here"
       }
