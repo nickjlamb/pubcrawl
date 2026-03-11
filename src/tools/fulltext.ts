@@ -22,6 +22,7 @@ export function registerFullTextTool(server: McpServer): void {
     "get_full_text",
     "Get the full text of an open-access article from PubMed Central. Returns article sections, figure/table captions, and reference count. Only works for articles available in PMC.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         if (!params.pmid && !params.pmcid) {

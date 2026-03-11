@@ -84,6 +84,7 @@ export function registerCompareLabelsTool(server: McpServer): void {
     "compare_labels",
     "Compare US FDA Prescribing Information vs UK/EU SmPC for a drug side-by-side. Maps equivalent sections (e.g., US Indications ↔ UK 4.1) and returns paired content.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         const mappings = filterSectionMap(params.sections);

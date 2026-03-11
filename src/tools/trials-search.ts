@@ -34,6 +34,7 @@ export function registerTrialsSearchTool(server: McpServer): void {
     "search_trials",
     "Search ClinicalTrials.gov for clinical trials. Filter by condition, intervention, status, and phase. Returns trial summaries with NCT IDs, status, sponsors, and enrollment info.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         if (!params.condition && !params.intervention && !params.term) {

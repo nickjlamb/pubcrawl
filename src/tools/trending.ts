@@ -41,6 +41,7 @@ export function registerTrendingTool(server: McpServer): void {
     "trending_papers",
     "Find recent/trending papers on a topic. Sorted by date, with optional filtering to high-impact journals.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         const now = new Date();

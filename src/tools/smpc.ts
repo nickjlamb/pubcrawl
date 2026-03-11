@@ -18,6 +18,7 @@ export function registerSmpcTool(server: McpServer): void {
     "get_smpc",
     "Get UK/EU Summary of Product Characteristics (SmPC) for a drug from eMC (medicines.org.uk). Returns structured labelling sections.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         const searchResults = await searchEmc(params.drug);

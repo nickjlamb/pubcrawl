@@ -14,6 +14,7 @@ export function registerTrialDetailTool(server: McpServer): void {
     "get_trial",
     "Get detailed information about a specific clinical trial from ClinicalTrials.gov. Returns eligibility criteria, study design, arms, outcomes, locations, and associated PubMed IDs.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         const detail = await getTrialDetail(params.nctId);

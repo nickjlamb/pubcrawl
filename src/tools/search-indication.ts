@@ -36,6 +36,7 @@ export function registerSearchIndicationTool(server: McpServer): void {
     "search_by_indication",
     "Find drugs approved for a medical condition. Searches US FDA labelling for the condition, then checks UK (eMC) availability for each drug found.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         // Step 1: Search OpenFDA for drugs with this indication

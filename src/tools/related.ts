@@ -14,6 +14,7 @@ export function registerRelatedTool(server: McpServer): void {
     "find_related",
     "Find related articles for a given PubMed article. Returns similar papers ranked by relevance score using PubMed's neighbor algorithm.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         const linkResult = await elink({

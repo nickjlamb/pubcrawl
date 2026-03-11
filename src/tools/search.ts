@@ -37,6 +37,7 @@ export function registerSearchTool(server: McpServer): void {
     "search_pubmed",
     "Search PubMed for biomedical literature. Returns article summaries with PMIDs, titles, authors, journals, and DOIs.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         let term = params.query;

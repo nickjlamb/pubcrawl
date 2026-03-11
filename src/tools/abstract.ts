@@ -21,6 +21,7 @@ export function registerAbstractTool(server: McpServer): void {
     "get_abstract",
     "Get the full structured abstract and metadata for a PubMed article. Returns abstract sections (background, methods, results, conclusions), keywords, MeSH terms, and PMC ID.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         const xml = await efetch({ id: params.pmid, rettype: "xml" });

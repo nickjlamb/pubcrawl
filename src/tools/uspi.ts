@@ -71,6 +71,7 @@ export function registerUspiTool(server: McpServer): void {
     "get_uspi",
     "Get FDA US Prescribing Information (USPI) for a drug from DailyMed. Returns structured labelling sections with LOINC codes.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         const searchResults = await searchDrugLabels(params.drug);

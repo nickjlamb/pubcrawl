@@ -144,6 +144,7 @@ export function registerCiteTool(server: McpServer): void {
     "format_citation",
     "Format a citation for a PubMed article in APA, Vancouver, Harvard, or BibTeX style.",
     schema,
+    { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
         const xml = await efetch({ id: params.pmid, rettype: "xml" });
