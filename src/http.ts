@@ -46,8 +46,27 @@ function createMcpServer(): McpServer {
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
 
+const CORS_HEADERS: Record<string, string> = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization, Mcp-Session-Id",
+  "Access-Control-Expose-Headers": "Mcp-Session-Id",
+};
+
 const httpServer = createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://${req.headers.host}`);
+
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    res.writeHead(204, CORS_HEADERS);
+    res.end();
+    return;
+  }
+
+  // Set CORS headers on all responses
+  for (const [key, value] of Object.entries(CORS_HEADERS)) {
+    res.setHeader(key, value);
+  }
 
   // Health check endpoint
   if (url.pathname === "/health" && req.method === "GET") {
