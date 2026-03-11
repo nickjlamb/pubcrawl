@@ -72,6 +72,6 @@ const httpServer = createServer(async (req, res) => {
   res.end(JSON.stringify({ error: "Not found" }));
 });
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, "0.0.0.0", () => {
   console.error(`PubCrawl MCP server running on http://0.0.0.0:${PORT}/mcp`);
 });
