@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/nickjlamb-pubcrawl-badge.png)](https://mseep.ai/app/nickjlamb-pubcrawl)
+
 # PubCrawl
 
 An [MCP server](https://modelcontextprotocol.io) that gives LLM clients access to PubMed, FDA drug labelling, UK medicines data, and ClinicalTrials.gov. A peer-reviewed pub crawl through the literature — the label — and the trial.
