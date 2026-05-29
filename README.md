@@ -4,6 +4,11 @@ An [MCP server](https://modelcontextprotocol.io) that gives LLM clients access t
 
 Built by [PharmaTools.AI](https://pharmatools.ai).
 
+[![build](https://github.com/nickjlamb/pubcrawl/actions/workflows/build.yml/badge.svg)](https://github.com/nickjlamb/pubcrawl/actions/workflows/build.yml)
+[![npm](https://img.shields.io/npm/v/@pharmatools/pubcrawl)](https://www.npmjs.com/package/@pharmatools/pubcrawl)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-6E56CF)](https://registry.modelcontextprotocol.io/?q=pubcrawl)
+
 ## Tools
 
 ### Literature
