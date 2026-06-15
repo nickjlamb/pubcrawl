@@ -26,7 +26,8 @@ Built by [PharmaTools.AI](https://pharmatools.ai).
 
 | Tool | What it does |
 |------|-------------|
-| `get_uspi` | Pull US Prescribing Information sections from DailyMed — indications, dosing, warnings, contraindications, and more. Parsed from FDA structured product labels. |
+| `resolve_drug_name` | Convert a brand drug name to its generic (or a generic to its US brand names), with drug class and common indications. Deterministic, via RxNorm/openFDA — no AI. |
+| `get_uspi` | Pull US Prescribing Information sections via openFDA (cited to DailyMed) — indications, dosing, warnings, contraindications, and more. |
 | `get_smpc` | Retrieve UK Summary of Product Characteristics from the eMC — the UK equivalent of US prescribing information, with numbered SmPC sections. |
 | `compare_labels` | Side-by-side comparison of US (USPI) and UK (SmPC) labelling for the same drug. Spot regulatory differences in indications, warnings, and dosing. |
 | `search_by_indication` | Find drugs approved for a medical condition. Searches FDA labelling via OpenFDA, then cross-references UK availability on the eMC. |

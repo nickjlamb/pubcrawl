@@ -14,6 +14,7 @@ import { registerUspiTool } from "./tools/uspi.js";
 import { registerSmpcTool } from "./tools/smpc.js";
 import { registerCompareLabelsTool } from "./tools/compare-labels.js";
 import { registerSearchIndicationTool } from "./tools/search-indication.js";
+import { registerResolveNameTool } from "./tools/resolve-name.js";
 import { registerTrialsSearchTool } from "./tools/trials-search.js";
 import { registerTrialDetailTool } from "./tools/trials-detail.js";
 
@@ -38,6 +39,7 @@ function createMcpServer(): McpServer {
   registerSmpcTool(server);
   registerCompareLabelsTool(server);
   registerSearchIndicationTool(server);
+  registerResolveNameTool(server);
   registerTrialsSearchTool(server);
   registerTrialDetailTool(server);
 
