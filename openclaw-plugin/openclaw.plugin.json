@@ -1,0 +1,34 @@
+{
+  "id": "pubcrawl",
+  "name": "PubCrawl",
+  "description": "Biomedical research tools: PubMed literature search, ClinicalTrials.gov, and US (FDA) / UK (eMC) drug labelling. Built by PharmaTools.AI.",
+  "version": "0.1.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "ncbiApiKey": {
+        "type": "string",
+        "description": "Optional NCBI E-utilities API key. Raises the PubMed rate limit from 3 to 10 requests/second."
+      }
+    }
+  },
+  "activation": {
+    "onStartup": true
+  },
+  "contracts": {
+    "tools": [
+      "search_pubmed",
+      "get_abstract",
+      "get_full_text",
+      "find_related",
+      "format_citation",
+      "trending_papers",
+      "get_uspi",
+      "get_smpc",
+      "compare_labels",
+      "search_by_indication",
+      "search_trials",
+      "get_trial"
+    ]
+  }
+}

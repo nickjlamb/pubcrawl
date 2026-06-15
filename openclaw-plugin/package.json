@@ -1,0 +1,61 @@
+{
+  "name": "@nickjlamb/openclaw-pubcrawl",
+  "version": "0.1.0",
+  "description": "PubCrawl plugin for OpenClaw — PubMed, ClinicalTrials.gov, and US/UK drug labelling tools. Built by PharmaTools.AI.",
+  "type": "module",
+  "license": "MIT",
+  "author": "PharmaTools.AI",
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "pubmed",
+    "ncbi",
+    "biomedical",
+    "literature",
+    "clinical-trials",
+    "drug-labelling",
+    "dailymed",
+    "pharma"
+  ],
+  "files": [
+    "dist",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "plugin:build": "openclaw plugins build --entry ./dist/index.js",
+    "plugin:validate": "openclaw plugins validate --entry ./dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "fast-xml-parser": "^4.3.0",
+    "typebox": "^1.1.38"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.5.17"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "compat": {
+      "pluginApi": ">=2026.6.6"
+    },
+    "build": {
+      "openclawVersion": "2026.6.6"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nickjlamb/pubcrawl"
+  }
+}

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { searchEmc, fetchSmpcHtml, parseSmpcSections } from "../lib/emc.js";
+import { getUkSmpc } from "@pharmatools/drug-data";
+import { cache, TTL } from "../lib/cache.js";
 import { SmPCResult } from "../types.js";
 
 const schema = {
@@ -13,6 +14,33 @@ const schema = {
     ),
 };
 
+/**
+ * Build an SmPCResult from the shared drug-data engine (eMC). Result-shape
+ * compatible with the previous implementation. Cached for 24h.
+ */
+export async function buildSmpcResult(
+  drug: string,
+  sections?: string[]
+): Promise<SmPCResult | { error: string }> {
+  const cacheKey = `smpc:${drug.toLowerCase()}:${(sections ?? []).join(",").toLowerCase()}`;
+  const cached = cache.get<SmPCResult>(cacheKey);
+  if (cached) return cached;
+
+  const smpc = await getUkSmpc(drug, sections);
+  if (!smpc || smpc.sections.length === 0) {
+    return { error: `No SmPC found for "${drug}" on eMC` };
+  }
+
+  const result: SmPCResult = {
+    drug_name: smpc.drugName,
+    product_id: smpc.productId,
+    sections: smpc.sections,
+    url: smpc.url,
+  };
+  cache.set(cacheKey, result, TTL.LABEL);
+  return result;
+}
+
 export function registerSmpcTool(server: McpServer): void {
   server.tool(
     "get_smpc",
@@ -21,39 +49,11 @@ export function registerSmpcTool(server: McpServer): void {
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
       try {
-        const searchResults = await searchEmc(params.drug);
-
-        if (searchResults.length === 0) {
-          return {
-            content: [{
-              type: "text",
-              text: JSON.stringify({ error: `No SmPC found for "${params.drug}" on eMC` }, null, 2),
-            }],
-            isError: true,
-          };
-        }
-
-        // Select best match: prefer name containing the drug
-        const drugLower = params.drug.toLowerCase();
-        const sorted = [...searchResults].sort((a, b) => {
-          const aMatch = a.name.toLowerCase().includes(drugLower) ? 1 : 0;
-          const bMatch = b.name.toLowerCase().includes(drugLower) ? 1 : 0;
-          return bMatch - aMatch;
-        });
-
-        const best = sorted[0];
-        const html = await fetchSmpcHtml(best.product_id);
-        const sections = parseSmpcSections(html, params.sections);
-
-        const result: SmPCResult = {
-          drug_name: best.name,
-          product_id: best.product_id,
-          sections: sections.map((s) => ({ code: s.code, title: s.title, content: s.content })),
-          url: `https://www.medicines.org.uk/emc/product/${best.product_id}/smpc`,
-        };
-
+        const result = await buildSmpcResult(params.drug, params.sections);
+        const isError = "error" in result;
         return {
           content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+          ...(isError ? { isError: true } : {}),
         };
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
