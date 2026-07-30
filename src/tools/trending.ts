@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { esearch, esummary } from "../lib/ncbi.js";
-import { parseSummaryAuthors } from "../lib/xml-parser.js";
+import { formatSummaryArticle } from "../lib/pubmed-format.js";
 import { PubMedArticle } from "../types.js";
 
 const HIGH_IMPACT_JOURNALS = [
@@ -82,23 +82,7 @@ export function registerTrendingTool(server: McpServer): void {
 
         const articles: PubMedArticle[] = searchResult.idlist
           .filter((uid) => summaryData[uid])
-          .map((uid) => {
-            const doc = summaryData[uid] as Record<string, unknown>;
-            const authors = parseSummaryAuthors(doc.authors);
-            const pubDate = String(doc.pubdate ?? "");
-            const year = pubDate.match(/\d{4}/)?.[0] ?? "";
-            const doi = (doc.elocationid ?? "").toString().replace(/^doi:\s*/i, "");
-
-            return {
-              pmid: uid,
-              title: String(doc.title ?? ""),
-              authors,
-              journal: String(doc.fulljournalname ?? doc.source ?? ""),
-              year,
-              doi,
-              abstract_snippet: String(doc.sorttitle ?? "").slice(0, 200),
-            };
-          });
+          .map((uid) => formatSummaryArticle(uid, summaryData[uid] as Record<string, unknown>));
 
         return {
           content: [{

@@ -4,7 +4,7 @@ An [MCP server](https://modelcontextprotocol.io) that gives LLM clients access t
 
 Built by [PharmaTools.AI](https://pharmatools.ai).
 
-[![build](https://github.com/nickjlamb/pubcrawl/actions/workflows/build.yml/badge.svg)](https://github.com/nickjlamb/pubcrawl/actions/workflows/build.yml)
+[![ci](https://github.com/nickjlamb/pubcrawl/actions/workflows/build.yml/badge.svg)](https://github.com/nickjlamb/pubcrawl/actions/workflows/build.yml)
 [![npm](https://img.shields.io/npm/v/@pharmatools/pubcrawl)](https://www.npmjs.com/package/@pharmatools/pubcrawl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-6E56CF)](https://registry.modelcontextprotocol.io/?q=pubcrawl)
@@ -136,7 +136,13 @@ Once connected, just ask naturally:
 npm run dev    # TypeScript watch mode
 npm run build  # Compile to dist/
 npm start      # Run the server
+npm test       # Run the Vitest unit suite
+npm run lint   # ESLint
 ```
+
+Unit tests live in `tests/` and cover the parsing, caching, citation, and
+trial-mapping logic with fixture payloads (no network calls). CI runs lint,
+tests, and the build on every push and pull request.
 
 ## License
 

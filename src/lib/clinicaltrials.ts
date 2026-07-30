@@ -42,7 +42,7 @@ function str(value: unknown): string {
   return value != null ? String(value) : "";
 }
 
-function studyToSummary(study: Record<string, unknown>): ClinicalTrialSummary {
+export function studyToSummary(study: Record<string, unknown>): ClinicalTrialSummary {
   const proto = study.protocolSection as Record<string, unknown> | undefined;
   if (!proto) {
     return {

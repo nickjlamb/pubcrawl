@@ -5,7 +5,6 @@ export interface PubMedArticle {
   journal: string;
   year: string;
   doi: string;
-  abstract_snippet: string;
 }
 
 export interface AbstractSection {

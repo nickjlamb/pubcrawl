@@ -8,7 +8,7 @@ const schema = {
   style: z.enum(["apa", "vancouver", "harvard", "bibtex"]).default("apa").describe("Citation style"),
 };
 
-interface ArticleInfo {
+export interface ArticleInfo {
   authors: string[];
   title: string;
   journal: string;
@@ -20,7 +20,7 @@ interface ArticleInfo {
   pmid: string;
 }
 
-function formatApa(info: ArticleInfo): string {
+export function formatApa(info: ArticleInfo): string {
   const authorStr = info.authors.length === 0
     ? ""
     : info.authors.length <= 7
@@ -54,7 +54,7 @@ function formatApa(info: ArticleInfo): string {
   return `${authorStr}${yearPart}${titlePart}${journalPart}${volPart}${issuePart}${pagesPart}.${doiPart}`.trim();
 }
 
-function formatVancouver(info: ArticleInfo): string {
+export function formatVancouver(info: ArticleInfo): string {
   const authorStr = info.authors.length === 0
     ? ""
     : info.authors.length <= 6
@@ -82,7 +82,7 @@ function formatVancouver(info: ArticleInfo): string {
   return `${authorStr}.${titlePart}${journalPart}${yearPart}${volPart}${issuePart}${pagesPart}.${doiPart}`.trim();
 }
 
-function formatHarvard(info: ArticleInfo): string {
+export function formatHarvard(info: ArticleInfo): string {
   const authorStr = info.authors.length === 0
     ? ""
     : info.authors.length <= 3
@@ -111,7 +111,7 @@ function formatHarvard(info: ArticleInfo): string {
   return `${authorStr}${yearPart}${titlePart}${journalPart}${volPart}${issuePart}${pagesPart}${doiPart}`.trim();
 }
 
-function formatBibtex(info: ArticleInfo): string {
+export function formatBibtex(info: ArticleInfo): string {
   const key = info.authors.length > 0
     ? info.authors[0].split(" ")[0].toLowerCase() + info.year
     : `pmid${info.pmid}`;

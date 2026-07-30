@@ -11,8 +11,20 @@ PubCrawl is an MCP (Model Context Protocol) server that gives LLM clients (Claud
 - `npm run build` — compile TypeScript (`src/`) to `dist/`
 - `npm start` — run the compiled MCP server via stdio
 - `npm run dev` — `tsc --watch` for development
+- `npm test` — run the Vitest unit suite (`tests/`)
+- `npm run test:watch` — Vitest in watch mode
+- `npm run coverage` — Vitest with v8 coverage
+- `npm run lint` — ESLint (flat config, `typescript-eslint`)
 
-No test framework or linter is configured.
+## Testing
+
+Vitest unit tests live in `tests/` and cover the pure logic layers: the XML/JATS/SPL
+parsers (`xml-parser.ts`), the LRU cache (`cache.ts`), the shared esummary→article
+formatter (`pubmed-format.ts`), the citation formatters (`cite.ts`), and the
+ClinicalTrials.gov summary mapper (`clinicaltrials.ts`). Tests use fixture payloads —
+no network calls. Functions that need testing are exported from their module; keep new
+parsing/formatting logic as exported pure functions so it can be unit-tested the same way.
+CI (`.github/workflows/build.yml`) runs lint → test → build on every push and PR.
 
 ## Architecture
 

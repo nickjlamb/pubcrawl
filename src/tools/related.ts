@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { elink, esummary } from "../lib/ncbi.js";
-import { parseSummaryAuthors } from "../lib/xml-parser.js";
+import { formatSummaryArticle } from "../lib/pubmed-format.js";
 import { RelatedArticle } from "../types.js";
 
 const schema = {
@@ -40,21 +40,8 @@ export function registerRelatedTool(server: McpServer): void {
           .filter((uid) => summaryData[uid])
           .map((uid) => {
             const doc = summaryData[uid] as Record<string, unknown>;
-            const authors = parseSummaryAuthors(doc.authors);
-            const pubDate = String(doc.pubdate ?? "");
-            const year = pubDate.match(/\d{4}/)?.[0] ?? "";
-            const doi = (doc.elocationid ?? "")
-              .toString()
-              .replace(/^doi:\s*/i, "");
-
             return {
-              pmid: uid,
-              title: String(doc.title ?? ""),
-              authors,
-              journal: String(doc.fulljournalname ?? doc.source ?? ""),
-              year,
-              doi,
-              abstract_snippet: String(doc.sorttitle ?? "").slice(0, 200),
+              ...formatSummaryArticle(uid, doc),
               relevance_score: scoreMap.get(uid) ?? 0,
             };
           });
