@@ -20,7 +20,7 @@ import { registerTrialDetailTool } from "./tools/trials-detail.js";
 
 const server = new McpServer({
   name: "pubcrawl",
-  version: "2.0.0",
+  version: "2.4.0",
 });
 
 // Configure NCBI API key if available (10 req/s vs 3 req/s)

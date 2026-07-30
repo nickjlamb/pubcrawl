@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or discussion
+    url: https://github.com/nickjlamb/pubcrawl/discussions
+    about: Ask a question or share how you're using PubCrawl.
+  - name: PharmaTools.AI
+    url: https://pharmatools.ai
+    about: Learn more about the tools behind PubCrawl.
