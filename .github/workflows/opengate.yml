@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: nickjlamb/opengate
-          ref: main
+          ref: master # OpenGATE's default branch is master, not main
           path: opengate
 
       - name: Install adapter dependency (MCP SDK)
