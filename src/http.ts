@@ -27,7 +27,7 @@ if (process.env.NCBI_API_KEY) {
 function createMcpServer(): McpServer {
   const server = new McpServer({
     name: "pubcrawl",
-    version: "2.4.0",
+    version: "2.5.0",
   });
 
   registerSearchTool(server);

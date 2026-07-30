@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] — 2026-07-30
+
 ### Changed
 - `search_europepmc` now returns `authors` as a `string[]` (was a single joined string), matching `search_pubmed`'s shape so downstream consumers can treat author lists uniformly. Surfaced by wiring the tool into OpenGATE's retrieval fidelity checks.
+
+### Added
+- OpenGATE retrieval-fidelity gate (`.github/workflows/opengate.yml`) — runs on release, checking that records come back matching hand-verified anchors across PubMed and Europe PMC, so a parser change can't silently corrupt the evidence downstream tools ground on.
 
 ## [2.4.0] — 2026-07-30
 
@@ -57,7 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release: PubMed literature tools — `search_pubmed`, `get_abstract`, `get_full_text`, `find_related`, `format_citation`, and `trending_papers`.
 
-[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.1.1...v2.3.0
 [2.1.1]: https://github.com/nickjlamb/pubcrawl/compare/v2.1.0...v2.1.1
