@@ -12,7 +12,7 @@ This is a living document, not a commitment. Priorities shift with feedback; [op
 
 ## 🎯 Near term
 
-- **`get_europepmc_fulltext`** — read the full text of preprints and open-access articles surfaced by `search_europepmc` (today `get_full_text` is PMC-only, so preprints can be found but not read)
+- **`get_preprint_fulltext`** — read the full text of bioRxiv/medRxiv preprints via their native APIs. Preprints are the real gap here: `get_full_text` already covers PMC open-access articles, and while Europe PMC indexes preprints, it doesn't expose their full text as XML — so reading a preprint needs the preprint servers' own APIs.
 - **`get_adverse_events`** — openFDA FAERS adverse-event reports for a drug; a natural follow-on to the labelling tools
 - **MeSH query helper** — resolve terms to MeSH and help build precise PubMed queries (search quality lives and dies on MeSH)
 
