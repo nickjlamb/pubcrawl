@@ -6,13 +6,13 @@ This is a living document, not a commitment. Priorities shift with feedback; [op
 
 ## ✅ Recently shipped
 
+- **`get_europepmc_fulltext`** — read the full text of preprints and open-access articles surfaced by `search_europepmc` (reuses the JATS parsers; covers what PMC-only `get_full_text` can't)
 - **`search_europepmc`** — search Europe PMC (preprints, patents, richer metadata) alongside PubMed
 - **Test suite + CI** — Vitest unit tests and ESLint, run on every push and PR
 - Fixed the `abstract_snippet` bug in the PubMed summary tools
 
 ## 🎯 Near term
 
-- **`get_europepmc_fulltext`** — read the full text of preprints and open-access articles surfaced by `search_europepmc` (today `get_full_text` is PMC-only, so preprints can be found but not read)
 - **`get_adverse_events`** — openFDA FAERS adverse-event reports for a drug; a natural follow-on to the labelling tools
 - **MeSH query helper** — resolve terms to MeSH and help build precise PubMed queries (search quality lives and dies on MeSH)
 

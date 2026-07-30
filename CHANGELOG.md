@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`get_europepmc_fulltext`** — read the full text of a preprint or open-access article from Europe PMC by source + id (as returned by `search_europepmc`). Returns parsed sections, figure/table captions, and reference count, reusing the JATS parsers. Complements `get_full_text`, which is PMC-only.
+
 ## [2.4.0] — 2026-07-30
 
 ### Added

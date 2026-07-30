@@ -1,5 +1,13 @@
 import { cache, TTL } from "./cache.js";
-import { EuropePmcArticle } from "../types.js";
+import {
+  parseXml,
+  parseJatsSections,
+  parseFigureCaptions,
+  parseTableCaptions,
+  countReferences,
+  extractText,
+} from "./xml-parser.js";
+import { EuropePmcArticle, EuropePmcFullText } from "../types.js";
 
 const BASE_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest";
 const EMAIL = "nick@pharmatools.ai";
@@ -115,5 +123,82 @@ export async function searchEuropePmc(params: {
   };
 
   cache.set(cacheKey, result, TTL.SEARCH);
+  return result;
+}
+
+/**
+ * Parse a Europe PMC JATS `fullTextXML` document into structured full text.
+ *
+ * Europe PMC returns the same JATS `<article>` (front/body/back) that PubMed
+ * Central does, so the existing JATS parsers are reused. Pure and exported for
+ * fixture-based unit testing — no network.
+ */
+export function parseEuropePmcFullText(
+  xml: string,
+  source: string,
+  id: string,
+  sectionFilter?: string[]
+): EuropePmcFullText {
+  const parsed = parseXml(xml);
+  const article = parsed?.article ?? parsed?.["pmc-articleset"]?.article ?? {};
+
+  const front = article.front;
+  const body = article.body;
+  const back = article.back;
+
+  const articleMeta = front?.["article-meta"];
+  const titleNode = articleMeta?.["title-group"]?.["article-title"];
+  const title = titleNode ? extractText(titleNode) : "";
+
+  let sections = parseJatsSections(body);
+  if (sectionFilter && sectionFilter.length > 0) {
+    const requested = sectionFilter.map((s) => s.toLowerCase());
+    sections = sections.filter((s) =>
+      requested.some((r) => s.title.toLowerCase().includes(r))
+    );
+  }
+
+  return {
+    source,
+    id,
+    title,
+    is_preprint: source.toUpperCase() === "PPR",
+    sections,
+    figure_captions: parseFigureCaptions(body),
+    table_captions: parseTableCaptions(body),
+    reference_count: countReferences(back),
+  };
+}
+
+/**
+ * Fetch and parse the full text of an article/preprint from Europe PMC.
+ * Full text is available for open-access articles and many preprints. Throws a
+ * NO_FULL_TEXT-tagged error when the source/id has no open full text (HTTP 404).
+ */
+export async function getEuropePmcFullText(
+  source: string,
+  id: string,
+  sectionFilter?: string[]
+): Promise<EuropePmcFullText> {
+  const cacheKey = `epmc:fulltext:${source}:${id}:${(sectionFilter ?? []).join(",")}`;
+  const cached = cache.get<EuropePmcFullText>(cacheKey);
+  if (cached) return cached;
+
+  const url = `${BASE_URL}/${encodeURIComponent(source)}/${encodeURIComponent(id)}/fullTextXML`;
+  let response: Response;
+  try {
+    response = await rateLimitedFetch(url);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    if (message.includes("404")) {
+      throw new Error(`NO_FULL_TEXT: no open full text for ${source}/${id}`);
+    }
+    throw err;
+  }
+
+  const xml = await response.text();
+  const result = parseEuropePmcFullText(xml, source, id, sectionFilter);
+
+  cache.set(cacheKey, result, TTL.FULLTEXT);
   return result;
 }

@@ -37,7 +37,7 @@ The server has three layers:
 
 **XML Parser** (`src/lib/xml-parser.ts`) — Configures `fast-xml-parser` with `isArray` for elements that can appear once or multiple times in PubMed XML (Author, AbstractText, MeshHeading, Keyword, sec, fig, table-wrap, ref, etc.). This list is critical — if a new XML element needs consistent array handling, it must be added here. Provides two distinct author parsers: `parseAuthors` for efetch XML (`LastName`/`ForeName` elements) and `parseSummaryAuthors` for esummary JSON (`name` property).
 
-**Europe PMC Client** (`src/lib/europepmc.ts`) — Wraps the Europe PMC REST API (`/search`, free, no auth). Covers a broader corpus than PubMed: journal articles (`source: MED`), preprints (`source: PPR`), full text in PMC (`source: PMC`), and patents. Rate-limited to one request per 200ms with cache. `searchEuropePmc` requests `resultType=core` (so each hit carries `abstractText`, `citedByCount`, `isOpenAccess`, `inEPMC`) and composes optional `AND (SRC:PPR)` / `AND (OPEN_ACCESS:Y)` filters into the query. The pure `formatEuropePmcResult` helper maps one `core` result to a `EuropePmcArticle` and is unit-tested against fixtures.
+**Europe PMC Client** (`src/lib/europepmc.ts`) — Wraps the Europe PMC REST API (`/search`, free, no auth). Covers a broader corpus than PubMed: journal articles (`source: MED`), preprints (`source: PPR`), full text in PMC (`source: PMC`), and patents. Rate-limited to one request per 200ms with cache. `searchEuropePmc` requests `resultType=core` (so each hit carries `abstractText`, `citedByCount`, `isOpenAccess`, `inEPMC`) and composes optional `AND (SRC:PPR)` / `AND (OPEN_ACCESS:Y)` filters into the query. The pure `formatEuropePmcResult` helper maps one `core` result to a `EuropePmcArticle` and is unit-tested against fixtures. `getEuropePmcFullText` fetches `/{source}/{id}/fullTextXML` (JATS — same shape as PMC) and delegates to the pure `parseEuropePmcFullText` helper, which reuses the JATS parsers from `xml-parser.ts`; a 404 is surfaced as a `NO_FULL_TEXT`-tagged error the tool turns into a friendly message.
 
 **ClinicalTrials.gov Client** (`src/lib/clinicaltrials.ts`) — Wraps ClinicalTrials.gov API v2 (free, no auth). Rate-limited to 1.2s between requests (~50 req/min). `searchTrials` queries `/studies` with condition/intervention/term filters and field limiting. `getTrialDetail` fetches a single study by NCT ID with full parsing of eligibility, design, arms, outcomes, and associated PMIDs. Both functions use the shared `studyToSummary` helper to parse the nested API response.
 
@@ -51,6 +51,7 @@ The server has three layers:
 |------|----------|
 | `search_pubmed` | esearch → esummary |
 | `search_europepmc` | Europe PMC `/search` (`resultType=core`), map each result via `formatEuropePmcResult` |
+| `get_europepmc_fulltext` | Europe PMC `/{source}/{id}/fullTextXML`, parse JATS via `parseEuropePmcFullText` |
 | `get_abstract` | efetch rettype=xml, parse `AbstractText` with `@_Label` attributes |
 | `get_full_text` | elink (PMID→PMCID) → efetch db=pmc rettype=xml, parse JATS `<sec>` elements |
 | `find_related` | elink cmd=neighbor_score → esummary |

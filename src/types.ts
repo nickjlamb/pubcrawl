@@ -51,6 +51,17 @@ export interface FullTextSection {
   content: string;
 }
 
+export interface EuropePmcFullText {
+  source: string;
+  id: string;
+  title: string;
+  is_preprint: boolean;
+  sections: FullTextSection[];
+  figure_captions: string[];
+  table_captions: string[];
+  reference_count: number;
+}
+
 export interface FullTextResult {
   pmid: string;
   pmcid: string;

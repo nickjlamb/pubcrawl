@@ -28,7 +28,7 @@ PubCrawl connects your AI assistant (Claude Desktop, Cursor, or any MCP-compatib
 
 Every tool is a thin, deterministic wrapper over an official API. Nothing is invented; every result cites its source.
 
-- 🔬 **14 tools** across literature, drug labelling, and clinical trials
+- 🔬 **15 tools** across literature, drug labelling, and clinical trials
 - 🧾 **Verifiable by design** — results link back to DailyMed, the eMC, PubMed, and ClinicalTrials.gov
 - 🌍 **US *and* UK labelling** — a side-by-side `compare_labels` no other MCP server offers
 - 📰 **Preprints** via Europe PMC — surface work ahead of formal publication
@@ -79,6 +79,7 @@ That's it. → [More examples](#-examples) · [API key & other options](#-config
 | `search_europepmc` | Search Europe PMC — a broader corpus than PubMed that also indexes preprints (bioRxiv, medRxiv) and patents. Each result includes an abstract snippet, citation count, open-access status, and a preprint flag. Filter to preprints or open-access only. |
 | `get_abstract` | Get the full structured abstract for an article — broken into labeled sections (background, methods, results, conclusions) with keywords and MeSH terms. |
 | `get_full_text` | Retrieve the full text of open-access articles from PubMed Central, with parsed sections, figure/table captions, and reference counts. |
+| `get_europepmc_fulltext` | Read the full text of a preprint or open-access article from Europe PMC by source + id (as returned by `search_europepmc`). Covers preprints (bioRxiv, medRxiv) and Europe PMC's wider OA corpus that `get_full_text` (PMC-only) can't reach. |
 | `find_related` | Find similar articles using PubMed's neighbor algorithm, ranked by relevance score. |
 | `format_citation` | Generate a formatted citation in APA, Vancouver, Harvard, or BibTeX style. |
 | `trending_papers` | Find recent papers on a topic, with optional filtering to high-impact journals (Nature, Science, Cell, NEJM, Lancet, JAMA, etc.). |
@@ -112,6 +113,7 @@ Once connected, just ask naturally:
 - "Get the abstract for PMID 38127654, then find related papers and cite them all in Vancouver style."
 - "What are the trending papers on CRISPR gene therapy this month, high-impact journals only?"
 - "Pull the full text of that PMC article and summarise the methods section."
+- "Read the full text of that bioRxiv preprint from Europe PMC and summarise its results."
 
 **Drug labelling**
 - "Get the FDA prescribing information for metformin — just the indications and warnings."
@@ -140,7 +142,7 @@ flowchart LR
     subgraph Server["PubCrawl MCP server"]
         direction TB
         Transport["stdio · Streamable HTTP"]
-        Tools["14 tools — src/tools/*"]
+        Tools["15 tools — src/tools/*"]
         Shared["LRU cache · XML/JATS/SPL parser"]
         Transport --> Tools --> Shared
     end
