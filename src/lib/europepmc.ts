@@ -53,6 +53,13 @@ export function formatEuropePmcResult(
   const journalInfo = (result.journalInfo ?? {}) as Record<string, unknown>;
   const journal = (journalInfo.journal ?? {}) as Record<string, unknown>;
   const abstractText = String(result.abstractText ?? "");
+  // Europe PMC returns a single `authorString` ("Smith J, Doe A, Brown C.").
+  // Split into an array so the shape matches search_pubmed's `authors: string[]`
+  // — consistency downstream consumers (and PubCrawl's own tools) rely on.
+  const authorString = String(result.authorString ?? "").replace(/\.\s*$/, "");
+  const authors = authorString
+    ? authorString.split(",").map((a) => a.trim()).filter(Boolean)
+    : [];
 
   return {
     id,
@@ -61,7 +68,7 @@ export function formatEuropePmcResult(
     pmcid: result.pmcid ? String(result.pmcid) : "",
     doi: result.doi ? String(result.doi) : "",
     title: String(result.title ?? ""),
-    authors: String(result.authorString ?? ""),
+    authors,
     journal:
       String(journal.title ?? "") || String(journal.isoabbreviation ?? ""),
     year: String(result.pubYear ?? journalInfo.yearOfPublication ?? ""),
