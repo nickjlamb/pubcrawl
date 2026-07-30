@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.nickjlamb/pubcrawl",
-  "description": "PubMed literature search and US/UK drug labelling for AI assistants.",
+  "description": "PubMed & Europe PMC literature search, US/UK drug labelling, and clinical trials for AI assistants.",
   "repository": {
     "url": "https://github.com/nickjlamb/pubcrawl",
     "source": "github"
   },
-  "version": "2.0.0",
+  "version": "2.4.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@pharmatools/pubcrawl",
-      "version": "2.0.0",
+      "version": "2.4.0",
       "transport": {
         "type": "stdio"
       },
