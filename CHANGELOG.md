@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `search_europepmc` now returns `authors` as a `string[]` (was a single joined string), matching `search_pubmed`'s shape so downstream consumers can treat author lists uniformly. Surfaced by wiring the tool into OpenGATE's retrieval fidelity checks.
+
 ## [2.4.0] — 2026-07-30
 
 ### Added

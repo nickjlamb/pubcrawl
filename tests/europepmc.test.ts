@@ -53,6 +53,11 @@ describe("formatEuropePmcResult — journal article", () => {
     });
   });
 
+  it("splits authorString into an array (matching search_pubmed's shape)", () => {
+    expect(a.authors).toEqual(["Smith J", "Doe A", "Brown C"]);
+    expect(Array.isArray(a.authors)).toBe(true);
+  });
+
   it("flags it as not a preprint, not open access, but full-text available", () => {
     expect(a.is_preprint).toBe(false);
     expect(a.is_open_access).toBe(false);
@@ -101,7 +106,7 @@ describe("formatEuropePmcResult — defensive defaults", () => {
       pmcid: "",
       doi: "",
       title: "",
-      authors: "",
+      authors: [],
       journal: "",
       year: "",
       is_preprint: false,

@@ -14,7 +14,7 @@ export interface EuropePmcArticle {
   pmcid: string;
   doi: string;
   title: string;
-  authors: string;
+  authors: string[];
   journal: string;
   year: string;
   is_preprint: boolean;
