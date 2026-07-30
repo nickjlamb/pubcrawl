@@ -16,6 +16,7 @@ Built by [PharmaTools.AI](https://pharmatools.ai).
 | Tool | What it does |
 |------|-------------|
 | `search_pubmed` | Search PubMed with filters for date range, article type, and sort order. Returns PMIDs, titles, authors, journals, and DOIs. |
+| `search_europepmc` | Search Europe PMC — a broader corpus than PubMed that also indexes preprints (bioRxiv, medRxiv) and patents. Each result includes an abstract snippet, citation count, open-access status, and a preprint flag. Filter to preprints or open-access only. |
 | `get_abstract` | Get the full structured abstract for an article — broken into labeled sections (background, methods, results, conclusions) with keywords and MeSH terms. |
 | `get_full_text` | Retrieve the full text of open-access articles from PubMed Central, with parsed sections, figure/table captions, and reference counts. |
 | `find_related` | Find similar articles using PubMed's neighbor algorithm, ranked by relevance score. |
@@ -119,6 +120,7 @@ Without an API key, requests are rate-limited to 3/second. With one, you get 10/
 Once connected, just ask naturally:
 
 - "Search PubMed for recent clinical trials on semaglutide"
+- "Search Europe PMC for preprints on GLP-1 receptor agonists, most cited first"
 - "Get the abstract for PMID 38127654"
 - "Find papers related to this one and format citations in APA"
 - "What are the trending papers on CRISPR gene therapy this month?"

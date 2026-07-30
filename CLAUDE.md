@@ -20,8 +20,9 @@ PubCrawl is an MCP (Model Context Protocol) server that gives LLM clients (Claud
 
 Vitest unit tests live in `tests/` and cover the pure logic layers: the XML/JATS/SPL
 parsers (`xml-parser.ts`), the LRU cache (`cache.ts`), the shared esummary→article
-formatter (`pubmed-format.ts`), the citation formatters (`cite.ts`), and the
-ClinicalTrials.gov summary mapper (`clinicaltrials.ts`). Tests use fixture payloads —
+formatter (`pubmed-format.ts`), the Europe PMC result mapper (`europepmc.ts`),
+the citation formatters (`cite.ts`), and the ClinicalTrials.gov summary mapper
+(`clinicaltrials.ts`). Tests use fixture payloads —
 no network calls. Functions that need testing are exported from their module; keep new
 parsing/formatting logic as exported pure functions so it can be unit-tested the same way.
 CI (`.github/workflows/build.yml`) runs lint → test → build on every push and PR.
@@ -36,17 +37,20 @@ The server has three layers:
 
 **XML Parser** (`src/lib/xml-parser.ts`) — Configures `fast-xml-parser` with `isArray` for elements that can appear once or multiple times in PubMed XML (Author, AbstractText, MeshHeading, Keyword, sec, fig, table-wrap, ref, etc.). This list is critical — if a new XML element needs consistent array handling, it must be added here. Provides two distinct author parsers: `parseAuthors` for efetch XML (`LastName`/`ForeName` elements) and `parseSummaryAuthors` for esummary JSON (`name` property).
 
+**Europe PMC Client** (`src/lib/europepmc.ts`) — Wraps the Europe PMC REST API (`/search`, free, no auth). Covers a broader corpus than PubMed: journal articles (`source: MED`), preprints (`source: PPR`), full text in PMC (`source: PMC`), and patents. Rate-limited to one request per 200ms with cache. `searchEuropePmc` requests `resultType=core` (so each hit carries `abstractText`, `citedByCount`, `isOpenAccess`, `inEPMC`) and composes optional `AND (SRC:PPR)` / `AND (OPEN_ACCESS:Y)` filters into the query. The pure `formatEuropePmcResult` helper maps one `core` result to a `EuropePmcArticle` and is unit-tested against fixtures.
+
 **ClinicalTrials.gov Client** (`src/lib/clinicaltrials.ts`) — Wraps ClinicalTrials.gov API v2 (free, no auth). Rate-limited to 1.2s between requests (~50 req/min). `searchTrials` queries `/studies` with condition/intervention/term filters and field limiting. `getTrialDetail` fetches a single study by NCT ID with full parsing of eligibility, design, arms, outcomes, and associated PMIDs. Both functions use the shared `studyToSummary` helper to parse the nested API response.
 
 **Cache** (`src/lib/cache.ts`) — Singleton LRU cache (500 entries). TTLs: search/related/summary = 1 hour, trial details = 4 hours, abstracts/fulltext/labels = 24 hours.
 
-**Entry point** (`src/index.ts`) — Creates `McpServer`, loads optional `NCBI_API_KEY` from env, registers all 12 tools, connects via `StdioServerTransport`.
+**Entry point** (`src/index.ts`) — Creates `McpServer`, loads optional `NCBI_API_KEY` from env, registers all tools, connects via `StdioServerTransport`. `src/http.ts` registers the same tool set behind a stateless Streamable HTTP transport; keep the two registration lists in sync when adding a tool.
 
 ## Tool → API Mapping
 
 | Tool | Pipeline |
 |------|----------|
 | `search_pubmed` | esearch → esummary |
+| `search_europepmc` | Europe PMC `/search` (`resultType=core`), map each result via `formatEuropePmcResult` |
 | `get_abstract` | efetch rettype=xml, parse `AbstractText` with `@_Label` attributes |
 | `get_full_text` | elink (PMID→PMCID) → efetch db=pmc rettype=xml, parse JATS `<sec>` elements |
 | `find_related` | elink cmd=neighbor_score → esummary |
