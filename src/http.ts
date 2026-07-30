@@ -5,6 +5,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { setApiKey } from "./lib/ncbi.js";
 import { registerSearchTool } from "./tools/search.js";
+import { registerSearchEuropePmcTool } from "./tools/search-europepmc.js";
 import { registerAbstractTool } from "./tools/abstract.js";
 import { registerFullTextTool } from "./tools/fulltext.js";
 import { registerRelatedTool } from "./tools/related.js";
@@ -30,6 +31,7 @@ function createMcpServer(): McpServer {
   });
 
   registerSearchTool(server);
+  registerSearchEuropePmcTool(server);
   registerAbstractTool(server);
   registerFullTextTool(server);
   registerRelatedTool(server);

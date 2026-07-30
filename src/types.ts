@@ -7,6 +7,24 @@ export interface PubMedArticle {
   doi: string;
 }
 
+export interface EuropePmcArticle {
+  id: string;
+  source: string;
+  pmid: string;
+  pmcid: string;
+  doi: string;
+  title: string;
+  authors: string;
+  journal: string;
+  year: string;
+  is_preprint: boolean;
+  is_open_access: boolean;
+  cited_by_count: number;
+  has_full_text: boolean;
+  abstract_snippet: string;
+  url: string;
+}
+
 export interface AbstractSection {
   label: string;
   text: string;
