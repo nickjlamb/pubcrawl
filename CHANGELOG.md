@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Demo animation in the README showing a live `compare_labels` call for semaglutide.
+
 ## [2.5.1] — 2026-08-25
 
 ### Changed
