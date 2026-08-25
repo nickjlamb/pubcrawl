@@ -6,10 +6,12 @@ authors:
   - family-names: Lamb
     given-names: Nick
     website: "https://pharmatools.ai"
+doi: "10.5281/zenodo.22101560"
 repository-code: "https://github.com/nickjlamb/pubcrawl"
 url: "https://www.pharmatools.ai/pubcrawl"
 license: MIT
 version: 2.5.1
+date-released: 2026-08-25
 keywords:
   - model context protocol
   - MCP server
@@ -20,3 +22,7 @@ keywords:
   - biomedical literature
   - retrieval
   - grounding
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22101560"
+    description: "Archived release v2.5.1"
