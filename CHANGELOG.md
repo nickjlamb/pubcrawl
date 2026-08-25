@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.1] — 2026-08-25
+
+### Changed
+- README now leads with `compare_labels`, the one tool no other MCP server offers, using a worked semaglutide example: the cardiovascular indication is on-label in the US and unlicensed in the UK.
+- Architecture diagram replaced with hand-crafted light/dark SVGs served via `<picture>`, regenerable from `docs/gen_diagram.py`.
+
+### Added
+- `CITATION.cff` — PubCrawl is now citable in published work, with a Zenodo DOI minted on release.
+
 ## [2.5.0] — 2026-07-30
 
 ### Changed

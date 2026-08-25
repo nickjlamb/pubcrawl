@@ -9,7 +9,7 @@ authors:
 repository-code: "https://github.com/nickjlamb/pubcrawl"
 url: "https://www.pharmatools.ai/pubcrawl"
 license: MIT
-version: 2.5.0
+version: 2.5.1
 keywords:
   - model context protocol
   - MCP server
