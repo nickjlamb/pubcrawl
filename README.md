@@ -28,12 +28,24 @@ PubCrawl connects your AI assistant (Claude Desktop, Cursor, or any MCP-compatib
 
 Every tool is a thin, deterministic wrapper over an official API. Nothing is invented; every result cites its source.
 
+### The thing no other MCP server does
+
+Ask **"compare US and UK labelling for semaglutide"** and PubCrawl pulls both live labels and maps equivalent sections — US *Indications and Usage* ↔ UK *4.1 Therapeutic indications*, and so on — so the differences are visible instead of assumed:
+
+| | US Prescribing Information | UK SmPC |
+|---|---|---|
+| **Indications** | glycaemic control · **reduce risk of MACE** in T2D with established CVD · **reduce risk of sustained eGFR decline, ESKD and CV death** in T2D with CKD | glycaemic control only — CV and renal outcomes appear as cross-references to §4.4/4.5/5.1, *not* as indications |
+| **Contraindications** | personal or family history of MTC or MEN 2 · hypersensitivity | hypersensitivity only |
+
+A cardiovascular claim that is on-label in the US promotes an unlicensed indication in the UK. If you write, review, or check medical copy for both markets, that gap is the whole job — and `compare_labels` is the only MCP tool that surfaces it.
+
+### Everything else
+
 - 🔬 **14 tools** across literature, drug labelling, and clinical trials
 - 🧾 **Verifiable by design** — results link back to DailyMed, the eMC, PubMed, and ClinicalTrials.gov
-- 🌍 **US *and* UK labelling** — a side-by-side `compare_labels` no other MCP server offers
 - 📰 **Preprints** via Europe PMC — surface work ahead of formal publication
 - 🆓 **No API keys required** (an optional free NCBI key raises PubMed rate limits)
-- 🧪 Fully **typed, tested, and CI-checked**
+- 🧪 Fully **typed, tested, and CI-checked** — retrieval fidelity gated by [OpenGATE](https://github.com/nickjlamb/opengate) on every release
 
 Built by [PharmaTools.AI](https://pharmatools.ai).
 
@@ -225,6 +237,20 @@ Versions follow [Semantic Versioning](https://semver.org). See the [**CHANGELOG*
 ## 🤝 Contributing
 
 Contributions are welcome and appreciated — bug reports, new data sources, new tools. Read the [contributing guide](CONTRIBUTING.md) to get started, then [open an issue](https://github.com/nickjlamb/pubcrawl/issues/new/choose) or a pull request.
+
+## 📚 Citation
+
+If PubCrawl supports work you publish, please cite it — see [`CITATION.cff`](CITATION.cff), or:
+
+```bibtex
+@software{lamb_pubcrawl,
+  author = {Lamb, Nick},
+  title  = {PubCrawl: verifiable biomedical literature, drug labelling and clinical trials for AI assistants},
+  url    = {https://github.com/nickjlamb/pubcrawl}
+}
+```
+
+---
 
 ## 📄 License
 

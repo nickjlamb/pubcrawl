@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use PubCrawl in your work, please cite it as below."
+title: "PubCrawl: verifiable biomedical literature, drug labelling and clinical trials for AI assistants"
+type: software
+authors:
+  - family-names: Lamb
+    given-names: Nick
+    website: "https://pharmatools.ai"
+repository-code: "https://github.com/nickjlamb/pubcrawl"
+url: "https://www.pharmatools.ai/pubcrawl"
+license: MIT
+version: 2.5.0
+keywords:
+  - model context protocol
+  - MCP server
+  - PubMed
+  - Europe PMC
+  - drug labelling
+  - clinical trials
+  - biomedical literature
+  - retrieval
+  - grounding
