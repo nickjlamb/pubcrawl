@@ -6,7 +6,7 @@ authors:
   - family-names: Lamb
     given-names: Nick
     website: "https://pharmatools.ai"
-doi: "10.5281/zenodo.22101560"
+doi: "10.5281/zenodo.22101559"
 repository-code: "https://github.com/nickjlamb/pubcrawl"
 url: "https://www.pharmatools.ai/pubcrawl"
 license: MIT
@@ -23,6 +23,9 @@ keywords:
   - retrieval
   - grounding
 identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22101559"
+    description: "Concept DOI — always resolves to the latest release"
   - type: doi
     value: "10.5281/zenodo.22101560"
     description: "Archived release v2.5.1"
