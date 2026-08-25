@@ -133,32 +133,10 @@ Once connected, just ask naturally:
 
 Three layers — **tools** register the MCP interface, **lib clients** talk to each external API, and shared **cache** + **parsers** keep it fast and consistent.
 
-```mermaid
-flowchart LR
-    Client["🖥  MCP client<br/>Claude Desktop · Cursor · …"]
-
-    subgraph Server["PubCrawl MCP server"]
-        direction TB
-        Transport["stdio · Streamable HTTP"]
-        Tools["14 tools — src/tools/*"]
-        Shared["LRU cache · XML/JATS/SPL parser"]
-        Transport --> Tools --> Shared
-    end
-
-    Client -->|MCP| Transport
-
-    Tools --> NCBI["NCBI E-utilities"]
-    Tools --> EPMC["Europe PMC REST"]
-    Tools --> FDA["openFDA + DailyMed"]
-    Tools --> EMC["UK eMC"]
-    Tools --> CT["ClinicalTrials.gov v2"]
-
-    NCBI --> S1[("PubMed / PMC")]
-    EPMC --> S2[("Preprints · patents")]
-    FDA --> S3[("US labels")]
-    EMC --> S4[("UK labels")]
-    CT --> S5[("Trials")]
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/architecture-dark.svg">
+  <img src="docs/architecture-light.svg" alt="PubCrawl architecture: an MCP client connects over stdio or streamable HTTP to the PubCrawl server, whose 14 tools are grouped into literature, drug labelling and clinical trials. Each family calls the official APIs directly — NCBI E-utilities, Europe PMC, openFDA and DailyMed, the UK eMC, and ClinicalTrials.gov — behind a shared LRU cache, XML/JATS/SPL parsers and rate limits. Every result returns with its own identifier: PMID, NCT or DOI. No model sits in this path; nothing is invented." width="100%">
+</picture>
 
 Each tool file exports a `register*Tool(server)` function with a zod schema and an async handler. All network calls are rate-limited, cached, and time-bounded. See [`CLAUDE.md`](CLAUDE.md) for a full architecture walkthrough and [`CONTRIBUTING.md`](CONTRIBUTING.md) to add a tool.
 

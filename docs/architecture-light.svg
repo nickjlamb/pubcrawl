@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" role="img" aria-label="PubCrawl architecture: an MCP client connects over stdio or streamable HTTP to the PubCrawl server, whose 14 tools are grouped into literature, drug labelling and clinical trials. Each family calls the official APIs directly — NCBI E-utilities, Europe PMC, openFDA and DailyMed, the UK eMC, and ClinicalTrials.gov — behind a shared LRU cache, XML/JATS/SPL parsers and rate limits. Every result returns with its own identifier: PMID, NCT or DOI. No model sits in this path; nothing is invented.">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8c959f"/></marker><marker id="arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker></defs>
+<rect x="16" y="52" width="170" height="400" rx="12" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="34" y="78" font-size="11" font-weight="600" letter-spacing="1.5" fill="#59636e">MCP CLIENT</text>
+<rect x="31.0" y="200" width="140" height="56" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="101" y="222" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Your assistant</text>
+<text x="101" y="240" font-size="11" text-anchor="middle" fill="#59636e">Claude &#183; Cursor</text>
+<text x="116" y="290" font-size="11" font-style="italic" fill="#59636e" text-anchor="middle">&#8220;Compare US and UK&#8221;</text>
+<text x="116" y="306" font-size="11" font-style="italic" fill="#59636e" text-anchor="middle">&#8220;labelling for this drug&#8221;</text>
+<rect x="216" y="52" width="390" height="400" rx="12" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="234" y="78" font-size="11" font-weight="600" letter-spacing="1.5" fill="#59636e">PUBCRAWL MCP SERVER</text>
+<rect x="271.0" y="88" width="300" height="44" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="421" y="114.5" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">stdio &#183; streamable HTTP</text>
+<polyline points="171,228 196,228 196,110 269,110" fill="none" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="186" y="170" font-size="11" fill="#59636e" text-anchor="middle" transform="rotate(-90 186 170)">MCP</text>
+<polyline points="421,132 421,154" fill="none" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="271.0" y="156" width="300" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="421" y="178" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Literature &#183; 7 tools</text>
+<text x="421" y="196" font-size="11" text-anchor="middle" fill="#59636e">search &#183; abstract &#183; full text &#183; cite</text>
+<rect x="271.0" y="224" width="300" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="421" y="246" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Drug labelling &#183; 5 tools</text>
+<text x="421" y="264" font-size="11" text-anchor="middle" fill="#59636e">USPI &#183; SmPC &#183; compare &#183; resolve</text>
+<rect x="271.0" y="292" width="300" height="52" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="421" y="314" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Clinical trials &#183; 2 tools</text>
+<text x="421" y="332" font-size="11" text-anchor="middle" fill="#59636e">search &#183; full record</text>
+<rect x="271.0" y="372" width="300" height="52" rx="8" fill="#fbf0ff" stroke="#8250df"/>
+<text x="421" y="394" font-size="13" font-weight="600" text-anchor="middle" fill="#8250df">LRU cache &#183; parsers &#183; rate limits</text>
+<text x="421" y="412" font-size="11" text-anchor="middle" fill="#59636e">XML / JATS / SPL &#183; time-bounded</text>
+<polyline points="271,398 250,398 250,182" fill="none" stroke="#8250df" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="250" y1="182" x2="269" y2="182" stroke="#8250df" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<line x1="250" y1="250" x2="269" y2="250" stroke="#8250df" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<line x1="250" y1="318" x2="269" y2="318" stroke="#8250df" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+<rect x="636" y="52" width="308" height="400" rx="12" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="654" y="78" font-size="11" font-weight="600" letter-spacing="1.5" fill="#59636e">OFFICIAL APIS</text>
+<rect x="650.0" y="88" width="280" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="790" y="110" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">NCBI E-utilities</text>
+<text x="790" y="128" font-size="11" text-anchor="middle" fill="#59636e">PubMed &#183; PMC</text>
+<rect x="650.0" y="148" width="280" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="790" y="170" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Europe PMC</text>
+<text x="790" y="188" font-size="11" text-anchor="middle" fill="#59636e">preprints &#183; patents</text>
+<rect x="650.0" y="208" width="280" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="790" y="230" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">openFDA &#183; DailyMed</text>
+<text x="790" y="248" font-size="11" text-anchor="middle" fill="#59636e">US prescribing info</text>
+<rect x="650.0" y="268" width="280" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="790" y="290" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">UK eMC</text>
+<text x="790" y="308" font-size="11" text-anchor="middle" fill="#59636e">SmPC</text>
+<rect x="650.0" y="328" width="280" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="790" y="350" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">ClinicalTrials.gov v2</text>
+<text x="790" y="368" font-size="11" text-anchor="middle" fill="#59636e">trial records</text>
+<text x="654" y="434" font-size="11" font-style="italic" fill="#59636e">no model in this path &#8212; nothing is invented</text>
+<polyline points="573,182 618,182 618,112 648,112" fill="none" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+<polyline points="573,182 618,182 618,172 648,172" fill="none" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+<polyline points="573,250 618,250 618,232 648,232" fill="none" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+<polyline points="573,250 618,250 618,292 648,292" fill="none" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+<polyline points="573,318 618,318 618,352 648,352" fill="none" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+<polyline points="790,376 790,478 56,478 56,260" fill="none" stroke="#1a7f37" stroke-width="1.5" marker-end="url(#arr-green)"/>
+<text x="452" y="470" font-size="11" font-weight="600" fill="#1a7f37" text-anchor="middle">every result carries its own identifier &#8212; PMID &#183; NCT &#183; DOI</text>
+</svg>
