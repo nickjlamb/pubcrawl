@@ -45,7 +45,7 @@ jobs:
 
       - name: Install adapter dependency (MCP SDK)
         working-directory: opengate
-        run: npm install --no-save @modelcontextprotocol/sdk
+        run: npm ci --omit=dev && npm install --no-save @modelcontextprotocol/sdk
 
       - name: Run OpenGATE retrieval gate against the built server
         working-directory: opengate
