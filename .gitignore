@@ -7,3 +7,6 @@ coverage/
 
 # Webflow embed pages (not part of the MCP server)
 *.html
+
+# Local Claude Code settings
+.claude/settings.local.json
