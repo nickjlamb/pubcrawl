@@ -2,6 +2,7 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getUkSmpc } from "@pharmatools/drug-data";
 import { cache, TTL } from "../lib/cache.js";
+import { markTruncated } from "../lib/label-mapping.js";
 import { SmPCResult } from "../types.js";
 
 const schema = {
@@ -34,7 +35,7 @@ export async function buildSmpcResult(
   const result: SmPCResult = {
     drug_name: smpc.drugName,
     product_id: smpc.productId,
-    sections: smpc.sections,
+    sections: markTruncated(smpc.sections),
     url: smpc.url,
   };
   cache.set(cacheKey, result, TTL.LABEL);

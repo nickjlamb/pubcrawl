@@ -10,3 +10,6 @@ coverage/
 
 # Local Claude Code settings
 .claude/settings.local.json
+
+# Benchmark dumps (returned label text for anchor verification) — never commit
+benchmark/results/dump-*.json

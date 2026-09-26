@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { searchByIndication } from "../lib/openfda.js";
+import { searchByIndication, OpenFdaDrug } from "../lib/openfda.js";
 import { searchEmc, EmcSearchResult } from "../lib/emc.js";
 import { DrugApprovalEntry, IndicationSearchResult } from "../types.js";
 
@@ -24,6 +24,29 @@ async function batchEmcLookups(
     }
   }
   return results;
+}
+
+/**
+ * Merge openFDA hits with the eMC lookups into the final entries. Pure, so the
+ * pairing rule (UK-approved iff the eMC returned at least one product for the
+ * generic name) is unit-testable without the network.
+ */
+export function mergeIndicationResults(
+  fdaDrugs: OpenFdaDrug[],
+  emcResults: Map<string, EmcSearchResult[]>
+): DrugApprovalEntry[] {
+  return fdaDrugs.map((fda) => {
+    const emcMatches = emcResults.get(fda.generic_name);
+    return {
+      name: fda.generic_name.toLowerCase(),
+      brand_name: fda.brand_name,
+      manufacturer: fda.manufacturer,
+      us_approved: true,
+      uk_approved: emcMatches !== undefined && emcMatches.length > 0,
+      us_setid: fda.set_id || undefined,
+      uk_product_id: emcMatches?.[0]?.product_id,
+    };
+  });
 }
 
 const schema = {
@@ -62,18 +85,7 @@ export function registerSearchIndicationTool(server: McpServer): void {
         const emcResults = await batchEmcLookups(genericNames);
 
         // Step 3: Merge into final results
-        const drugs: DrugApprovalEntry[] = fdaDrugs.map((fda) => {
-          const emcMatches = emcResults.get(fda.generic_name);
-          return {
-            name: fda.generic_name.toLowerCase(),
-            brand_name: fda.brand_name,
-            manufacturer: fda.manufacturer,
-            us_approved: true,
-            uk_approved: emcMatches !== undefined,
-            us_setid: fda.set_id || undefined,
-            uk_product_id: emcMatches?.[0]?.product_id,
-          };
-        });
+        const drugs = mergeIndicationResults(fdaDrugs, emcResults);
 
         const result: IndicationSearchResult = {
           condition: params.condition,

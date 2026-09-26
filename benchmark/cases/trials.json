@@ -1,0 +1,89 @@
+{
+  "$comment": "get_trial retrieval-fidelity anchors. Each case names facts about a registered trial that the ClinicalTrials.gov record states and that PubCrawl's mapper must return intact (title, phase, sponsor, conditions, interventions, primary outcome). Matching is normalised substring, case-insensitive. status as for labels.json: draft until a human checks the anchor against the live record.",
+  "version": "0.2-draft",
+  "frozen": false,
+  "cases": [
+    {
+      "id": "destiny-breast04",
+      "nct_id": "NCT03734029",
+      "status": "draft",
+      "title_contains": "trastuzumab deruxtecan",
+      "phase_contains": "3",
+      "sponsor_contains": "Daiichi Sankyo",
+      "conditions_any": [
+        "breast"
+      ],
+      "interventions_any": [
+        "trastuzumab deruxtecan",
+        "DS-8201"
+      ],
+      "primary_outcome_contains": "progression",
+      "has_pmids": true
+    },
+    {
+      "id": "keynote-522",
+      "nct_id": "NCT03036488",
+      "status": "draft",
+      "title_contains": "pembrolizumab",
+      "phase_contains": "3",
+      "sponsor_contains": "Merck",
+      "conditions_any": [
+        "triple negative breast",
+        "breast"
+      ],
+      "interventions_any": [
+        "pembrolizumab"
+      ],
+      "has_pmids": true
+    },
+    {
+      "id": "sustain-6",
+      "nct_id": "NCT01720446",
+      "status": "draft",
+      "title_contains": "semaglutide",
+      "phase_contains": "3",
+      "sponsor_contains": "Novo Nordisk",
+      "conditions_any": [
+        "diabetes"
+      ],
+      "interventions_any": [
+        "semaglutide"
+      ],
+      "primary_outcome_contains": "cardiovascular",
+      "has_pmids": true
+    },
+    {
+      "id": "recovery",
+      "nct_id": "NCT04381936",
+      "status": "draft",
+      "title_contains": "randomised evaluation of covid-19 therapy",
+      "sponsor_contains": "University of Oxford",
+      "conditions_any": [
+        "pneumonia"
+      ],
+      "interventions_any": [
+        "dexamethasone"
+      ],
+      "min_enrollment": 10000,
+      "has_pmids": true,
+      "note": "Run 1: the registry lists the condition as 'Pneumonia', not COVID-19; anchor corrected to what the record says (title still carries 'COVID-19 therapy')."
+    },
+    {
+      "id": "pfizer-biontech-c4591001",
+      "nct_id": "NCT04368728",
+      "status": "draft",
+      "title_contains": "sars-cov-2",
+      "phase_contains": "3",
+      "sponsor_contains": "BioNTech",
+      "conditions_any": [
+        "sars-cov-2",
+        "covid"
+      ],
+      "interventions_any": [
+        "BNT162b2"
+      ],
+      "min_enrollment": 40000,
+      "has_pmids": true
+    }
+  ]
+}

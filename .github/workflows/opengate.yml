@@ -1,11 +1,15 @@
 name: opengate
 
-# Grounding / retrieval-fidelity gate.
+# Grounding / retrieval-fidelity gates.
 #
-# Exercises the *built* PubCrawl server through OpenGATE's `retrieval` scorer,
-# checking that records come back matching hand-verified anchors (right title,
-# all authors, intact abstract) with no parse regressions — the foundation every
-# downstream citation grounds on.
+# Job 1 exercises the *built* PubCrawl server through OpenGATE's `retrieval`
+# scorer, checking that literature records come back matching hand-verified
+# anchors (right title, all authors, intact abstract) with no parse regressions.
+#
+# Job 2 runs the in-repo fidelity benchmark (benchmark/run.mjs) over the two tool
+# families the literature scorer doesn't cover — drug labelling (compare_labels
+# anchors + verbatim-against-source check) and clinical trials. Only *verified*
+# cases can fail it; see benchmark/README.md.
 #
 # It runs on release and on demand — deliberately NOT on every push — because the
 # retrieval scorer is online: it calls the live NCBI / Europe PMC APIs, which
@@ -60,3 +64,28 @@ jobs:
           PUBCRAWL_ARGS: ${{ github.workspace }}/dist/index.js
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: node src/runner.mjs --online --adapter ./src/adapters/pubcrawl.mjs --ci
+
+  labelling-trials-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Build PubCrawl
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run labelling + trials fidelity benchmark (verified cases gate)
+        run: node benchmark/run.mjs --ci --save
+
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fidelity-benchmark-results
+          path: benchmark/results/latest.json

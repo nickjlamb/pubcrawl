@@ -1,0 +1,742 @@
+{
+  "ran_at": "2026-09-14T16:12:49.058Z",
+  "node": "v24.19.0",
+  "suites": {
+    "labels": {
+      "set_version": "0.3-draft",
+      "frozen": false,
+      "summary": {
+        "cases": 24,
+        "verified": 1,
+        "verified_pass": 1,
+        "draft": 23,
+        "draft_pass": 16,
+        "section_coverage": {
+          "both_sides": 19,
+          "of": 21,
+          "pct": "90.5%"
+        },
+        "verbatim": {
+          "sentences_checked": 255,
+          "matched": 255,
+          "pct": "100.0%"
+        },
+        "truncation": {
+          "sections_cut_by_engine": 13,
+          "anchors_unverifiable": 5
+        },
+        "availability": {
+          "sides_recovered_on_retry": 0,
+          "sides_still_unavailable_after_retry": 2
+        }
+      },
+      "results": [
+        {
+          "id": "ozempic-indications",
+          "drug": "Ozempic",
+          "topic": "Indications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 1519,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Ozempic (SEMAGLUTIDE)",
+            "uk": "Ozempic 0.25 mg solution for injection in pre-filled pen"
+          },
+          "verbatim_us": {
+            "checked": 8,
+            "matched": 8,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 4,
+            "matched": 4,
+            "misses": []
+          }
+        },
+        {
+          "id": "ozempic-contraindications",
+          "drug": "Ozempic",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 1519,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Ozempic (SEMAGLUTIDE)",
+            "uk": "Ozempic 0.25 mg solution for injection in pre-filled pen"
+          },
+          "verbatim_us": {
+            "checked": 6,
+            "matched": 6,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 1,
+            "matched": 1,
+            "misses": []
+          }
+        },
+        {
+          "id": "montelukast-indications",
+          "drug": "montelukast",
+          "topic": "Indications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 469,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Montelukast (MONTELUKAST)",
+            "uk": "Montelukast 10 mg Film Coated Tablets"
+          },
+          "truncated": {
+            "us": true
+          },
+          "verbatim_us": {
+            "checked": 10,
+            "matched": 10,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 3,
+            "matched": 3,
+            "misses": []
+          }
+        },
+        {
+          "id": "montelukast-warnings",
+          "drug": "montelukast",
+          "topic": "Warnings",
+          "status": "draft",
+          "pass": false,
+          "failures": [
+            "uk: UNVERIFIABLE — anchor \"neuropsychiatric\" not in the returned text, but the section was cut at the engine's cap (1350 chars); may sit past the cut"
+          ],
+          "ms": 469,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Montelukast (MONTELUKAST)",
+            "uk": "Montelukast 10 mg Film Coated Tablets"
+          },
+          "truncated": {
+            "us": true,
+            "uk": true
+          },
+          "verbatim_us": {
+            "checked": 9,
+            "matched": 9,
+            "misses": []
+          },
+          "unverifiable": 1,
+          "verbatim_uk": {
+            "checked": 9,
+            "matched": 9,
+            "misses": []
+          }
+        },
+        {
+          "id": "isotretinoin-contraindications",
+          "drug": "isotretinoin",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 366,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Isotretinoin (ISOTRETINOIN)",
+            "uk": "Isotretinoin 10 mg capsules, soft"
+          },
+          "verbatim_us": {
+            "checked": 5,
+            "matched": 5,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 8,
+            "matched": 8,
+            "misses": []
+          }
+        },
+        {
+          "id": "codeine-contraindications",
+          "drug": "codeine",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 1305,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Acetaminophen and Codeine Phosphate (ACETAMINOPHEN AND CODEINE PHOSPHATE)",
+            "uk": "Boots Ibuprofen and Codeine 200mg/12.8mg Film-Coated Tablets"
+          },
+          "verbatim_us": {
+            "checked": 9,
+            "matched": 9,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 12,
+            "matched": 12,
+            "misses": []
+          }
+        },
+        {
+          "id": "atorvastatin-indications",
+          "drug": "atorvastatin",
+          "topic": "Indications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 475,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "ATORVASTATIN CALCIUM (ATORVASTATIN CALCIUM)",
+            "uk": "Atorvastatin 10 mg film-coated tablets"
+          },
+          "truncated": {
+            "us": true
+          },
+          "verbatim_us": {
+            "checked": 4,
+            "matched": 4,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 4,
+            "matched": 4,
+            "misses": []
+          }
+        },
+        {
+          "id": "atorvastatin-warnings",
+          "drug": "atorvastatin",
+          "topic": "Warnings",
+          "status": "draft",
+          "pass": false,
+          "failures": [
+            "uk: UNVERIFIABLE — anchor \"interstitial lung disease\" not in the returned text, but the section was cut at the engine's cap (1151 chars); may sit past the cut",
+            "uk: UNVERIFIABLE — anchor \"myopathy\" not in the returned text, but the section was cut at the engine's cap (1151 chars); may sit past the cut"
+          ],
+          "ms": 475,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "ATORVASTATIN CALCIUM (ATORVASTATIN CALCIUM)",
+            "uk": "Atorvastatin 10 mg film-coated tablets"
+          },
+          "truncated": {
+            "us": true,
+            "uk": true
+          },
+          "verbatim_us": {
+            "checked": 12,
+            "matched": 12,
+            "misses": []
+          },
+          "unverifiable": 2,
+          "verbatim_uk": {
+            "checked": 8,
+            "matched": 8,
+            "misses": []
+          }
+        },
+        {
+          "id": "metformin-contraindications",
+          "drug": "metformin",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 469,
+          "lookup_names": {
+            "us": "metformin",
+            "uk": "Glucophage"
+          },
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Metformin (METFORMIN ER 500 MG)",
+            "uk": "Glucophage 500 mg film coated tablets"
+          },
+          "verbatim_us": {
+            "checked": 4,
+            "matched": 4,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 7,
+            "matched": 7,
+            "misses": []
+          }
+        },
+        {
+          "id": "ibuprofen-contraindications",
+          "drug": "ibuprofen",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": false,
+          "failures": [
+            "us: section missing — US label unavailable (see us_label.note)"
+          ],
+          "ms": 5523,
+          "lookup_names": {
+            "us": "Motrin",
+            "uk": "ibuprofen"
+          },
+          "coverage": {
+            "us": false,
+            "uk": true
+          },
+          "product": {
+            "us": null,
+            "uk": "Boots 3 Months Plus Ibuprofen 100mg/5ml Suspension Strawberry Flavour (GSL)"
+          },
+          "verbatim_uk": {
+            "checked": 7,
+            "matched": 7,
+            "misses": []
+          }
+        },
+        {
+          "id": "amoxicillin-contraindications",
+          "drug": "amoxicillin",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": false,
+          "failures": [
+            "uk: missing anchor \"beta-lactam\""
+          ],
+          "ms": 2505,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "AMOXICILLIN (AMOXICILLIN)",
+            "uk": "Amoxicillin 125 mg/5 ml Powder for Oral Suspension Sugar Free"
+          },
+          "verbatim_us": {
+            "checked": 2,
+            "matched": 2,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 4,
+            "matched": 4,
+            "misses": []
+          }
+        },
+        {
+          "id": "apixaban-indications",
+          "drug": "apixaban",
+          "topic": "Indications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 485,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "ELIQUIS (APIXABAN)",
+            "uk": "Apixaban 1 mg/1 ml Oral suspension"
+          },
+          "truncated": {
+            "us": true
+          },
+          "verbatim_us": {
+            "checked": 8,
+            "matched": 8,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 4,
+            "matched": 4,
+            "misses": []
+          }
+        },
+        {
+          "id": "apixaban-contraindications",
+          "drug": "apixaban",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 485,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "ELIQUIS (APIXABAN)",
+            "uk": "Apixaban 1 mg/1 ml Oral suspension"
+          },
+          "verbatim_us": {
+            "checked": 2,
+            "matched": 2,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 6,
+            "matched": 6,
+            "misses": []
+          }
+        },
+        {
+          "id": "clozapine-contraindications",
+          "drug": "Clozaril",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 856,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Clozaril (CLOZAPINE)",
+            "uk": "Clozaril 100 mg Orodispersible Tablets"
+          },
+          "verbatim_us": {
+            "checked": 2,
+            "matched": 2,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 11,
+            "matched": 11,
+            "misses": []
+          }
+        },
+        {
+          "id": "lisinopril-contraindications",
+          "drug": "lisinopril",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 371,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Lisinopril (LISINOPRIL)",
+            "uk": "Lisinopril 1 mg/ml Oral Solution"
+          },
+          "verbatim_us": {
+            "checked": 4,
+            "matched": 4,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 6,
+            "matched": 6,
+            "misses": []
+          }
+        },
+        {
+          "id": "amiodarone-contraindications",
+          "drug": "amiodarone",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 448,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Amiodarone Hydrochloride (AMIODARONE HYDROCHLORIDE)",
+            "uk": "Amiodarone 150mg/3ml concentrate for solution for injection/infusion ampoules (50mg/ml)"
+          },
+          "verbatim_us": {
+            "checked": 5,
+            "matched": 5,
+            "misses": []
+          },
+          "truncated": {
+            "uk": true
+          },
+          "verbatim_uk": {
+            "checked": 12,
+            "matched": 12,
+            "misses": []
+          }
+        },
+        {
+          "id": "omeprazole-contraindications",
+          "drug": "omeprazole",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": false,
+          "failures": [
+            "us: section missing — US label unavailable (see us_label.note)"
+          ],
+          "ms": 5466,
+          "lookup_names": {
+            "us": "Prilosec",
+            "uk": "Losec"
+          },
+          "coverage": {
+            "us": false,
+            "uk": true
+          },
+          "product": {
+            "us": null,
+            "uk": "Losec Capsules 10mg"
+          },
+          "verbatim_uk": {
+            "checked": 2,
+            "matched": 2,
+            "misses": []
+          }
+        },
+        {
+          "id": "keytruda-indications",
+          "drug": "Keytruda",
+          "topic": "Indications",
+          "status": "draft",
+          "pass": false,
+          "failures": [
+            "us: UNVERIFIABLE — anchor \"tumor mutational burden\" not in the returned text, but the section was cut at the engine's cap (1288 chars); may sit past the cut"
+          ],
+          "ms": 1290,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "KEYTRUDA (PEMBROLIZUMAB)",
+            "uk": "KEYTRUDA 25 mg/mL concentrate for solution for infusion"
+          },
+          "truncated": {
+            "us": true,
+            "uk": true
+          },
+          "unverifiable": 1,
+          "verbatim_us": {
+            "checked": 8,
+            "matched": 8,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 5,
+            "matched": 5,
+            "misses": []
+          }
+        },
+        {
+          "id": "tamoxifen-indications",
+          "drug": "tamoxifen",
+          "topic": "Indications",
+          "status": "draft",
+          "pass": false,
+          "failures": [
+            "us: UNVERIFIABLE — anchor \"ductal carcinoma in situ\" not in the returned text, but the section was cut at the engine's cap (1331 chars); may sit past the cut"
+          ],
+          "ms": 410,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Tamoxifen Citrate (TAMOXIFEN CITRATE)",
+            "uk": "Tamoxifen 10mg Film-Coated Tablets"
+          },
+          "truncated": {
+            "us": true
+          },
+          "unverifiable": 1,
+          "verbatim_us": {
+            "checked": 9,
+            "matched": 9,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 3,
+            "matched": 3,
+            "misses": []
+          }
+        },
+        {
+          "id": "dapagliflozin-indications",
+          "drug": "dapagliflozin",
+          "topic": "Indications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 901,
+          "lookup_names": {
+            "us": "Farxiga",
+            "uk": "Forxiga"
+          },
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "FARXIGA (DAPAGLIFLOZIN)",
+            "uk": "Forxiga 10 mg film-coated tablets"
+          },
+          "truncated": {
+            "us": true
+          },
+          "verbatim_us": {
+            "checked": 10,
+            "matched": 10,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 6,
+            "matched": 6,
+            "misses": []
+          }
+        },
+        {
+          "id": "valproate-contraindications",
+          "drug": "valproic acid",
+          "topic": "Contraindications",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 605,
+          "coverage": {
+            "us": true,
+            "uk": true
+          },
+          "product": {
+            "us": "Valproic Acid (VALPROIC ACID)",
+            "uk": "Convulex 150 mg Capsules"
+          },
+          "truncated": {
+            "us": true
+          },
+          "verbatim_us": {
+            "checked": 7,
+            "matched": 7,
+            "misses": []
+          },
+          "verbatim_uk": {
+            "checked": 9,
+            "matched": 9,
+            "misses": []
+          }
+        },
+        {
+          "id": "status-us-only-name",
+          "drug": "acetaminophen",
+          "topic": null,
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 5301
+        },
+        {
+          "id": "status-uk-only-name",
+          "drug": "paracetamol",
+          "topic": null,
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 6114
+        },
+        {
+          "id": "status-not-a-drug",
+          "drug": "notadrugxyz",
+          "topic": null,
+          "status": "verified",
+          "pass": true,
+          "failures": [],
+          "ms": 4736
+        }
+      ]
+    },
+    "trials": {
+      "set_version": "0.2-draft",
+      "frozen": false,
+      "summary": {
+        "cases": 5,
+        "verified": 0,
+        "verified_pass": 0,
+        "draft": 5,
+        "draft_pass": 5
+      },
+      "results": [
+        {
+          "id": "destiny-breast04",
+          "nct_id": "NCT03734029",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 288
+        },
+        {
+          "id": "keynote-522",
+          "nct_id": "NCT03036488",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 1042
+        },
+        {
+          "id": "sustain-6",
+          "nct_id": "NCT01720446",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 1234
+        },
+        {
+          "id": "recovery",
+          "nct_id": "NCT04381936",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 1159
+        },
+        {
+          "id": "pfizer-biontech-c4591001",
+          "nct_id": "NCT04368728",
+          "status": "draft",
+          "pass": true,
+          "failures": [],
+          "ms": 1307
+        }
+      ]
+    }
+  }
+}

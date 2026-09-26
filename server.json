@@ -6,12 +6,12 @@
     "url": "https://github.com/nickjlamb/pubcrawl",
     "source": "github"
   },
-  "version": "2.5.1",
+  "version": "2.6.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@pharmatools/pubcrawl",
-      "version": "2.5.1",
+      "version": "2.6.0",
       "transport": {
         "type": "stdio"
       },

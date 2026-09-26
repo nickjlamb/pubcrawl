@@ -2,6 +2,7 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getUsLabel } from "@pharmatools/drug-data";
 import { cache, TTL } from "../lib/cache.js";
+import { markTruncated } from "../lib/label-mapping.js";
 import { USPIResult } from "../types.js";
 
 const schema = {
@@ -37,7 +38,7 @@ export async function buildUspiResult(
     setid: label.setId,
     spl_version: "",
     published_date: label.publishedDate,
-    sections: label.sections,
+    sections: markTruncated(label.sections),
     dailymed_url: label.dailymedUrl,
   };
   cache.set(cacheKey, result, TTL.LABEL);

@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.0] — 2026-09-14
+
+### Added
+- **Fidelity benchmark** (`benchmark/`) — deterministic, judge-free checks for the two tool families the OpenGATE literature gate doesn't cover. `compare_labels` is measured against a gold set of hand-verified US/UK anchors (phrases that must appear on one side and must not on the other, so a real divergence is surfaced rather than smoothed over), a section-coverage metric, and a verbatim check that refetches the raw openFDA record and eMC page independently and confirms every returned sentence is a substring of the source. `get_trial` is checked against registry anchors (title, phase, sponsor, conditions, interventions, primary outcome, linked PMIDs). Cases are `draft` until a person verifies them live; only `verified` cases can fail the gate. `npm run bench`.
+- The benchmark's first runs also documented three limits in the shared `@pharmatools/drug-data` engine, now on the roadmap: every section is cut at 1,400 characters (13 of 40 sections returned in run 3); openFDA best-match takes the five most recently updated labels, so common generics (ibuprofen, omeprazole) land on OTC labels with no contraindications section, and others on generic manufacturers' labels that may carve out indications; and the eMC side fails intermittently under sequential load with no way to tell throttling from absence. The runner now paces requests and retries an unavailable side once, reporting recovered sides as transient.
+- **`labelling-trials-gate`** job in the OpenGATE workflow — runs the benchmark in `--ci` mode on release and weekly, uploading results as an artifact.
+- Unit tests for the labelling side (`tests/label-mapping.test.ts`, `tests/compare-labels.test.ts`, `tests/search-indication.test.ts`) — 26 new cases; the suite is now 88 tests.
+
+- **`compare_labels` per-side names.** Optional `us_drug` / `uk_drug` override the lookup name on one side, for products whose brand differs by market (Farxiga/Forxiga, Prilosec/Losec) or where a generic resolves badly on one side; the result records `lookup_names` when used. Surfaced by the benchmark: a single string could not pin the reference product in both markets.
+
+### Changed
+- **`compare_labels` never leaves a missing side unexplained.** The result now carries `us_label` / `uk_label` (`status: ok | unavailable`, product name as the source lists it, sections returned, and a note saying what `unavailable` can and cannot mean), and each comparison whose `us_section` / `uk_section` is null gets a `us_note` / `uk_note` distinguishing "label retrieved but has no such section" from "label unavailable". Previously all three of "not licensed in this market", "source unreachable" and "section absent" looked like the same bare `null`.
+- **Truncated sections are flagged.** The shared engine caps every label section at 1,400 characters and appends "…" (surfaced by the new benchmark: Keytruda's TMB-H indication, tamoxifen's DCIS and atorvastatin's UK 4.4 myopathy text all sit past the cut). `compare_labels`, `get_uspi` and `get_smpc` now set `truncated: true` on such sections, and `compare_labels` adds a note that absence of a phrase from a cut section proves nothing, with the source URL to read the rest. Raising or exposing the cap is a `@pharmatools/drug-data` change (roadmap).
+- When neither label can be retrieved the error now says so plainly and points to `resolve_drug_name`, instead of the misleading "No labelling found" that also fired on network failures.
+- Label fetchers are injectable into `buildCompareResult`, so the pairing logic is tested offline with fixture labels.
+- `mergeIndicationResults` extracted from `search_by_indication` as a pure, tested function, with the UK-approval rule (at least one eMC product for the generic name) stated explicitly rather than implied by the batching code.
+
+### Fixed
+- **Topic filter over-matched.** Asking `compare_labels` for `["indications"]` also returned Contraindications, because topic matching was a bare substring test. Matching is now whole-topic, prefix, single-word or word-bounded phrase — `indications` selects Indications only; `contraindications`, `interactions`, `special warnings and precautions for use` all resolve to exactly one topic. Caught by the new tests.
+
+### Removed
+- `src/lib/dailymed.ts` — dead since 2.2.0, when labelling moved to the shared `@pharmatools/drug-data` engine.
+
+## [2.5.1] — 2026-08-25
+
 ### Added
 - Demo animation in the README showing a live `compare_labels` call for semaglutide.
 
@@ -74,7 +99,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release: PubMed literature tools — `search_pubmed`, `get_abstract`, `get_full_text`, `find_related`, `format_citation`, and `trending_papers`.
 
-[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.0...HEAD
+[2.6.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.5.1...v2.6.0
+[2.5.1]: https://github.com/nickjlamb/pubcrawl/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.1.1...v2.3.0

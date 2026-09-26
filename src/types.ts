@@ -77,6 +77,13 @@ export interface LabelSection {
   code: string;
   title: string;
   content: string;
+  /**
+   * True when the shared engine cut the section at its per-section character
+   * cap (content then ends with an ellipsis). The text returned is verbatim
+   * but incomplete: anything after the cut is not visible, so absence of a
+   * phrase from a truncated section proves nothing. Follow the source URL.
+   */
+  truncated?: boolean;
 }
 
 export interface USPIResult {
@@ -95,17 +102,43 @@ export interface SmPCResult {
   url: string;
 }
 
+/**
+ * Whether a whole label was retrieved from its source. "unavailable" covers
+ * both "no product under that name in this market" and "source unreachable" —
+ * the shared engine returns null for either, so the note tells the caller
+ * which follow-up to try rather than pretending to know.
+ */
+export type LabelAvailability = "ok" | "unavailable";
+
+export interface LabelSourceStatus {
+  status: LabelAvailability;
+  /** Product name as the source lists it (null when unavailable). */
+  product: string | null;
+  /** Number of mapped sections the source returned. */
+  sections_returned: number;
+  /** Present when status is "unavailable": what it can and cannot mean. */
+  note?: string;
+}
+
 export interface LabelComparison {
   topic: string;
   us_section: LabelSection | null;
   uk_section: LabelSection | null;
+  /** Present when us_section is null: why (label unavailable vs section absent). */
+  us_note?: string;
+  /** Present when uk_section is null: why (label unavailable vs section absent). */
+  uk_note?: string;
 }
 
 export interface CompareLabelsResult {
   drug: string;
+  /** Present when a per-side name override was used (e.g. Farxiga / Forxiga). */
+  lookup_names?: { us: string; uk: string };
   comparisons: LabelComparison[];
   us_source: string | null;
   uk_source: string | null;
+  us_label: LabelSourceStatus;
+  uk_label: LabelSourceStatus;
 }
 
 export interface DrugApprovalEntry {

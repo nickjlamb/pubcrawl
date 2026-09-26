@@ -1,6 +1,6 @@
 {
   "name": "@pharmatools/pubcrawl",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "MCP server for PubMed & Europe PMC literature search, US/UK drug labelling, and clinical trials — built by PharmaTools.AI",
   "mcpName": "io.github.nickjlamb/pubcrawl",
   "author": "PharmaTools.AI",
@@ -34,6 +34,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
+    "bench": "node benchmark/run.mjs",
     "lint": "eslint .",
     "prepublishOnly": "npm run build"
   },

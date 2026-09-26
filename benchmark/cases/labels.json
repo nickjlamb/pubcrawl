@@ -1,0 +1,507 @@
+{
+  "$comment": "compare_labels gold set. Every anchor is a phrase that must (or must not) appear, after whitespace/case/quote normalisation, in the section compare_labels returns for that side. status: draft = written from the article/label knowledge but NOT yet checked against the live label by a human; verified = checked live on verified_on by verified_by. Only verified cases can fail the CI gate. Freeze by verifying, never by editing an anchor to make it pass. Sources: 'One molecule, two labels' (pharmatools.ai/us-uk-labelling, 25 Aug 2026) for the first four drugs. Run 1 (14 Sep 2026) showed two engine limits worth keeping visible: (a) every section is cut at 1,400 chars, so anchors past the cut are reported UNVERIFIABLE; (b) eMC/openFDA best-match sometimes picks OTC or combination products or nothing — cases note what each side resolved to. Product names are used where the generic resolved badly. Cases may carry us_drug / uk_drug (passed through to compare_labels' per-side names) when one string cannot name both products (Farxiga/Forxiga, Prilosec/Losec).",
+  "version": "0.4-draft",
+  "frozen": false,
+  "cases": [
+    {
+      "id": "ozempic-indications",
+      "drug": "Ozempic",
+      "topic": "Indications",
+      "status": "draft",
+      "divergence": "US indicates for MACE and renal risk reduction; UK 4.1 lists glycaemic control only and cross-references the outcome data.",
+      "us": {
+        "must_contain": [
+          "major adverse cardiovascular events",
+          "type 2 diabetes"
+        ],
+        "must_not_contain": []
+      },
+      "uk": {
+        "must_contain": [
+          "type 2 diabetes",
+          "diet and exercise"
+        ],
+        "must_not_contain": [
+          "major adverse cardiovascular events"
+        ]
+      }
+    },
+    {
+      "id": "ozempic-contraindications",
+      "drug": "Ozempic",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "US contraindicates personal/family history of MTC or MEN 2; UK 4.3 is hypersensitivity only. Run 2 (dump): the US section uses the abbreviations 'MTC' and 'MEN 2'; the expansion is in 5.1. Anchor corrected to the label's wording — the claim is unchanged.",
+      "us": {
+        "must_contain": [
+          "MTC",
+          "MEN 2"
+        ],
+        "must_not_contain": []
+      },
+      "uk": {
+        "must_contain": [
+          "hypersensitivity"
+        ],
+        "must_not_contain": [
+          "MTC",
+          "medullary thyroid carcinoma"
+        ]
+      }
+    },
+    {
+      "id": "montelukast-indications",
+      "drug": "montelukast",
+      "topic": "Indications",
+      "status": "draft",
+      "divergence": "US: prophylaxis and chronic treatment of asthma (monotherapy). UK: add-on therapy only, in patients inadequately controlled on inhaled corticosteroids.",
+      "us": {
+        "must_contain": [
+          "prophylaxis and chronic treatment of asthma"
+        ],
+        "must_not_contain": [
+          "add-on therapy"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "add-on therapy",
+          "inhaled corticosteroids"
+        ],
+        "must_not_contain": [
+          "prophylaxis and chronic treatment"
+        ]
+      }
+    },
+    {
+      "id": "montelukast-warnings",
+      "drug": "montelukast",
+      "topic": "Warnings",
+      "status": "draft",
+      "divergence": "Both mention neuropsychiatric events, but only the US carries a boxed warning (a separate LOINC section, outside this mapping). This case checks the mapped Warnings sections both surface the risk — a convergence case. Run 1: anchor(s) missing from a section the engine cut at 1,400 chars — reported UNVERIFIABLE, not a miss. Fix belongs in @pharmatools/drug-data (expose the cap), not in this anchor.",
+      "us": {
+        "must_contain": [
+          "neuropsychiatric"
+        ],
+        "must_not_contain": []
+      },
+      "uk": {
+        "must_contain": [
+          "neuropsychiatric",
+          "acute asthma attacks"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "isotretinoin-contraindications",
+      "drug": "isotretinoin",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "UK 4.3 makes the Pregnancy Prevention Programme itself a contraindication and adds hepatic insufficiency, hyperlipidaemia, hypervitaminosis A and concomitant tetracyclines; US lists pregnancy and hypersensitivity only.",
+      "us": {
+        "must_contain": [
+          "pregnancy",
+          "hypersensitivity"
+        ],
+        "must_not_contain": [
+          "pregnancy prevention programme",
+          "tetracyclines"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "pregnancy prevention programme",
+          "tetracyclines",
+          "hypervitaminosis a"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "codeine-contraindications",
+      "drug": "codeine",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "Both restrict post-tonsillectomy/adenoidectomy use in children, but the UK 4.3 also contraindicates known CYP2D6 ultra-rapid metabolisers and breastfeeding, which the US keeps in warnings. Verify which codeine product each source resolves to before freezing. Run 1: passed, but resolved to combination products on both sides (US acetaminophen+codeine, UK Boots ibuprofen+codeine) — the anchors held because the paediatric restrictions are class-wide. Decide whether a plain-codeine product should be pinned instead.",
+      "us": {
+        "must_contain": [
+          "tonsillectomy"
+        ],
+        "must_not_contain": [
+          "ultra-rapid"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "tonsillectomy",
+          "ultra-rapid"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "atorvastatin-indications",
+      "drug": "atorvastatin",
+      "topic": "Indications",
+      "status": "draft",
+      "divergence": "Same use, different spelling — a retrieval sanity check: US 'hyperlipidemia', UK 'hypercholesterolaemia'.",
+      "us": {
+        "must_contain": [
+          "hyperlipidemia"
+        ],
+        "must_not_contain": []
+      },
+      "uk": {
+        "must_contain": [
+          "hypercholesterolaemia"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "atorvastatin-warnings",
+      "drug": "atorvastatin",
+      "topic": "Warnings",
+      "status": "draft",
+      "divergence": "UK 4.4 carries the statin-class interstitial lung disease warning; US Warnings and Precautions does not. Run 1: anchor(s) missing from a section the engine cut at 1,400 chars — reported UNVERIFIABLE, not a miss. Fix belongs in @pharmatools/drug-data (expose the cap), not in this anchor.",
+      "us": {
+        "must_contain": [
+          "myopathy"
+        ],
+        "must_not_contain": [
+          "interstitial lung disease"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "interstitial lung disease",
+          "myopathy"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "metformin-contraindications",
+      "drug": "metformin",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "Both contraindicate metabolic acidosis; the UK 4.3 also contraindicates acute alcohol intoxication/alcoholism, which the US keeps in warnings. Run 1: the generic 'metformin' resolved the UK side to Alogliptin/Metformin (a combination); switched to Glucophage so both sides are the plain product. Run 2: 'Glucophage' found nothing on openFDA; US back to the generic name (run 1 resolved it), UK pinned to Glucophage.",
+      "us": {
+        "must_contain": [
+          "metabolic acidosis"
+        ],
+        "must_not_contain": [
+          "alcohol"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "metabolic acidosis",
+          "alcohol"
+        ],
+        "must_not_contain": []
+      },
+      "uk_drug": "Glucophage"
+    },
+    {
+      "id": "ibuprofen-contraindications",
+      "drug": "ibuprofen",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "US contraindicates use in the setting of CABG surgery (absent from UK 4.3); UK contraindicates the third trimester of pregnancy (US handles pregnancy in warnings). Run 1: US side unavailable (openFDA best-match failed on 'ibuprofen') and the UK side resolved to a Boots paediatric OTC suspension whose 4.3 wording differs. Kept as an engine-resolution finding; verify before changing the product name. Run 2 (dump): the UK 4.3 says 'Last trimester of pregnancy'; anchor corrected to the label's wording. US pinned to Motrin for the same openFDA recency reason; may still resolve to an OTC label — verify. Run 3: US side still unavailable by brand (Motrin / Prilosec) — openFDA's five most recently updated labels for these names are OTC and carry no contraindications section, so the engine returns null. Kept as an engine-resolution finding.",
+      "us": {
+        "must_contain": [
+          "coronary artery bypass graft"
+        ],
+        "must_not_contain": [
+          "trimester"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "last trimester"
+        ],
+        "must_not_contain": [
+          "coronary artery bypass"
+        ]
+      },
+      "us_drug": "Motrin"
+    },
+    {
+      "id": "amoxicillin-contraindications",
+      "drug": "amoxicillin",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "UK 4.3 spells out cross-reactivity with cephalosporins, carbapenems and monobactams; US refers to beta-lactams generally. Run 3 (dump): the UK 4.3 writes 'betalactam' as one word; anchor moved to the class names it spells out (penicillins, carbapenem, monobactam), which is the divergence the case is about.",
+      "us": {
+        "must_contain": [
+          "beta-lactam"
+        ],
+        "must_not_contain": [
+          "carbapenem"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "penicillins",
+          "carbapenem",
+          "monobactam"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "apixaban-indications",
+      "drug": "apixaban",
+      "topic": "Indications",
+      "status": "draft",
+      "divergence": "Spelling: US 'nonvalvular atrial fibrillation', UK 'non-valvular atrial fibrillation'. Note norm() folds dashes but not the missing hyphen, so both anchors are genuinely side-specific.",
+      "us": {
+        "must_contain": [
+          "nonvalvular atrial fibrillation"
+        ],
+        "must_not_contain": []
+      },
+      "uk": {
+        "must_contain": [
+          "non-valvular atrial fibrillation"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "apixaban-contraindications",
+      "drug": "apixaban",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "UK 4.3 contraindicates hepatic disease associated with coagulopathy and clinically relevant bleeding risk; US lists active pathological bleeding and severe hypersensitivity only.",
+      "us": {
+        "must_contain": [
+          "active pathological bleeding"
+        ],
+        "must_not_contain": [
+          "hepatic disease"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "hepatic disease",
+          "coagulopathy"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "clozapine-contraindications",
+      "drug": "Clozaril",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "UK 4.3 is a long list (inability to have regular blood tests, prior drug-induced agranulocytosis, paralytic ileus, uncontrolled epilepsy, active liver disease); US contraindications are hypersensitivity only, with the haematological controls in the REMS/warnings. Run 1: 'clozapine' resolved US to Versacloz and found nothing on the eMC; switched to Clozaril, licensed under that name in both markets.",
+      "us": {
+        "must_contain": [
+          "hypersensitivity"
+        ],
+        "must_not_contain": [
+          "paralytic ileus"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "paralytic ileus",
+          "agranulocytosis"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "lisinopril-contraindications",
+      "drug": "lisinopril",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "Both contraindicate angioedema history and aliskiren co-use in diabetes; the UK 4.3 also contraindicates the second and third trimesters of pregnancy, which the US carries as a boxed warning, not a contraindication.",
+      "us": {
+        "must_contain": [
+          "angioedema",
+          "aliskiren"
+        ],
+        "must_not_contain": [
+          "trimester"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "angioedema",
+          "aliskiren",
+          "trimester"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "amiodarone-contraindications",
+      "drug": "amiodarone",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "UK 4.3 contraindicates evidence or history of thyroid dysfunction and pregnancy/lactation; US contraindications are cardiac (cardiogenic shock, sick sinus syndrome, AV block) and hypersensitivity, with thyroid in warnings. Run 1: UK side unavailable — the eMC search for 'amiodarone' returned no usable product. Kept as an engine-resolution finding; verify what the eMC lists before choosing a product name.",
+      "us": {
+        "must_contain": [
+          "cardiogenic shock",
+          "sick sinus syndrome"
+        ],
+        "must_not_contain": [
+          "thyroid"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "thyroid",
+          "sinus bradycardia"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "omeprazole-contraindications",
+      "drug": "omeprazole",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "UK 4.3 contraindicates co-administration with nelfinavir; US contraindicates rilpivirine-containing products and keeps nelfinavir in interactions. Run 1: US side unavailable — openFDA best-match failed on 'omeprazole' (many OTC labels). Kept as an engine-resolution finding. Run 2: both sides failed on the generic (openFDA returns the five most recently updated labels, which for omeprazole are OTC and have no contraindications section). Pinned to Prilosec / Losec. Run 3: US side still unavailable by brand (Motrin / Prilosec) — openFDA's five most recently updated labels for these names are OTC and carry no contraindications section, so the engine returns null. Kept as an engine-resolution finding.",
+      "us": {
+        "must_contain": [
+          "rilpivirine"
+        ],
+        "must_not_contain": [
+          "nelfinavir"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "nelfinavir"
+        ],
+        "must_not_contain": []
+      },
+      "us_drug": "Prilosec",
+      "uk_drug": "Losec"
+    },
+    {
+      "id": "keytruda-indications",
+      "drug": "Keytruda",
+      "topic": "Indications",
+      "status": "draft",
+      "divergence": "US carries the tissue-agnostic TMB-H (tumour mutational burden-high) indication; the UK/EU SmPC does not. Also a spelling check: 'tumor' vs 'tumour'. Run 1: anchor(s) missing from a section the engine cut at 1,400 chars — reported UNVERIFIABLE, not a miss. Fix belongs in @pharmatools/drug-data (expose the cap), not in this anchor.",
+      "us": {
+        "must_contain": [
+          "tumor mutational burden"
+        ],
+        "must_not_contain": []
+      },
+      "uk": {
+        "must_contain": [
+          "melanoma",
+          "non-small cell lung"
+        ],
+        "must_not_contain": [
+          "tumour mutational burden",
+          "tumor mutational burden"
+        ]
+      }
+    },
+    {
+      "id": "tamoxifen-indications",
+      "drug": "tamoxifen",
+      "topic": "Indications",
+      "status": "draft",
+      "divergence": "US indications include ductal carcinoma in situ and risk reduction in high-risk women; UK 4.1 is breast cancer treatment (some UK products also list anovulatory infertility). Run 1: anchor(s) missing from a section the engine cut at 1,400 chars — reported UNVERIFIABLE, not a miss. Fix belongs in @pharmatools/drug-data (expose the cap), not in this anchor.",
+      "us": {
+        "must_contain": [
+          "ductal carcinoma in situ"
+        ],
+        "must_not_contain": []
+      },
+      "uk": {
+        "must_contain": [
+          "breast cancer"
+        ],
+        "must_not_contain": [
+          "ductal carcinoma in situ"
+        ]
+      }
+    },
+    {
+      "id": "dapagliflozin-indications",
+      "drug": "dapagliflozin",
+      "topic": "Indications",
+      "status": "draft",
+      "divergence": "Convergence case: both markets now indicate for type 2 diabetes, heart failure and chronic kidney disease. Guards against false divergence. Run 1: anchor(s) missing from a section the engine cut at 1,400 chars — reported UNVERIFIABLE, not a miss. Fix belongs in @pharmatools/drug-data (expose the cap), not in this anchor. Run 2 (dump): the generic 'dapagliflozin' resolved the US side to a generic manufacturer's label, which can carve out patent-protected indications, and was cut at the cap. Pinned to the reference products (Farxiga US / Forxiga UK) via the new per-side names.",
+      "us": {
+        "must_contain": [
+          "heart failure",
+          "chronic kidney disease"
+        ],
+        "must_not_contain": []
+      },
+      "uk": {
+        "must_contain": [
+          "heart failure",
+          "chronic kidney disease"
+        ],
+        "must_not_contain": []
+      },
+      "us_drug": "Farxiga",
+      "uk_drug": "Forxiga"
+    },
+    {
+      "id": "valproate-contraindications",
+      "drug": "valproic acid",
+      "topic": "Contraindications",
+      "status": "draft",
+      "divergence": "UK 4.3 contraindicates use in women of childbearing potential unless the Pregnancy Prevention Programme conditions are met; US contraindications cover urea cycle disorders, POLG mitochondrial disease and migraine prophylaxis in pregnancy, without a PPP. Verify which products each source resolves to.",
+      "us": {
+        "must_contain": [
+          "urea cycle disorders"
+        ],
+        "must_not_contain": [
+          "pregnancy prevention programme"
+        ]
+      },
+      "uk": {
+        "must_contain": [
+          "pregnancy prevention programme"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "id": "status-us-only-name",
+      "drug": "acetaminophen",
+      "status": "draft",
+      "divergence": "Status semantics, not content: 'acetaminophen' is the US generic; the eMC lists paracetamol. compare_labels must report the UK side as unavailable with an explanatory note rather than a bare null.",
+      "expect": {
+        "us_status": "ok",
+        "uk_status": "unavailable"
+      }
+    },
+    {
+      "id": "status-uk-only-name",
+      "drug": "paracetamol",
+      "status": "draft",
+      "divergence": "Mirror of the above: openFDA has no 'paracetamol' generic; the UK side should be ok and the US side unavailable.",
+      "expect": {
+        "us_status": "unavailable",
+        "uk_status": "ok"
+      }
+    },
+    {
+      "id": "status-not-a-drug",
+      "drug": "notadrugxyz",
+      "status": "verified",
+      "verified_by": "construction — no such product can exist in either source",
+      "verified_on": "2026-09-14",
+      "divergence": "Neither source can return a label; the tool must return a single explanatory error naming resolve_drug_name, not a comparison of nulls.",
+      "expect": {
+        "error": true
+      }
+    }
+  ]
+}

@@ -48,7 +48,7 @@ A cardiovascular claim that is on-label in the US promotes an unlicensed indicat
 - 🧾 **Verifiable by design** — results link back to DailyMed, the eMC, PubMed, and ClinicalTrials.gov
 - 📰 **Preprints** via Europe PMC — surface work ahead of formal publication
 - 🆓 **No API keys required** (an optional free NCBI key raises PubMed rate limits)
-- 🧪 Fully **typed, tested, and CI-checked** — retrieval fidelity gated by [OpenGATE](https://github.com/nickjlamb/opengate) on every release
+- 🧪 Fully **typed, tested, and CI-checked** — literature retrieval gated by [OpenGATE](https://github.com/nickjlamb/opengate), and labelling & trials by the in-repo [fidelity benchmark](benchmark/README.md), on every release
 
 Built by [PharmaTools.AI](https://pharmatools.ai).
 
@@ -105,7 +105,7 @@ That's it. → [More examples](#-examples) · [API key & other options](#-config
 | `resolve_drug_name` | Convert a brand drug name to its generic (or a generic to its US brand names), with drug class and common indications. Deterministic, via RxNorm/openFDA — no AI. |
 | `get_uspi` | Pull US Prescribing Information sections via openFDA (cited to DailyMed) — indications, dosing, warnings, contraindications, and more. |
 | `get_smpc` | Retrieve UK Summary of Product Characteristics from the eMC — the UK equivalent of US prescribing information, with numbered SmPC sections. |
-| `compare_labels` | Side-by-side comparison of US (USPI) and UK (SmPC) labelling for the same drug. Spot regulatory differences in indications, warnings, and dosing. |
+| `compare_labels` | Side-by-side comparison of US (USPI) and UK (SmPC) labelling for the same drug, pairing equivalent sections (US Indications ↔ UK 4.1). A missing side is always explained, cut sections are flagged `truncated`, and `us_drug` / `uk_drug` pin a different name per market (Farxiga / Forxiga). |
 | `search_by_indication` | Find drugs approved for a medical condition. Searches FDA labelling via openFDA, then cross-references UK availability on the eMC. |
 
 ### 🧫 Clinical trials
@@ -229,7 +229,16 @@ npm test         # Vitest unit suite
 npm run lint     # ESLint
 ```
 
-Unit tests live in `tests/` and cover the parsing, caching, citation, and formatting logic with fixture payloads (no network calls). CI runs lint → test → build on every push and pull request. New to the codebase? Start with [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Unit tests live in `tests/` and cover the parsing, caching, citation, formatting and label-pairing logic with fixture payloads (no network calls). CI runs lint → test → build on every push and pull request. New to the codebase? Start with [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+### Measuring fidelity
+
+```bash
+npm run bench            # labelling + trials fidelity benchmark against the live sources
+npm run bench -- --ci    # what the release gate runs: exit 1 if a verified case fails
+```
+
+Two gates run on every release and weekly. [OpenGATE](https://github.com/nickjlamb/opengate)'s retrieval scorer checks PubMed and Europe PMC records against hand-verified anchors. The in-repo [fidelity benchmark](benchmark/README.md) does the same for drug labelling and trials: `compare_labels` is held to a gold set of US/UK anchors (a phrase must appear on one side and must *not* on the other, so real divergences are surfaced rather than smoothed over) plus a verbatim check that refetches the raw openFDA record and eMC page and confirms every returned sentence is a substring of the source. No LLM judge anywhere in either gate.
 
 ---
 

@@ -34,6 +34,7 @@ src/
                   #   clinicaltrials), plus cache + xml-parser
   types.ts        # shared return-type interfaces
 tests/            # Vitest fixture-based unit tests
+benchmark/        # online fidelity benchmark (labels + trials), run on release
 ```
 
 See [`CLAUDE.md`](CLAUDE.md) for a deeper architecture walkthrough.

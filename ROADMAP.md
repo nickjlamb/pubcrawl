@@ -6,6 +6,8 @@ This is a living document, not a commitment. Priorities shift with feedback; [op
 
 ## ✅ Recently shipped
 
+- **Fidelity benchmark for labelling and trials** (`benchmark/`) — `compare_labels` gold set with verbatim-against-source checks, trial-record anchors, and a CI gate on release
+- **`compare_labels` status semantics** — a missing side is always explained (label unavailable vs section absent)
 - **`search_europepmc`** — search Europe PMC (preprints, patents, richer metadata) alongside PubMed
 - **Test suite + CI** — Vitest unit tests and ESLint, run on every push and PR
 - Fixed the `abstract_snippet` bug in the PubMed summary tools
@@ -26,6 +28,7 @@ This is a living document, not a commitment. Priorities shift with feedback; [op
 
 ## 🧱 Infrastructure
 
+- `@pharmatools/drug-data` 0.3: expose the per-section character cap (currently 1,400) so PubCrawl can return whole sections; typed failure reasons (not-found vs unreachable); stricter eMC/openFDA best-match so a generic doesn't resolve to an OTC or combination product
 - Response schema validation on outbound tool results
 - Coverage reporting in CI
 - Optional persistent cache for hosted deployments
