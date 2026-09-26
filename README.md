@@ -13,6 +13,7 @@ _A peer-reviewed pub crawl through the literature — the label — and the tria
 [![downloads](https://img.shields.io/npm/dm/@pharmatools/pubcrawl?color=cb3837)](https://www.npmjs.com/package/@pharmatools/pubcrawl)
 [![node](https://img.shields.io/node/v/@pharmatools/pubcrawl?color=339933&logo=node.js&logoColor=white)](https://nodejs.org)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-6E56CF)](https://registry.modelcontextprotocol.io/?q=pubcrawl)
+[![Glama MCP server](https://glama.ai/mcp/servers/nickjlamb/pubcrawl/badges/score.svg)](https://glama.ai/mcp/servers/nickjlamb/pubcrawl)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22101559.svg)](https://doi.org/10.5281/zenodo.22101559)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
