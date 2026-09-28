@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.2] — 2026-09-28
+
+### Security
+- Dependency refresh via `npm audit fix` (lockfile only, no range changes): clears all production-dependency advisories, including the critical and high `fast-xml-parser` DOCTYPE entity-expansion issues (4.5.3 → 4.5.7) and high-severity advisories in transitive dependencies of the MCP SDK and cheerio (`hono`, `@hono/node-server`, `undici`, `path-to-regexp`, `express-rate-limit`, `ip-address`, `fast-uri`, `qs`, `ajv`, `body-parser`). The one remaining `fast-xml-parser` advisory affects `XMLBuilder`, which PubCrawl does not use. The remaining advisories are in dev-only test tooling (`vitest` 2.x / `vite` / `esbuild`) and need a major `vitest` upgrade.
+
+### Changed
+- `server.json` version synced with the npm package so the MCP Registry lists the current release.
+
+## [2.6.1] — 2026-09-26
+
+### Fixed
+- `zod` is now a declared dependency. Every tool imports it, but it was previously only installed as the MCP SDK's peer dependency, so strict installers (e.g. pnpm) failed to build PubCrawl.
+
 ## [2.6.0] — 2026-09-14
 
 ### Added
