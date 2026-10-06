@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.4] — 2026-10-06
+
+### Security
+- **OpenClaw plugin** (`openclaw-plugin/`): `fast-xml-parser` `^4.3.0` → `^5.11.2`, matching the main package. Its parsing setup is identical; on live PubMed and PMC XML the returned abstracts, authors, MeSH terms, sections and captions are byte-identical, and v5 now reads alphanumeric reference page numbers (e.g. `e01736`) that v4 dropped to `null`.
+- Main package: `@modelcontextprotocol/sdk` minimum `^1.26.0` → `^1.32.1`, and dev `eslint` minimum `^9.0.0` → `^9.39.5`. `npm audit`: 0 vulnerabilities.
+
 ## [2.6.3] — 2026-10-06
 
 ### Security
