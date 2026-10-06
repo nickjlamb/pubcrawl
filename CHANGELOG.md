@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.3] — 2026-10-06
+
+### Security
+- **Minimum dependency versions raised** so the declared ranges no longer admit known-vulnerable releases: `@modelcontextprotocol/sdk` `^1.0.0` → `^1.26.0` (DNS-rebinding advisory affects < 1.24.0) and `fast-xml-parser` `^4.3.0` → `^5.11.2`. The parser major clears the last open advisory (XMLBuilder comment/CDATA injection, which PubCrawl never used); `XMLParser` output was checked identical on live PubMed abstracts, full text, citations, related articles and date-sorted searches.
+- Lockfile refresh via `npm audit fix` (includes a `proxy-addr` fix). `npm audit` now reports **0 vulnerabilities**.
+
+### Changed
+- Test tooling: `vitest` and `@vitest/coverage-v8` 2.x → 4.x, clearing the dev-only `vitest`/`vite`/`esbuild` advisories. Still supports Node 20 (CI unchanged).
+
 ## [2.6.2] — 2026-09-28
 
 ### Security
