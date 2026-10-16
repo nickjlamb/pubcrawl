@@ -3,6 +3,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getUsLabel, getUkSmpc } from "@pharmatools/drug-data";
 import { cache, TTL } from "../lib/cache.js";
 import { filterSectionMap, markTruncated } from "../lib/label-mapping.js";
+import { pageSection, COMPARE_SECTION_CHARS, MIN_SECTION_CHARS, MAX_SECTION_CHARS } from "../lib/paging.js";
 import {
   CompareLabelsResult,
   LabelComparison,
@@ -26,6 +27,15 @@ const schema = {
     .describe(
       "Specific topics to compare (e.g., ['indications', 'adverse reactions']). Compares all mapped sections if omitted."
     ),
+  max_chars: z
+    .number()
+    .int()
+    .min(MIN_SECTION_CHARS)
+    .max(MAX_SECTION_CHARS)
+    .optional()
+    .describe(
+      `Maximum characters per side per section (default ${COMPARE_SECTION_CHARS}). Longer sections are cut and flagged truncated with total_chars and next_offset; read on with get_uspi / get_smpc.`
+    ),
 };
 
 /** Minimal shape of a fetched label, as the shared engine returns it. */
@@ -40,7 +50,11 @@ export interface LabelFetchers {
   getUkSmpc: (drug: string, codes: string[]) => Promise<(FetchedLabel & { url: string }) | null>;
 }
 
-const defaultFetchers: LabelFetchers = { getUsLabel, getUkSmpc };
+// Full sections from the engine; PubCrawl pages them itself.
+const defaultFetchers: LabelFetchers = {
+  getUsLabel: (drug, codes) => getUsLabel(drug, codes, { maxChars: Infinity }),
+  getUkSmpc: (drug, codes) => getUkSmpc(drug, codes, { maxChars: Infinity }),
+};
 
 const US_UNAVAILABLE =
   "US label not retrieved: no openFDA/DailyMed product matched this name, or the source was unreachable. " +
@@ -49,8 +63,14 @@ const UK_UNAVAILABLE =
   "UK SmPC not retrieved: no eMC product matched this name (the drug may not be licensed in the UK under it), " +
   "or the source was unreachable. If the name is a brand, try resolve_drug_name and retry with the generic.";
 
-const TRUNCATED_NOTE = (side: string, url: string | null) =>
-  `${side} text is verbatim but cut at the engine's per-section cap (ends with …); absence of a phrase here proves nothing — read the full section at ${url ?? "the source"}`;
+const TRUNCATED_NOTE = (side: string, url: string | null, section: LabelSection) => {
+  const tool = side.startsWith("US") ? "get_uspi" : "get_smpc";
+  const more =
+    section.next_offset !== undefined
+      ? `call ${tool} with sections ["${section.code}"] and offset ${section.next_offset} to read on (${section.total_chars} characters in total), or `
+      : "";
+  return `${side} text is verbatim but cut (ends with …); absence of a phrase here proves nothing — ${more}read the full section at ${url ?? "the source"}`;
+};
 const res_us_url = (us: { dailymedUrl: string } | null) => us?.dailymedUrl ?? null;
 const res_uk_url = (uk: { url: string } | null) => uk?.url ?? null;
 
@@ -73,6 +93,8 @@ export interface CompareNames {
   us?: string;
   /** Name used for the UK lookup; defaults to `drug`. */
   uk?: string;
+  /** Page size per side per section; defaults to COMPARE_SECTION_CHARS. */
+  maxChars?: number;
 }
 
 export async function buildCompareResult(
@@ -88,7 +110,8 @@ export async function buildCompareResult(
 
   const usName = names.us?.trim() || drug;
   const ukName = names.uk?.trim() || drug;
-  const cacheKey = `compare:${usName.toLowerCase()}|${ukName.toLowerCase()}:${(sections ?? []).join(",").toLowerCase()}`;
+  const maxChars = names.maxChars ?? COMPARE_SECTION_CHARS;
+  const cacheKey = `compare:${usName.toLowerCase()}|${ukName.toLowerCase()}:${(sections ?? []).join(",").toLowerCase()}:${maxChars}`;
   const cached = cache.get<CompareLabelsResult>(cacheKey);
   if (cached) return cached;
 
@@ -116,8 +139,8 @@ export async function buildCompareResult(
     };
   }
 
-  const usByCode = new Map(markTruncated(us?.sections ?? []).map((s) => [s.code, s]));
-  const ukByCode = new Map(markTruncated(uk?.sections ?? []).map((s) => [s.code, s]));
+  const usByCode = new Map(markTruncated(us?.sections ?? []).map((s) => [s.code, pageSection(s, 0, maxChars)]));
+  const ukByCode = new Map(markTruncated(uk?.sections ?? []).map((s) => [s.code, pageSection(s, 0, maxChars)]));
 
   const comparisons: LabelComparison[] = mappings.map((m) => {
     const usSection = usByCode.get(m.us_loinc) ?? null;
@@ -135,8 +158,8 @@ export async function buildCompareResult(
           ? "UK SmPC unavailable (see uk_label.note)"
           : `UK SmPC retrieved but has no section ${m.uk_code} (${m.topic})`;
     }
-    if (usSection?.truncated) c.us_note = TRUNCATED_NOTE("US section", res_us_url(us));
-    if (ukSection?.truncated) c.uk_note = TRUNCATED_NOTE("UK section", res_uk_url(uk));
+    if (usSection?.truncated) c.us_note = TRUNCATED_NOTE("US section", res_us_url(us), usSection);
+    if (ukSection?.truncated) c.uk_note = TRUNCATED_NOTE("UK section", res_uk_url(uk), ukSection);
     return c;
   });
 
@@ -156,7 +179,7 @@ export async function buildCompareResult(
 export function registerCompareLabelsTool(server: McpServer): void {
   server.tool(
     "compare_labels",
-    "Compare US FDA Prescribing Information vs UK/EU SmPC for a drug side-by-side. Maps equivalent sections (e.g., US Indications ↔ UK 4.1) and returns paired verbatim content. A missing side is always explained: us_label/uk_label say whether the label was retrieved, each comparison notes why a section is null, and sections cut at the engine's length cap are flagged truncated.",
+    "Compare US FDA Prescribing Information vs UK/EU SmPC for a drug side-by-side. Maps equivalent sections (e.g., US Indications ↔ UK 4.1) and returns paired verbatim content. A missing side is always explained: us_label/uk_label say whether the label was retrieved, each comparison notes why a section is null, and sections longer than max_chars are flagged truncated with next_offset (read on with get_uspi / get_smpc).",
     schema,
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
@@ -164,6 +187,7 @@ export function registerCompareLabelsTool(server: McpServer): void {
         const result = await buildCompareResult(params.drug, params.sections, defaultFetchers, {
           us: params.us_drug,
           uk: params.uk_drug,
+          maxChars: params.max_chars,
         });
         const isError = "error" in result;
         return {

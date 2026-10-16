@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.0] — 2026-10-16
+
+### Added
+- **Full label sections, paged.** `get_smpc` and `get_uspi` now return complete verbatim sections instead of the first 1,400 characters. Long sections come a page at a time (default 6,000 characters): a cut page has `truncated: true`, `total_chars` and `next_offset`; call again with that one section and `offset: next_offset` to read on. New optional parameters `max_chars` (500–50,000) and `offset`. Example: the Lynparza SmPC section 4.2 is 12,837 characters; previously 11% of it was visible and the doses were not, and now the first page includes them.
+- `compare_labels` pages each side at 4,000 characters by default (new optional `max_chars`), and a truncated side's note now says exactly which `get_smpc` / `get_uspi` call reads the rest.
+- Tool descriptions for `get_smpc` and `get_uspi` now tell callers to check `drug_name`, because the best source match can be a different product or formulation (e.g. a combination tablet or a paediatric form).
+
+### Changed
+- Requires `@pharmatools/drug-data` `^0.3.0`, which adds a `maxChars` option (pass `Infinity` for full sections). PubCrawl fetches full sections and pages them itself; the engine's 1,400-character default is unchanged for Pharmonym.
+- Full labels are cached once and paged per request, so reading further pages does not refetch from eMC or openFDA.
+
 ## [2.6.4] — 2026-10-06
 
 ### Security

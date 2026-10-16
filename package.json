@@ -1,6 +1,6 @@
 {
   "name": "@pharmatools/pubcrawl",
-  "version": "2.6.4",
+  "version": "2.7.0",
   "description": "MCP server for PubMed & Europe PMC literature search, US/UK drug labelling, and clinical trials — built by PharmaTools.AI",
   "mcpName": "io.github.nickjlamb/pubcrawl",
   "author": "PharmaTools.AI",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
-    "@pharmatools/drug-data": "^0.2.0",
+    "@pharmatools/drug-data": "^0.3.0",
     "cheerio": "^1.2.0",
     "dotenv": "^16.0.0",
     "fast-xml-parser": "^5.11.2",

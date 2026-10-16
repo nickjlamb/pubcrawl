@@ -78,12 +78,18 @@ export interface LabelSection {
   title: string;
   content: string;
   /**
-   * True when the shared engine cut the section at its per-section character
-   * cap (content then ends with an ellipsis). The text returned is verbatim
-   * but incomplete: anything after the cut is not visible, so absence of a
-   * phrase from a truncated section proves nothing. Follow the source URL.
+   * True when more of this section follows this page (content then ends with
+   * an ellipsis). The text returned is verbatim but incomplete: absence of a
+   * phrase from a truncated section proves nothing. Fetch the next page with
+   * `offset: next_offset` on get_smpc / get_uspi.
    */
   truncated?: boolean;
+  /** Length of the full section text (present when the section is paged). */
+  total_chars?: number;
+  /** Where this page starts in the full section (present when > 0). */
+  offset?: number;
+  /** Pass as `offset` to fetch the next page (present when truncated). */
+  next_offset?: number;
 }
 
 export interface USPIResult {

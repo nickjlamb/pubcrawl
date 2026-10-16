@@ -48,9 +48,11 @@ export function filterSectionMap(requestedTopics?: string[]): SectionMapping[] {
 }
 
 /**
- * The shared engine caps each section's text (currently 1,400 characters) and
- * appends " …" when it does. Mark those sections so callers know the text is
- * verbatim but incomplete.
+ * Mark sections that arrive already cut (content ends with " …"), e.g. from an
+ * engine older than @pharmatools/drug-data 0.3.0, which capped every section at
+ * 1,400 characters. Current tools fetch full sections and page them with
+ * lib/paging.ts; this stays as a guard so a pre-cut section is never presented
+ * as complete.
  */
 export function markTruncated<T extends { content: string }>(sections: T[]): (T & { truncated?: boolean })[] {
   return sections.map((s) => (/\u2026\s*$/.test(s.content) ? { ...s, truncated: true } : s));

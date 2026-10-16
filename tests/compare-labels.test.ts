@@ -129,10 +129,21 @@ describe("buildCompareResult", () => {
     const r = ok(await buildCompareResult("keytruda", ["indications"], fetchers(cutUs, ukLabel)));
     const [c] = r.comparisons;
     expect(c.us_section?.truncated).toBe(true);
-    expect(c.us_note).toMatch(/cut at the engine/);
+    expect(c.us_note).toMatch(/verbatim but cut/);
     expect(c.us_note).toContain(usLabel.dailymedUrl);
     expect(c.uk_section?.truncated).toBeUndefined();
     expect(c.uk_note).toBeUndefined();
+  });
+
+  it("pages a long section and points to get_smpc with the next offset", async () => {
+    const long = Array.from({ length: 300 }, (_, i) => `Dose sentence ${i + 1}.`).join(" ");
+    const longUk = { ...ukLabel, sections: [{ code: "4.1", title: "Therapeutic indications", content: long }] };
+    const r = ok(await buildCompareResult("longdrug", ["indications"], fetchers(usLabel, longUk), { maxChars: 1000 }));
+    const [c] = r.comparisons;
+    expect(c.uk_section?.truncated).toBe(true);
+    expect(c.uk_section?.total_chars).toBe(long.length);
+    expect(c.uk_note).toContain("get_smpc");
+    expect(c.uk_note).toContain(`offset ${c.uk_section?.next_offset}`);
   });
 
   it("uses per-side name overrides for the lookups and records them", async () => {
