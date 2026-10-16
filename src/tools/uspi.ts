@@ -20,7 +20,8 @@ const schema = {
       "Specific sections to retrieve (e.g., ['indications', 'adverse reactions', 'contraindications']). Returns all sections if omitted."
     ),
   max_chars: z
-    .number()
+    // coerce: some MCP clients send numbers as strings ("12000")
+    .coerce.number()
     .int()
     .min(MIN_SECTION_CHARS)
     .max(MAX_SECTION_CHARS)
@@ -29,7 +30,8 @@ const schema = {
       `Maximum characters returned per section (default ${DEFAULT_SECTION_CHARS}). Long sections are returned a page at a time: a cut page has truncated: true, total_chars and next_offset.`
     ),
   offset: z
-    .number()
+    // coerce: some MCP clients send numbers as strings ("12000")
+    .coerce.number()
     .int()
     .min(0)
     .optional()

@@ -28,7 +28,8 @@ const schema = {
       "Specific topics to compare (e.g., ['indications', 'adverse reactions']). Compares all mapped sections if omitted."
     ),
   max_chars: z
-    .number()
+    // coerce: some MCP clients send numbers as strings ("12000")
+    .coerce.number()
     .int()
     .min(MIN_SECTION_CHARS)
     .max(MAX_SECTION_CHARS)

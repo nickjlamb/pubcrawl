@@ -72,3 +72,24 @@ describe("pageSections", () => {
     expect(out[1].truncated).toBe(true);
   });
 });
+
+import { registerSmpcTool } from "../src/tools/smpc.js";
+import { registerUspiTool } from "../src/tools/uspi.js";
+import { registerCompareLabelsTool } from "../src/tools/compare-labels.js";
+
+describe("paging parameters accept numeric strings", () => {
+  it("coerces \"12000\" and \"5988\" on all three label tools", () => {
+    const schemas: Record<string, any> = {};
+    const fake = { tool: (name: string, _d: string, schema: any) => { schemas[name] = schema; } } as any;
+    registerSmpcTool(fake);
+    registerUspiTool(fake);
+    registerCompareLabelsTool(fake);
+    for (const name of ["get_smpc", "get_uspi", "compare_labels"]) {
+      expect(schemas[name].max_chars.parse("12000")).toBe(12000);
+      expect(schemas[name].max_chars.safeParse("abc").success).toBe(false);
+      expect(schemas[name].max_chars.safeParse("100").success).toBe(false); // below minimum
+    }
+    expect(schemas.get_smpc.offset.parse("5988")).toBe(5988);
+    expect(schemas.get_uspi.offset.parse(5988)).toBe(5988);
+  });
+});

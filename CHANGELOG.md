@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.1] — 2026-10-16
+
+### Fixed
+- `max_chars` and `offset` on `get_smpc`, `get_uspi` and `compare_labels` now accept numbers sent as strings (e.g. `"12000"`), which some MCP clients do. Previously these calls failed validation. The advertised schema is unchanged (`integer`, with the same limits).
+
 ## [2.7.0] — 2026-10-16
 
 ### Added
