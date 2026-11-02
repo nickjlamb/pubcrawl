@@ -249,12 +249,16 @@ After a minute or so, `gcloud agent-registry mcp-servers list --project=PROJECT_
 
 The tool spec is generated from the server itself (`npm run build && npm run toolspec`), and a test fails if the committed file falls out of step with the code. The registry requires an input schema for every tool and caps the spec at 10 KB, so the schemas keep their types, required fields, enums, defaults and ranges but drop parameter descriptions. Clients that connect still get the complete schemas from the server.
 
-**3. Connect a client.** `gcloud` can proxy the authenticated service to your machine using your own credentials:
+**3. Connect a client.** Any client that can send a header can call the service with a Google identity token. With Claude Code:
 
 ```bash
-gcloud run services proxy pubcrawl --project=PROJECT_ID --region=REGION --port=3000
-claude mcp add --transport http pubcrawl-gcp http://localhost:3000/mcp   # in another terminal
+claude mcp add --transport http pubcrawl-gcp $URL/mcp \
+  --header "Authorization: Bearer $(gcloud auth print-identity-token)"
 ```
+
+The token expires after an hour and is stored in the client's config, so this suits a quick test; remove it afterwards with `claude mcp remove pubcrawl-gcp`. For everyday use, `gcloud run services proxy pubcrawl --project=PROJECT_ID --region=REGION --port=3000` keeps refreshing your credentials, and the client connects to `http://localhost:3000/mcp` with no header. The proxy needs the `cloud-run-proxy` gcloud component. In our test it reported the binary as missing straight after installing it; the header route above works without it.
+
+Agents running in Google Cloud should call the service as their own service account, granted `roles/run.invoker` on it, rather than with a user's token.
 
 ### Environment variables
 
