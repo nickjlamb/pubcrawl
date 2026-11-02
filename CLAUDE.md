@@ -17,6 +17,7 @@ PubCrawl is an MCP (Model Context Protocol) server that gives LLM clients (Claud
 - `npm run test:watch` — Vitest in watch mode
 - `npm run coverage` — Vitest with v8 coverage
 - `npm run lint` — ESLint (flat config, `typescript-eslint`)
+- `npm run toolspec` — regenerate `deploy/agent-registry/toolspec.json` after `npm run build` (`-- --check` to verify)
 
 ## Testing
 
@@ -51,6 +52,8 @@ The server has three layers:
 **Entry points** — `src/index.ts` connects the server over `StdioServerTransport`. `src/http.ts` reads `PORT`, `HOST` and `PUBCRAWL_ALLOWED_ORIGINS`, starts the HTTP app and handles `SIGTERM`. `src/http-app.ts` exports `createHttpApp()` (no side effects, so tests can start it on port 0): stateless Streamable HTTP on `POST /mcp` with a fresh server per request, `GET /health`, CORS with an optional origin allowlist (403 for others), and 405 for `GET`/`DELETE` on `/mcp`.
 
 **Container** — `Dockerfile` builds a non-root image running `dist/http.js` on port 8080. The CI `container` job builds it and checks health, user, handshake, tool count and clean stop. The README's "Run in your own environment" section lists every outbound host; update that table if a tool starts calling a new one.
+
+**Agent Registry tool spec** — `src/toolspec.ts` builds the spec Google Cloud Agent Registry needs (name, description, annotations, input schema without parameter descriptions) over an in-memory MCP connection. `npm run build && npm run toolspec` regenerates `deploy/agent-registry/toolspec.json`; `tests/toolspec.test.ts` fails if that file is stale or over 10 KB, so rerun it after changing any tool's name, description or schema.
 
 ## Tool → API Mapping
 

@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Google Cloud Agent Registry tool spec.** `deploy/agent-registry/toolspec.json`, generated from the server by `npm run toolspec` (`--check` fails if stale), for registering a Cloud Run deployment's endpoint and tools in Agent Registry. A test fails if the committed file drifts from the code or exceeds the registry's 10 KB limit. The registry requires an input schema for each tool, so schemas are kept with parameter descriptions removed to fit.
+- README: a Cloud Run and Agent Registry walkthrough (deploy behind Cloud Run IAM, register the endpoint and tools, connect a client through `gcloud run services proxy`).
+
 - **Run in your own environment.** A `Dockerfile` builds a non-root image that serves MCP over Streamable HTTP on `$PORT` (8080), with a container health check and clean shutdown on `SIGTERM`. The README has a new section covering deployment, environment variables, the complete outbound host list for firewall allowlists, and what data leaves the environment.
 - `PUBCRAWL_ALLOWED_ORIGINS`: comma-separated browser origins allowed to call the HTTP server. When set, requests from other origins get 403, as the MCP spec recommends against DNS rebinding. Unset keeps the previous behaviour (any origin).
 - `HOST` environment variable for the bind interface (default `0.0.0.0`).
