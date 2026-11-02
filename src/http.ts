@@ -1,100 +1,30 @@
 #!/usr/bin/env node
 import "dotenv/config";
-import { createServer } from "node:http";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { setApiKey } from "./lib/ncbi.js";
-import { registerSearchTool } from "./tools/search.js";
-import { registerSearchEuropePmcTool } from "./tools/search-europepmc.js";
-import { registerAbstractTool } from "./tools/abstract.js";
-import { registerFullTextTool } from "./tools/fulltext.js";
-import { registerRelatedTool } from "./tools/related.js";
-import { registerCiteTool } from "./tools/cite.js";
-import { registerTrendingTool } from "./tools/trending.js";
-import { registerUspiTool } from "./tools/uspi.js";
-import { registerSmpcTool } from "./tools/smpc.js";
-import { registerCompareLabelsTool } from "./tools/compare-labels.js";
-import { registerSearchIndicationTool } from "./tools/search-indication.js";
-import { registerResolveNameTool } from "./tools/resolve-name.js";
-import { registerTrialsSearchTool } from "./tools/trials-search.js";
-import { registerTrialDetailTool } from "./tools/trials-detail.js";
+import { configureFromEnv, SERVER_VERSION } from "./server.js";
+import { createHttpApp, parseAllowedOrigins } from "./http-app.js";
 
-// Configure NCBI API key if available (10 req/s vs 3 req/s)
-if (process.env.NCBI_API_KEY) {
-  setApiKey(process.env.NCBI_API_KEY);
-}
-
-function createMcpServer(): McpServer {
-  const server = new McpServer({
-    name: "pubcrawl",
-    version: "2.5.0",
-  });
-
-  registerSearchTool(server);
-  registerSearchEuropePmcTool(server);
-  registerAbstractTool(server);
-  registerFullTextTool(server);
-  registerRelatedTool(server);
-  registerCiteTool(server);
-  registerTrendingTool(server);
-  registerUspiTool(server);
-  registerSmpcTool(server);
-  registerCompareLabelsTool(server);
-  registerSearchIndicationTool(server);
-  registerResolveNameTool(server);
-  registerTrialsSearchTool(server);
-  registerTrialDetailTool(server);
-
-  return server;
-}
+configureFromEnv();
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
+const HOST = process.env.HOST ?? "0.0.0.0";
+const allowedOrigins = parseAllowedOrigins(process.env.PUBCRAWL_ALLOWED_ORIGINS);
 
-const CORS_HEADERS: Record<string, string> = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization, Mcp-Session-Id",
-  "Access-Control-Expose-Headers": "Mcp-Session-Id",
-};
+const httpServer = createHttpApp({ allowedOrigins });
 
-const httpServer = createServer(async (req, res) => {
-  const url = new URL(req.url ?? "/", `http://${req.headers.host}`);
-
-  // Handle CORS preflight
-  if (req.method === "OPTIONS") {
-    res.writeHead(204, CORS_HEADERS);
-    res.end();
-    return;
-  }
-
-  // Set CORS headers on all responses
-  for (const [key, value] of Object.entries(CORS_HEADERS)) {
-    res.setHeader(key, value);
-  }
-
-  // Health check endpoint
-  if (url.pathname === "/health" && req.method === "GET") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ status: "ok", server: "pubcrawl" }));
-    return;
-  }
-
-  // MCP endpoint — new server + transport per request (stateless mode)
-  if (url.pathname === "/mcp") {
-    const server = createMcpServer();
-    const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined,
-    });
-    await server.connect(transport);
-    await transport.handleRequest(req, res);
-    return;
-  }
-
-  // 404 for everything else
-  res.writeHead(404, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ error: "Not found" }));
+httpServer.listen(PORT, HOST, () => {
+  const origins = allowedOrigins === "*" ? "any origin" : allowedOrigins.join(", ");
+  console.error(`PubCrawl ${SERVER_VERSION} MCP server on http://${HOST}:${PORT}/mcp (CORS: ${origins})`);
 });
 
-httpServer.listen(PORT, "0.0.0.0", () => {
-  console.error(`PubCrawl MCP server running on http://0.0.0.0:${PORT}/mcp`);
-});
+// Container platforms (Cloud Run, Kubernetes, ECS) send SIGTERM before stopping an
+// instance. Stop accepting connections, let in-flight requests finish, then exit;
+// give up after 10s so a stuck upstream call can't block the shutdown.
+function shutdown(signal: string): void {
+  console.error(`${signal} received, shutting down`);
+  httpServer.close(() => process.exit(0));
+  httpServer.closeIdleConnections();
+  setTimeout(() => process.exit(1), 10_000).unref();
+}
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));

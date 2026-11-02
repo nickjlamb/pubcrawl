@@ -19,3 +19,32 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+
+  # Builds the container image and checks it serves MCP over HTTP:
+  # healthy, non-root, and a client can initialise and list all 14 tools.
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t pubcrawl:ci .
+      - name: Start container
+        run: |
+          docker run -d --name pubcrawl -p 8080:8080 pubcrawl:ci
+          for i in $(seq 1 20); do curl -sf localhost:8080/health && exit 0; sleep 1; done
+          docker logs pubcrawl; exit 1
+      - name: Runs as non-root
+        run: test "$(docker exec pubcrawl whoami)" = "node"
+      - name: MCP handshake and tool list
+        run: |
+          H=(-H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream')
+          curl -sf -X POST localhost:8080/mcp "${H[@]}" \
+            -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"ci","version":"0"}}}' \
+            | grep -q '"name":"pubcrawl"'
+          n=$(curl -sf -X POST localhost:8080/mcp "${H[@]}" -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+            | grep -o '"name":"[a-z_]*"' | sort -u | wc -l)
+          echo "tools: $n"; test "$n" -eq 14
+      - name: Stops cleanly on SIGTERM
+        run: |
+          docker stop -t 15 pubcrawl
+          test "$(docker inspect pubcrawl --format '{{.State.ExitCode}}')" = "0"

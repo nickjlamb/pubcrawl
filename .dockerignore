@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+.git
+.github
+.env
+.env.*
+!.env.example
+benchmark
+openclaw-plugin
+assets
+docs
+tests
+*.md
+*.html
