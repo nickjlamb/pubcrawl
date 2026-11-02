@@ -10,6 +10,8 @@ PubCrawl is an MCP (Model Context Protocol) server that gives LLM clients (Claud
 
 - `npm run build` — compile TypeScript (`src/`) to `dist/`
 - `npm start` — run the compiled MCP server via stdio
+- `npm run start:http` — run it over Streamable HTTP (`PORT`, default 3000)
+- `docker build -t pubcrawl . && docker run -p 8080:8080 pubcrawl` — container image
 - `npm run dev` — `tsc --watch` for development
 - `npm test` — run the Vitest unit suite (`tests/`)
 - `npm run test:watch` — Vitest in watch mode
@@ -22,10 +24,11 @@ Vitest unit tests live in `tests/` and cover the pure logic layers: the XML/JATS
 parsers (`xml-parser.ts`), the LRU cache (`cache.ts`), the shared esummary→article
 formatter (`pubmed-format.ts`), the Europe PMC result mapper (`europepmc.ts`),
 the citation formatters (`cite.ts`), and the ClinicalTrials.gov summary mapper
-(`clinicaltrials.ts`). Tests use fixture payloads —
+(`clinicaltrials.ts`), plus `http.test.ts`, which starts the real HTTP app on a local port
+and checks the transport and handshake (it calls no tools). Tests use fixture payloads —
 no network calls. Functions that need testing are exported from their module; keep new
 parsing/formatting logic as exported pure functions so it can be unit-tested the same way.
-CI (`.github/workflows/build.yml`) runs lint → test → build on every push and PR.
+CI (`.github/workflows/build.yml`) runs lint → test → build on every push and PR, plus a `container` job that builds and smoke-tests the Docker image.
 
 ## Architecture
 
@@ -43,7 +46,11 @@ The server has three layers:
 
 **Cache** (`src/lib/cache.ts`) — Singleton LRU cache (500 entries). TTLs: search/related/summary = 1 hour, trial details = 4 hours, abstracts/fulltext/labels = 24 hours.
 
-**Entry point** (`src/index.ts`) — Creates `McpServer`, loads optional `NCBI_API_KEY` from env, registers all tools, connects via `StdioServerTransport`. `src/http.ts` registers the same tool set behind a stateless Streamable HTTP transport; keep the two registration lists in sync when adding a tool.
+**Server factory** (`src/server.ts`) — `createPubCrawlServer()` is the single place tools are registered; register a new tool here and both transports get it. `SERVER_VERSION` is read from `package.json`. `configureFromEnv()` applies `NCBI_API_KEY`.
+
+**Entry points** — `src/index.ts` connects the server over `StdioServerTransport`. `src/http.ts` reads `PORT`, `HOST` and `PUBCRAWL_ALLOWED_ORIGINS`, starts the HTTP app and handles `SIGTERM`. `src/http-app.ts` exports `createHttpApp()` (no side effects, so tests can start it on port 0): stateless Streamable HTTP on `POST /mcp` with a fresh server per request, `GET /health`, CORS with an optional origin allowlist (403 for others), and 405 for `GET`/`DELETE` on `/mcp`.
+
+**Container** — `Dockerfile` builds a non-root image running `dist/http.js` on port 8080. The CI `container` job builds it and checks health, user, handshake, tool count and clean stop. The README's "Run in your own environment" section lists every outbound host; update that table if a tool starts calling a new one.
 
 ## Tool → API Mapping
 

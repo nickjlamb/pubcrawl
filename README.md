@@ -19,7 +19,7 @@ _A peer-reviewed pub crawl through the literature — the label — and the tria
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[Quick start](#-quick-start-60-seconds) · [Tools](#-tools) · [Examples](#-examples) · [Architecture](#-architecture) · [Roadmap](ROADMAP.md) · [Contributing](CONTRIBUTING.md)
+[Quick start](#-quick-start-60-seconds) · [Tools](#-tools) · [Examples](#-examples) · [Architecture](#-architecture) · [Self-hosting](#-run-in-your-own-environment) · [Roadmap](ROADMAP.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -195,11 +195,63 @@ Without a key, PubMed requests are limited to 3/second. A free key raises this t
 
 ### HTTP transport
 
-PubCrawl also ships a stateless Streamable HTTP transport for browser-based and hosted clients:
+PubCrawl also ships a stateless Streamable HTTP transport for hosted and browser-based clients:
 
 ```bash
 npm run start:http   # serves POST /mcp and GET /health on PORT (default 3000)
 ```
+
+---
+
+## 🏢 Run in your own environment
+
+For teams who need PubCrawl inside their own cloud project rather than on a laptop, it runs as a container serving MCP over Streamable HTTP. Each request is handled by a fresh server instance with no sessions, so it scales horizontally behind any load balancer.
+
+```bash
+docker build -t pubcrawl .
+docker run --rm -p 8080:8080 pubcrawl
+curl http://localhost:8080/health   # {"status":"ok","server":"pubcrawl","version":"…"}
+```
+
+Point any MCP client, or an agent registry such as Google Cloud Agent Registry, Microsoft Foundry or Amazon Bedrock AgentCore, at `https://<your-host>/mcp`. On Google Cloud Run, for example:
+
+```bash
+gcloud run deploy pubcrawl --source . --region europe-west2 --no-allow-unauthenticated
+```
+
+Authentication is left to the platform in front of the container (Cloud Run IAM, API Gateway, an identity-aware proxy), so PubCrawl itself holds no credentials for your users.
+
+The image runs as a non-root user, has a container health check, and shuts down cleanly on `SIGTERM`. CI builds it on every push and checks the health endpoint, the MCP handshake, the full tool list and a clean stop.
+
+### Environment variables
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `PORT` | `8080` in the image, `3000` otherwise | Port to listen on. Cloud Run and most platforms set this. |
+| `HOST` | `0.0.0.0` | Interface to bind. |
+| `NCBI_API_KEY` | none | Raises PubMed's limit from 3 to 10 requests per second. |
+| `PUBCRAWL_ALLOWED_ORIGINS` | `*` | Comma-separated browser origins allowed to call the server. When set, requests from any other origin are refused with 403. Requests with no `Origin` header, such as server-side agents, are unaffected. |
+
+### Network egress
+
+PubCrawl needs outbound HTTPS to these hosts only, which is the complete list for a firewall allowlist:
+
+| Host | Used for |
+|---|---|
+| `eutils.ncbi.nlm.nih.gov` | PubMed and PubMed Central (search, abstracts, full text, related articles, citations) |
+| `www.ebi.ac.uk` | Europe PMC |
+| `clinicaltrials.gov` | ClinicalTrials.gov API v2 |
+| `api.fda.gov` | US prescribing information (openFDA) |
+| `rxnav.nlm.nih.gov` | US/UK drug-name resolution (RxNorm) |
+| `www.medicines.org.uk` | UK Summaries of Product Characteristics (eMC) |
+
+### Data handling
+
+- **What leaves your environment:** the search terms, identifiers and drug names in each tool call are sent to the public source that answers it, from the table above. Nothing goes anywhere else, and PharmaTools.AI receives nothing.
+- **What is kept:** upstream responses are held in an in-memory cache (500 entries, up to 24 hours) to stay within the sources' rate limits. Nothing is written to disk, and the cache is gone when the instance stops.
+- **What is logged:** one line at startup and one at shutdown. Requests and queries are not logged.
+- **Identification to NCBI:** per NCBI's usage policy, E-utilities requests identify the tool as `pubcrawl` with the maintainer's contact address.
+- **No model in the path:** every tool is a deterministic API call and parse. Nothing is generated.
 
 ---
 

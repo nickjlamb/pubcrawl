@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Run in your own environment.** A `Dockerfile` builds a non-root image that serves MCP over Streamable HTTP on `$PORT` (8080), with a container health check and clean shutdown on `SIGTERM`. The README has a new section covering deployment, environment variables, the complete outbound host list for firewall allowlists, and what data leaves the environment.
+- `PUBCRAWL_ALLOWED_ORIGINS`: comma-separated browser origins allowed to call the HTTP server. When set, requests from other origins get 403, as the MCP spec recommends against DNS rebinding. Unset keeps the previous behaviour (any origin).
+- `HOST` environment variable for the bind interface (default `0.0.0.0`).
+- CI `container` job: builds the image and checks health, non-root user, the MCP handshake, all 14 tools listed, and a clean stop.
+- HTTP integration tests (`tests/http.test.ts`) against a real server on a local port: health, 404, 405, CORS, origin allowlist, MCP handshake, tool list and concurrent clients. No external network.
+
+### Changed
+- Tools are registered in one place (`src/server.ts`), used by both the stdio and HTTP entry points, so the two transports can no longer drift apart.
+- The HTTP transport now returns 405 for `GET`/`DELETE` on `/mcp` (stateless mode has no stream or session to resume), returns a JSON-RPC 500 if a request fails before a response starts, and releases each request's server and transport when the response closes.
+- `/health` now includes the server version.
+
+### Fixed
+- Both transports reported version `2.5.0` to clients. The version is now read from `package.json`.
+
 ## [2.7.1] — 2026-10-16
 
 ### Fixed
