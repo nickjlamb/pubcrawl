@@ -9,14 +9,33 @@ export interface ToolSpecEntry {
   name: string;
   description?: string;
   annotations?: Record<string, unknown>;
+  inputSchema: Record<string, unknown>;
+}
+
+/**
+ * Remove `$schema` and every string-valued `description` from a JSON Schema, keeping
+ * its structure: types, properties, required, enums, defaults and ranges. A property
+ * that happens to be named "description" is an object, not a string, so it is kept.
+ */
+export function compactSchema(schema: unknown): unknown {
+  if (Array.isArray(schema)) return schema.map(compactSchema);
+  if (schema === null || typeof schema !== "object") return schema;
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(schema)) {
+    if (key === "$schema") continue;
+    if (key === "description" && typeof value === "string") continue;
+    out[key] = compactSchema(value);
+  }
+  return out;
 }
 
 /**
  * Build the tool spec Agent Registry needs for manual registration of a remote MCP
- * server: each tool's name, description and annotations, read from the real server
- * over an in-memory MCP connection, so the spec can't drift from the code.
- * Input schemas are left out: the registry doesn't require them and they would
- * take the spec past the 10 KB limit. Clients still get them from tools/list.
+ * server, read from the real server over an in-memory MCP connection so it can't drift
+ * from the code. Each tool keeps its name, description, annotations and input schema
+ * (the registry requires the schema). Parameter-level descriptions are dropped from the
+ * schemas to fit the registry's 10 KB limit; connected clients still get the complete
+ * schemas, descriptions included, from the server's own tools/list.
  */
 export async function buildToolSpec(): Promise<{ tools: ToolSpecEntry[] }> {
   const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
@@ -27,10 +46,11 @@ export async function buildToolSpec(): Promise<{ tools: ToolSpecEntry[] }> {
   try {
     const { tools } = await client.listTools();
     return {
-      tools: tools.map(({ name, description, annotations }) => ({
+      tools: tools.map(({ name, description, annotations, inputSchema }) => ({
         name,
         ...(description !== undefined && { description }),
         ...(annotations !== undefined && { annotations: annotations as Record<string, unknown> }),
+        inputSchema: compactSchema(inputSchema) as Record<string, unknown>,
       })),
     };
   } finally {
@@ -39,6 +59,7 @@ export async function buildToolSpec(): Promise<{ tools: ToolSpecEntry[] }> {
   }
 }
 
+/** Compact JSON: indentation alone would push the spec past the 10 KB limit. */
 export function serializeToolSpec(spec: { tools: ToolSpecEntry[] }): string {
-  return JSON.stringify(spec, null, 2) + "\n";
+  return JSON.stringify(spec) + "\n";
 }
