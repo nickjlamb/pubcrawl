@@ -213,15 +213,52 @@ docker run --rm -p 8080:8080 pubcrawl
 curl http://localhost:8080/health   # {"status":"ok","server":"pubcrawl","version":"…"}
 ```
 
-Point any MCP client, or an agent registry such as Google Cloud Agent Registry, Microsoft Foundry or Amazon Bedrock AgentCore, at `https://<your-host>/mcp`. On Google Cloud Run, for example:
-
-```bash
-gcloud run deploy pubcrawl --source . --region europe-west2 --no-allow-unauthenticated
-```
-
-Authentication is left to the platform in front of the container (Cloud Run IAM, API Gateway, an identity-aware proxy), so PubCrawl itself holds no credentials for your users.
+Point any MCP client, or an agent registry such as Google Cloud Agent Registry, Microsoft Foundry or Amazon Bedrock AgentCore, at `https://<your-host>/mcp`. Authentication is left to the platform in front of the container (Cloud Run IAM, API Gateway, an identity-aware proxy), so PubCrawl itself holds no credentials for your users.
 
 The image runs as a non-root user, has a container health check, and shuts down cleanly on `SIGTERM`. CI builds it on every push and checks the health endpoint, the MCP handshake, the full tool list and a clean stop.
+
+### Google Cloud Run and Agent Registry
+
+These steps were run end to end in November 2026. Replace `PROJECT_ID` and `REGION`; the project needs billing and the `run`, `cloudbuild`, `artifactregistry` and `agentregistry` APIs enabled.
+
+**1. Deploy behind Cloud Run IAM.** From a clone of this repo (the `--functional-type` flag needs a current `gcloud` with the beta component):
+
+```bash
+gcloud beta run deploy pubcrawl --source . --project=PROJECT_ID --region=REGION \
+  --no-allow-unauthenticated --functional-type=mcp-server --max-instances=2
+```
+
+Unauthenticated requests to any path now get `403` from Google before reaching PubCrawl. With an identity token, `/health` answers as usual:
+
+```bash
+URL=$(gcloud run services describe pubcrawl --project=PROJECT_ID --region=REGION --format='value(status.url)')
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $URL/health
+```
+
+**2. Register the endpoint and its tools.** `--functional-type=mcp-server` adds an entry to Agent Registry that links to the Cloud Run service, but it carries no endpoint URL and no tools, because the registry can't read tools from a server that requires authentication. Register the endpoint manually with the tool spec in [`deploy/agent-registry/toolspec.json`](deploy/agent-registry/toolspec.json):
+
+```bash
+gcloud agent-registry services create pubcrawl-mcp --project=PROJECT_ID --location=REGION \
+  --display-name="PubCrawl" \
+  --mcp-server-spec-type=tool-spec \
+  --mcp-server-spec-content=deploy/agent-registry/toolspec.json \
+  --interfaces=url=$URL/mcp,protocolBinding=jsonrpc
+```
+
+After a minute or so, `gcloud agent-registry mcp-servers list --project=PROJECT_ID --location=REGION` shows `PubCrawl` with its `/mcp` URL and all 14 tools.
+
+The tool spec is generated from the server itself (`npm run build && npm run toolspec`), and a test fails if the committed file falls out of step with the code. The registry requires an input schema for every tool and caps the spec at 10 KB, so the schemas keep their types, required fields, enums, defaults and ranges but drop parameter descriptions. Clients that connect still get the complete schemas from the server.
+
+**3. Connect a client.** Any client that can send a header can call the service with a Google identity token. With Claude Code:
+
+```bash
+claude mcp add --transport http pubcrawl-gcp $URL/mcp \
+  --header "Authorization: Bearer $(gcloud auth print-identity-token)"
+```
+
+The token expires after an hour and is stored in the client's config, so this suits a quick test; remove it afterwards with `claude mcp remove pubcrawl-gcp`. For everyday use, `gcloud run services proxy pubcrawl --project=PROJECT_ID --region=REGION --port=3000` keeps refreshing your credentials, and the client connects to `http://localhost:3000/mcp` with no header. The proxy needs the `cloud-run-proxy` gcloud component. In our test it reported the binary as missing straight after installing it; the header route above works without it.
+
+Agents running in Google Cloud should call the service as their own service account, granted `roles/run.invoker` on it, rather than with a user's token.
 
 ### Environment variables
 
