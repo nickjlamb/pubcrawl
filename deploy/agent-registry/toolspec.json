@@ -1,0 +1,130 @@
+{
+  "tools": [
+    {
+      "name": "search_pubmed",
+      "description": "Search PubMed for biomedical literature. Returns article summaries with PMIDs, titles, authors, journals, and DOIs.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "search_europepmc",
+      "description": "Search Europe PMC — a broader biomedical corpus than PubMed that also indexes preprints (bioRxiv, medRxiv), patents, and agricultural/biomedical databases. Unlike search_pubmed, each result includes an abstract snippet, citation count, open-access status, and whether a preprint. Use preprintsOnly to surface work ahead of formal publication.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_abstract",
+      "description": "Get the full structured abstract and metadata for a PubMed article. Returns abstract sections (background, methods, results, conclusions), keywords, MeSH terms, and PMC ID.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_full_text",
+      "description": "Get the full text of an open-access article from PubMed Central. Returns article sections, figure/table captions, and reference count. Only works for articles available in PMC.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "find_related",
+      "description": "Find related articles for a given PubMed article. Returns similar papers ranked by relevance score using PubMed's neighbor algorithm.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "format_citation",
+      "description": "Format a citation for a PubMed article in APA, Vancouver, Harvard, or BibTeX style.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "trending_papers",
+      "description": "Find recent/trending papers on a topic. Sorted by date, with optional filtering to high-impact journals.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_uspi",
+      "description": "Get FDA US Prescribing Information (USPI) for a drug from openFDA (cited to DailyMed). Returns structured labelling sections with LOINC codes, verbatim. Long sections are paged: a cut section has truncated: true, total_chars and next_offset — call again with that section and offset to read on. Check drug_name: the best openFDA match may be a different product from the one you meant.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_smpc",
+      "description": "Get UK/EU Summary of Product Characteristics (SmPC) for a drug from eMC (medicines.org.uk). Returns structured labelling sections, verbatim. Long sections are paged: a cut section has truncated: true, total_chars and next_offset — call again with that section and offset to read on. Check drug_name: the best eMC match may be a different product or formulation from the one you meant.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "compare_labels",
+      "description": "Compare US FDA Prescribing Information vs UK/EU SmPC for a drug side-by-side. Maps equivalent sections (e.g., US Indications ↔ UK 4.1) and returns paired verbatim content. A missing side is always explained: us_label/uk_label say whether the label was retrieved, each comparison notes why a section is null, and sections longer than max_chars are flagged truncated with next_offset (read on with get_uspi / get_smpc).",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "search_by_indication",
+      "description": "Find drugs approved for a medical condition. Searches US FDA labelling for the condition, then checks UK (eMC) availability for each drug found.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "resolve_drug_name",
+      "description": "Convert a brand drug name to its generic name (or a generic to its US brand names), with drug class and common indications. Deterministic — sourced from RxNorm/openFDA, no AI.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "search_trials",
+      "description": "Search ClinicalTrials.gov for clinical trials. Filter by condition, intervention, status, and phase. Returns trial summaries with NCT IDs, status, sponsors, and enrollment info.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_trial",
+      "description": "Get detailed information about a specific clinical trial from ClinicalTrials.gov. Returns eligibility criteria, study design, arms, outcomes, locations, and associated PubMed IDs.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    }
+  ]
+}

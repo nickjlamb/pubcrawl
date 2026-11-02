@@ -36,7 +36,8 @@
     "coverage": "vitest run --coverage",
     "bench": "node benchmark/run.mjs",
     "lint": "eslint .",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "toolspec": "node scripts/toolspec.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",

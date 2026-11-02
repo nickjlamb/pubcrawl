@@ -21,8 +21,8 @@ export default tseslint.config(
     },
   },
   {
-    // The benchmark runner is plain Node ESM, outside the TypeScript build.
-    files: ["benchmark/**/*.mjs"],
+    // The benchmark runner and helper scripts are plain Node ESM, outside the TypeScript build.
+    files: ["benchmark/**/*.mjs", "scripts/**/*.mjs"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
@@ -34,6 +34,7 @@ export default tseslint.config(
         setTimeout: "readonly",
         clearTimeout: "readonly",
         URL: "readonly",
+        Buffer: "readonly",
       },
     },
   },
