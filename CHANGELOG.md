@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.0] — 2026-11-03
+
 ### Added
 - **Google Cloud Agent Registry tool spec.** `deploy/agent-registry/toolspec.json`, generated from the server by `npm run toolspec` (`--check` fails if stale), for registering a Cloud Run deployment's endpoint and tools in Agent Registry. A test fails if the committed file drifts from the code or exceeds the registry's 10 KB limit. The registry requires an input schema for each tool, so schemas are kept with parameter descriptions removed to fit.
 - README: a Cloud Run and Agent Registry walkthrough (deploy behind Cloud Run IAM, register the endpoint and tools, connect a client with an identity token or `gcloud run services proxy`).
@@ -160,7 +162,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release: PubMed literature tools — `search_pubmed`, `get_abstract`, `get_full_text`, `find_related`, `format_citation`, and `trending_papers`.
 
-[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.0...HEAD
+[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.8.0...HEAD
+[2.8.0]: https://github.com/nickjlamb/pubcrawl/releases/tag/v2.8.0
+[2.6.4]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.3...v2.6.4
+[2.6.3]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.2...v2.6.3
+[2.6.2]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.1...v2.6.2
+[2.6.1]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.5.1...v2.6.0
 [2.5.1]: https://github.com/nickjlamb/pubcrawl/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.4.0...v2.5.0
