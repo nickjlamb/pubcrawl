@@ -9,7 +9,9 @@ const PORT = parseInt(process.env.PORT ?? "3000", 10);
 const HOST = process.env.HOST ?? "0.0.0.0";
 const allowedOrigins = parseAllowedOrigins(process.env.PUBCRAWL_ALLOWED_ORIGINS);
 
-const httpServer = createHttpApp({ allowedOrigins });
+const usageLog = process.env.PUBCRAWL_USAGE_LOG?.trim().toLowerCase() === "off" ? false : undefined;
+
+const httpServer = createHttpApp({ allowedOrigins, usageLog });
 
 httpServer.listen(PORT, HOST, () => {
   const origins = allowedOrigins === "*" ? "any origin" : allowedOrigins.join(", ");
