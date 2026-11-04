@@ -26,8 +26,11 @@ const EXPECTED_TOOLS = [
   "trending_papers",
 ];
 
-async function start(allowedOrigins: "*" | string[]): Promise<{ server: Server; base: string }> {
-  const server = createHttpApp({ allowedOrigins });
+async function start(
+  allowedOrigins: "*" | string[],
+  usageLog: ((line: string) => void) | false = false,
+): Promise<{ server: Server; base: string }> {
+  const server = createHttpApp({ allowedOrigins, usageLog });
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const { port } = server.address() as AddressInfo;
   return { server, base: `http://127.0.0.1:${port}` };
@@ -154,5 +157,40 @@ describe("HTTP transport (origin allowlist)", () => {
     } finally {
       await client.close();
     }
+  });
+});
+
+describe("HTTP transport (usage logging)", () => {
+  let server: Server;
+  let base: string;
+  const lines: string[] = [];
+
+  beforeAll(async () => {
+    ({ server, base } = await start("*", (line) => lines.push(line)));
+  });
+  afterAll(async () => stop(server));
+
+  it("logs one structured line per connection, not per request", async () => {
+    for (const name of ["claude-ai", "cursor", "claude-ai"]) {
+      const client = new Client({ name, version: "1.2.3" });
+      await client.connect(new StreamableHTTPClientTransport(new URL(`${base}/mcp`)));
+      try {
+        await client.listTools();
+      } finally {
+        await client.close();
+      }
+    }
+    // Wait for the response 'close' handlers to run.
+    await new Promise((r) => setTimeout(r, 50));
+    const events = lines.map((l) => JSON.parse(l));
+    expect(events).toHaveLength(3);
+    expect(events.map((e) => e.client)).toEqual(["claude-ai", "cursor", "claude-ai"]);
+    expect(events[2]).toMatchObject({
+      event: "initialize",
+      level: "info",
+      clientVersion: "1.2.3",
+      todayTotal: 3,
+      todayForClient: 2,
+    });
   });
 });

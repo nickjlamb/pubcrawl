@@ -1,6 +1,7 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createPubCrawlServer, SERVER_NAME, SERVER_VERSION } from "./server.js";
+import { UsageCounter } from "./lib/usage.js";
 
 export interface HttpAppOptions {
   /**
@@ -10,6 +11,12 @@ export interface HttpAppOptions {
    * Requests with no `Origin` header (server-to-server agents, curl) are unaffected.
    */
   allowedOrigins: "*" | string[];
+  /**
+   * Where to write the one-line JSON usage record logged for each MCP `initialize`
+   * (client name, version and today's running count). Defaults to stdout, which
+   * Railway and most container hosts parse as structured logs. Pass `false` to disable.
+   */
+  usageLog?: ((line: string) => void) | false;
 }
 
 /** Parse `PUBCRAWL_ALLOWED_ORIGINS` (comma-separated). Unset or `*` means any origin. */
@@ -59,7 +66,11 @@ function applyCors(req: IncomingMessage, res: ServerResponse, allowed: "*" | str
   return false;
 }
 
-async function handleMcp(req: IncomingMessage, res: ServerResponse): Promise<void> {
+async function handleMcp(
+  req: IncomingMessage,
+  res: ServerResponse,
+  onInitialize: ((name: unknown, version: unknown) => void) | undefined,
+): Promise<void> {
   // Stateless mode: a fresh server and transport per request, with no session to
   // resume, so there is no server-initiated stream (GET) or session to end (DELETE).
   if (req.method !== "POST") {
@@ -73,6 +84,9 @@ async function handleMcp(req: IncomingMessage, res: ServerResponse): Promise<voi
   // Release both when the response finishes or the client disconnects,
   // so long-running hosts don't accumulate servers.
   res.on("close", () => {
+    // Only the instance that handled an `initialize` request knows the client.
+    const client = server.server.getClientVersion();
+    if (client && onInitialize) onInitialize(client.name, client.version);
     void transport.close();
     void server.close();
   });
@@ -90,6 +104,12 @@ async function handleMcp(req: IncomingMessage, res: ServerResponse): Promise<voi
 
 /** Create the PubCrawl HTTP server without starting it. Call `.listen()` on the result. */
 export function createHttpApp(options: HttpAppOptions): Server {
+  const log = options.usageLog === undefined ? (line: string) => console.log(line) : options.usageLog;
+  const usage = new UsageCounter();
+  const onInitialize = log
+    ? (name: unknown, version: unknown) => log(JSON.stringify(usage.record(name, version)))
+    : undefined;
+
   return createServer((req, res) => {
     const url = new URL(req.url ?? "/", "http://localhost");
 
@@ -110,7 +130,7 @@ export function createHttpApp(options: HttpAppOptions): Server {
     }
 
     if (url.pathname === "/mcp") {
-      void handleMcp(req, res);
+      void handleMcp(req, res, onInitialize);
       return;
     }
 

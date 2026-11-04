@@ -49,7 +49,7 @@ The server has three layers:
 
 **Server factory** (`src/server.ts`) — `createPubCrawlServer()` is the single place tools are registered; register a new tool here and both transports get it. `SERVER_VERSION` is read from `package.json`. `configureFromEnv()` applies `NCBI_API_KEY`.
 
-**Entry points** — `src/index.ts` connects the server over `StdioServerTransport`. `src/http.ts` reads `PORT`, `HOST` and `PUBCRAWL_ALLOWED_ORIGINS`, starts the HTTP app and handles `SIGTERM`. `src/http-app.ts` exports `createHttpApp()` (no side effects, so tests can start it on port 0): stateless Streamable HTTP on `POST /mcp` with a fresh server per request, `GET /health`, CORS with an optional origin allowlist (403 for others), and 405 for `GET`/`DELETE` on `/mcp`.
+**Entry points** — `src/index.ts` connects the server over `StdioServerTransport`. `src/http.ts` reads `PORT`, `HOST` and `PUBCRAWL_ALLOWED_ORIGINS`, starts the HTTP app and handles `SIGTERM`. `src/http-app.ts` exports `createHttpApp()` (no side effects, so tests can start it on port 0): stateless Streamable HTTP on `POST /mcp` with a fresh server per request, `GET /health`, CORS with an optional origin allowlist (403 for others), and 405 for `GET`/`DELETE` on `/mcp`. Each MCP `initialize` logs one JSON usage line to stdout via `src/lib/usage.ts` (client name/version and daily counts; nothing about the user or query); `PUBCRAWL_USAGE_LOG=off` disables it.
 
 **Container** — `Dockerfile` builds a non-root image running `dist/http.js` on port 8080. The CI `container` job builds it and checks health, user, handshake, tool count and clean stop. The README's "Run in your own environment" section lists every outbound host; update that table if a tool starts calling a new one.
 

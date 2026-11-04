@@ -268,6 +268,7 @@ Agents running in Google Cloud should call the service as their own service acco
 | `HOST` | `0.0.0.0` | Interface to bind. |
 | `NCBI_API_KEY` | none | Raises PubMed's limit from 3 to 10 requests per second. |
 | `PUBCRAWL_ALLOWED_ORIGINS` | `*` | Comma-separated browser origins allowed to call the server. When set, requests from any other origin are refused with 403. Requests with no `Origin` header, such as server-side agents, are unaffected. |
+| `PUBCRAWL_USAGE_LOG` | on | Set to `off` to stop the one-line JSON log per MCP connection (client name, version and daily count). |
 
 ### Network egress
 
@@ -286,7 +287,7 @@ PubCrawl needs outbound HTTPS to these hosts only, which is the complete list fo
 
 - **What leaves your environment:** the search terms, identifiers and drug names in each tool call are sent to the public source that answers it, from the table above. Nothing goes anywhere else, and PharmaTools.AI receives nothing.
 - **What is kept:** upstream responses are held in an in-memory cache (500 entries, up to 24 hours) to stay within the sources' rate limits. Nothing is written to disk, and the cache is gone when the instance stops.
-- **What is logged:** one line at startup and one at shutdown. Requests and queries are not logged.
+- **What is logged:** one line at startup and one at shutdown, plus one JSON line per new MCP connection with the client's self-reported name and version (e.g. `claude-ai`, `cursor`) and a running count for the UTC day. Queries, tool arguments and IP addresses are not logged. Set `PUBCRAWL_USAGE_LOG=off` to turn the connection lines off.
 - **Identification to NCBI:** per NCBI's usage policy, E-utilities requests identify the tool as `pubcrawl` with the maintainer's contact address.
 - **No model in the path:** every tool is a deterministic API call and parse. Nothing is generated.
 

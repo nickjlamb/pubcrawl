@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Connection counts in the logs.** The HTTP server logs one structured JSON line per MCP `initialize` (`event: "initialize"`, client name and version, `todayTotal`, `todayForClient`), so daily connections per client can be read from the host's logs (on Railway, filter with `@event:initialize`). These are sessions, not unique users. No queries, arguments or IPs are logged. `PUBCRAWL_USAGE_LOG=off` disables it.
+
 ## [2.8.0] — 2026-11-03
 
 ### Added
