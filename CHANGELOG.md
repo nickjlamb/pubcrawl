@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Server icon in `server.json` for the MCP Registry listing. It goes out with the next registry publish.
 - **Connection counts in the logs.** The HTTP server logs one structured JSON line per MCP `initialize` (`event: "initialize"`, client name and version, `todayTotal`, `todayForClient`), so daily connections per client can be read from the host's logs (on Railway, filter with `@event:initialize`). These are sessions, not unique users. No queries, arguments or IPs are logged. `PUBCRAWL_USAGE_LOG=off` disables it.
 
 ## [2.8.0] — 2026-11-03
