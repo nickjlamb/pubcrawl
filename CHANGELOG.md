@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Server icon in `server.json` for the MCP Registry listing. It goes out with the next registry publish.
 - **Connection counts in the logs.** The HTTP server logs one structured JSON line per MCP `initialize` (`event: "initialize"`, client name and version, `todayTotal`, `todayForClient`), so daily connections per client can be read from the host's logs (on Railway, filter with `@event:initialize`). These are sessions, not unique users. No queries, arguments or IPs are logged. `PUBCRAWL_USAGE_LOG=off` disables it.
 
+### Fixed
+- **HTTP server no longer dies when an upstream host drops a connection mid-response.** undici 7 (loaded by cheerio, and used by Node's `fetch` once loaded) throws an uncatchable `assert(!this.paused)` from a socket event in that case, which ended the process and took the hosted endpoint offline on 2026-11-21. The HTTP entry point now logs that one assertion (`event: "undici_parser_assertion_suppressed"`) and keeps serving; any other uncaught exception still exits with code 1.
+- `railway.toml`: restart policy is now `always`. With `on_failure` and three retries, the service was not restarted once the retries were used up.
+
 ## [2.8.0] — 2026-11-03
 
 ### Added

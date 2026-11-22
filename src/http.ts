@@ -2,7 +2,10 @@
 import "dotenv/config";
 import { configureFromEnv, SERVER_VERSION } from "./server.js";
 import { createHttpApp, parseAllowedOrigins } from "./http-app.js";
+import { installCrashGuard } from "./lib/crash-guard.js";
 
+// A long-running server must outlive one bad upstream connection; see crash-guard.ts.
+installCrashGuard();
 configureFromEnv();
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
