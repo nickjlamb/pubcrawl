@@ -29,7 +29,7 @@ the citation formatters (`cite.ts`), and the ClinicalTrials.gov summary mapper
 and checks the transport and handshake (it calls no tools). Tests use fixture payloads —
 no network calls. Functions that need testing are exported from their module; keep new
 parsing/formatting logic as exported pure functions so it can be unit-tested the same way.
-CI (`.github/workflows/build.yml`) runs lint → test → build on every push and PR, plus a `container` job that builds and smoke-tests the Docker image.
+CI (`.github/workflows/build.yml`) runs lint → test → build on every push and PR, plus a `container` job that builds and smoke-tests the Docker image. A `published-package` job packs the release, installs it in an empty project on Node 20 and runs `scripts/consumer-smoke.mjs`, because npm users get cheerio's undici 7 on Node 20+ rather than this repo's Node 22 + undici 8 override.
 
 ## Architecture
 

@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Tool-call counts in the logs.** The HTTP server logs one structured JSON line per completed tool call (`event: "tool_call"`, `tool`, `ok`, `durationMs`, `todayToolCalls`, `todayForTool`, `todayErrorsForTool`), so the host's logs show which tools are used and which are failing (on Railway, filter with `@event:tool_call`, or `@event:tool_call @ok:false` for failures). No arguments, queries, results or IPs are logged, and a call is not linked to a client, since the server is stateless. Calls rejected before they reach a tool (unknown tool, invalid arguments) are not counted. `PUBCRAWL_USAGE_LOG=off` disables these lines along with the connection lines.
 
+### Changed
+- CI: new `published-package` job installs the packed tarball in an empty project on Node 20 and runs `scripts/consumer-smoke.mjs`, which checks the dependency tree npm users get (cheerio's own undici 7, no override), that the stdio server starts and lists all 14 tools, and that the unread-error-body crash stays fixed there. Until now only the Node 22 + undici 8 development setup was tested.
+
 ## [2.9.0] — 2026-11-22
 
 ### Added
