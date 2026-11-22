@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **HTTP server no longer dies when an upstream host drops a connection mid-response.** undici 7 (loaded by cheerio, and used by Node's `fetch` once loaded) throws an uncatchable `assert(!this.paused)` from a socket event in that case, which ended the process and took the hosted endpoint offline on 2026-11-21. The HTTP entry point now logs that one assertion (`event: "undici_parser_assertion_suppressed"`) and keeps serving; any other uncaught exception still exits with code 1.
+- **Root cause of that outage fixed.** It was reproduced: an upstream error response (`Connection: close`, body of roughly 65-130 KB) whose body is never read makes undici 6 and 7 throw `assert(!this.paused)` when the peer closes. Two changes:
+  - Every outbound fetch helper (NCBI, Europe PMC, eMC, ClinicalTrials.gov, openFDA) now discards the body of an error response before throwing (`src/lib/discard-body.ts`). This protects all installs, including `npx` on Node 20.
+  - The hosted build overrides cheerio's `undici` to 8.x, which handles the case in the library, so fetch calls made by `@pharmatools/drug-data` are covered too. undici 8 needs Node 22.19+, so the Dockerfile and CI move to Node 22 and Railway now builds from the Dockerfile. npm overrides do not reach people who install the package, so `engines` stays at Node 20+.
+  - `tests/unread-body.test.ts` replays the failing response against a local server and fails if either protection regresses.
 - `railway.toml`: restart policy is now `always`. With `on_failure` and three retries, the service was not restarted once the retries were used up.
 
 ## [2.8.0] — 2026-11-03

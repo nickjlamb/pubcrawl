@@ -7,7 +7,7 @@
 # Serves POST /mcp and GET /health on $PORT (8080 here; Cloud Run and most
 # platforms set PORT themselves). See "Run in your own environment" in README.md.
 
-FROM node:20-slim AS build
+FROM node:22-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
@@ -15,7 +15,7 @@ COPY tsconfig.json ./
 COPY src ./src
 RUN npm run build && npm prune --omit=dev
 
-FROM node:20-slim
+FROM node:22-slim
 ENV NODE_ENV=production \
     PORT=8080
 WORKDIR /app

@@ -1,5 +1,6 @@
 import { cache, TTL } from "./cache.js";
 import { EuropePmcArticle } from "../types.js";
+import { discardBody } from "./discard-body.js";
 
 const BASE_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest";
 const EMAIL = "nick@pharmatools.ai";
@@ -24,6 +25,7 @@ async function rateLimitedFetch(url: string): Promise<Response> {
   try {
     const response = await fetch(url, { signal: controller.signal });
     if (!response.ok) {
+      await discardBody(response);
       throw new Error(`Europe PMC API error: ${response.status} ${response.statusText}`);
     }
     return response;

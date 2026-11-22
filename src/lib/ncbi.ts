@@ -1,4 +1,5 @@
 import { cache, TTL } from "./cache.js";
+import { discardBody } from "./discard-body.js";
 
 const BASE_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
 const TOOL = "pubcrawl";
@@ -42,6 +43,7 @@ async function rateLimitedFetch(url: string): Promise<Response> {
   try {
     const response = await fetch(url, { signal: controller.signal });
     if (!response.ok) {
+      await discardBody(response);
       throw new Error(`NCBI API error: ${response.status} ${response.statusText}`);
     }
     return response;

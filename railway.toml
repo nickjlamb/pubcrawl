@@ -1,12 +1,10 @@
+# Built from the Dockerfile, so production runs the image CI builds and smoke-tests
+# (Node 22, which the undici 8 override in package.json needs).
 [build]
-builder = "nixpacks"
-buildCommand = "npm install && npm run build"
-
-[build.nixpacks]
-NODE_VERSION = "20"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "node dist/http.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
 # Always restart: with "on_failure" and a retry cap, the service stayed down once

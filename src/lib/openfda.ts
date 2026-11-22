@@ -1,4 +1,5 @@
 import { cache, TTL } from "./cache.js";
+import { discardBody } from "./discard-body.js";
 
 const BASE_URL = "https://api.fda.gov/drug/label.json";
 const REQUEST_DELAY_MS = 300;
@@ -22,6 +23,7 @@ async function rateLimitedFetch(url: string): Promise<Response> {
   try {
     const response = await fetch(url, { signal: controller.signal });
     if (!response.ok) {
+      await discardBody(response);
       throw new Error(`OpenFDA API error: ${response.status} ${response.statusText}`);
     }
     return response;
