@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio";
 import { cache, TTL } from "./cache.js";
+import { discardBody } from "./discard-body.js";
 
 const BASE_URL = "https://www.medicines.org.uk";
 const REQUEST_DELAY_MS = 1000;
@@ -27,6 +28,7 @@ async function rateLimitedFetch(url: string): Promise<Response> {
       headers: { "User-Agent": USER_AGENT },
     });
     if (!response.ok) {
+      await discardBody(response);
       throw new Error(`eMC error: ${response.status} ${response.statusText}`);
     }
     return response;

@@ -7,6 +7,7 @@ import {
   TrialArmGroup,
   TrialDesign,
 } from "../types.js";
+import { discardBody } from "./discard-body.js";
 
 const BASE_URL = "https://clinicaltrials.gov/api/v2";
 const REQUEST_DELAY_MS = 1200; // ~50 req/min
@@ -30,6 +31,7 @@ async function rateLimitedFetch(url: string): Promise<Response> {
   try {
     const response = await fetch(url, { signal: controller.signal });
     if (!response.ok) {
+      await discardBody(response);
       throw new Error(`ClinicalTrials.gov API error: ${response.status} ${response.statusText}`);
     }
     return response;

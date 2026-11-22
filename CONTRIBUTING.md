@@ -21,7 +21,7 @@ npm test         # Vitest unit suite
 npm run lint     # ESLint
 ```
 
-Requires **Node.js 20+**. No API keys are needed for development (an optional free NCBI key raises PubMed rate limits — see the README).
+Developing in this repo requires **Node.js 22.19+**: `package.json` overrides cheerio's `undici` to 8.x (see the changelog), and undici 8 needs that Node version. The published package still runs on Node.js 20+, because npm overrides do not apply to people who install it. No API keys are needed for development (an optional free NCBI key raises PubMed rate limits — see the README).
 
 ## Project layout
 

@@ -9,6 +9,9 @@
  * dispatcher, so Node's built-in `fetch` runs through it.) undici 8 handles this
  * case but needs Node 22.19+, which is newer than this package's Node 20 floor.
  *
+ * This is a backstop. The trigger (an unread error body) is removed by
+ * discard-body.ts, and the hosted build overrides undici to 8.x.
+ *
  * The failure is confined to one outbound connection: the affected request ends
  * through its own timeout. Anything else uncaught still stops the process, as
  * Node does by default, so the host can restart it.
