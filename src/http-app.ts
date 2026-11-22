@@ -1,6 +1,6 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { createPubCrawlServer, SERVER_NAME, SERVER_VERSION } from "./server.js";
+import { createPubCrawlServer, SERVER_NAME, SERVER_VERSION, type ToolCallInfo } from "./server.js";
 import { UsageCounter } from "./lib/usage.js";
 
 export interface HttpAppOptions {
@@ -12,9 +12,11 @@ export interface HttpAppOptions {
    */
   allowedOrigins: "*" | string[];
   /**
-   * Where to write the one-line JSON usage record logged for each MCP `initialize`
-   * (client name, version and today's running count). Defaults to stdout, which
-   * Railway and most container hosts parse as structured logs. Pass `false` to disable.
+   * Where to write the one-line JSON usage records: one for each MCP `initialize`
+   * (client name, version and today's running count) and one for each tool call
+   * (tool name, outcome, duration and today's running counts). Defaults to stdout,
+   * which Railway and most container hosts parse as structured logs. Pass `false`
+   * to disable both.
    */
   usageLog?: ((line: string) => void) | false;
 }
@@ -70,6 +72,7 @@ async function handleMcp(
   req: IncomingMessage,
   res: ServerResponse,
   onInitialize: ((name: unknown, version: unknown) => void) | undefined,
+  onToolCall: ((info: ToolCallInfo) => void) | undefined,
 ): Promise<void> {
   // Stateless mode: a fresh server and transport per request, with no session to
   // resume, so there is no server-initiated stream (GET) or session to end (DELETE).
@@ -78,7 +81,7 @@ async function handleMcp(
     return;
   }
 
-  const server = createPubCrawlServer();
+  const server = createPubCrawlServer({ onToolCall });
   const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
 
   // Release both when the response finishes or the client disconnects,
@@ -109,6 +112,9 @@ export function createHttpApp(options: HttpAppOptions): Server {
   const onInitialize = log
     ? (name: unknown, version: unknown) => log(JSON.stringify(usage.record(name, version)))
     : undefined;
+  const onToolCall = log
+    ? (info: ToolCallInfo) => log(JSON.stringify(usage.recordToolCall(info.tool, info.ok, info.durationMs)))
+    : undefined;
 
   return createServer((req, res) => {
     const url = new URL(req.url ?? "/", "http://localhost");
@@ -130,7 +136,7 @@ export function createHttpApp(options: HttpAppOptions): Server {
     }
 
     if (url.pathname === "/mcp") {
-      void handleMcp(req, res, onInitialize);
+      void handleMcp(req, res, onInitialize, onToolCall);
       return;
     }
 

@@ -31,16 +31,67 @@ export function configureFromEnv(env: NodeJS.ProcessEnv = process.env): void {
   }
 }
 
+/** Reported once per completed tool call: the tool's name, outcome and duration, nothing else. */
+export interface ToolCallInfo {
+  tool: string;
+  /** False when the tool returned `isError` or threw. */
+  ok: boolean;
+  durationMs: number;
+}
+
+export interface PubCrawlServerOptions {
+  /**
+   * Called after each tool call finishes. Used by the HTTP server for usage counts.
+   * It never receives the call's arguments or result.
+   */
+  onToolCall?: (info: ToolCallInfo) => void;
+}
+
+/**
+ * Make every tool registered on `server` after this call report to `onToolCall`.
+ * Wraps each handler at registration, so only registered tool names are ever reported
+ * and a call rejected before it reaches a handler (unknown tool, invalid arguments)
+ * is not counted. The handler's own result or error passes through unchanged.
+ */
+export function instrumentTools(server: McpServer, onToolCall: (info: ToolCallInfo) => void): void {
+  type AnyFn = (...args: unknown[]) => unknown;
+  const register = server.tool as unknown as AnyFn;
+  (server as unknown as { tool: AnyFn }).tool = (...args: unknown[]) => {
+    const name = args[0];
+    const handler = args[args.length - 1];
+    if (typeof name === "string" && typeof handler === "function") {
+      args[args.length - 1] = async (...handlerArgs: unknown[]) => {
+        const started = performance.now();
+        let ok = false;
+        try {
+          const result = (await (handler as AnyFn)(...handlerArgs)) as { isError?: boolean } | undefined;
+          ok = result?.isError !== true;
+          return result;
+        } finally {
+          try {
+            onToolCall({ tool: name, ok, durationMs: performance.now() - started });
+          } catch {
+            // Counting must never change the outcome of a tool call.
+          }
+        }
+      };
+    }
+    return Reflect.apply(register, server, args);
+  };
+}
+
 /**
  * Build an MCP server with every PubCrawl tool registered.
  * The single place tools are registered: the stdio and HTTP entry points both call this,
  * so the two transports always expose the same tool set.
  */
-export function createPubCrawlServer(): McpServer {
+export function createPubCrawlServer(options: PubCrawlServerOptions = {}): McpServer {
   const server = new McpServer({
     name: SERVER_NAME,
     version: SERVER_VERSION,
   });
+
+  if (options.onToolCall) instrumentTools(server, options.onToolCall);
 
   registerSearchTool(server);
   registerSearchEuropePmcTool(server);
