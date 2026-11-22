@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.0] — 2026-11-22
+
 ### Added
 - **Retraction and correction flags on every literature result.** `search_pubmed`, `search_europepmc`, `get_abstract`, `get_full_text`, `find_related`, `format_citation` and `trending_papers` now return `retracted` (always present). When the source records a retraction, partial retraction or expression of concern, the result also carries a `warning` that names the notice, and `notices` lists each one (errata included) with its type, PMID and reference. A record that is itself a retraction or expression-of-concern notice is labelled as such. Read from fields the tools already fetch (`pubtype`/`references` in esummary, `PublicationTypeList`/`CommentsCorrectionsList` in efetch XML, `pubTypeList`/`commentCorrectionList` in Europe PMC), so there is no extra request, except `get_full_text`, which makes one cached PubMed lookup and reports `retracted: null` if it cannot check. `get_full_text` also now returns the PMID when called with only a PMCID. Not detected: withdrawn preprints, and retractions the source has not yet indexed.
 - **Tool-call counts in the logs.** The HTTP server logs one structured JSON line per completed tool call (`event: "tool_call"`, `tool`, `ok`, `durationMs`, `todayToolCalls`, `todayForTool`, `todayErrorsForTool`), so the host's logs show which tools are used and which are failing (on Railway, filter with `@event:tool_call`, or `@event:tool_call @ok:false` for failures). No arguments, queries, results or IPs are logged, and a call is not linked to a client, since the server is stateless. Calls rejected before they reach a tool (unknown tool, invalid arguments) are not counted. `PUBCRAWL_USAGE_LOG=off` disables these lines along with the connection lines.
@@ -189,7 +191,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release: PubMed literature tools — `search_pubmed`, `get_abstract`, `get_full_text`, `find_related`, `format_citation`, and `trending_papers`.
 
-[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.9.0...HEAD
+[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.10.0...HEAD
+[2.10.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/nickjlamb/pubcrawl/releases/tag/v2.8.0
 [2.6.4]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.3...v2.6.4
