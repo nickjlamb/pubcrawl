@@ -17,6 +17,27 @@ import { statusFromSummary } from "./publication-status.js";
  * `references`), so every result carries `retracted` and, when relevant, a
  * `warning` and the `notices` themselves.
  */
+/**
+ * The article's DOI from an esummary document.
+ *
+ * `articleids` is the reliable source: it lists every identifier with its type.
+ * `elocationid` is only a fallback, because it is empty for many older records
+ * (so the DOI was silently dropped) and can hold a non-DOI identifier such as
+ * "pii: S0140..." (which must not be reported as a DOI).
+ */
+export function doiFromSummary(doc: Record<string, unknown>): string {
+  if (Array.isArray(doc.articleids)) {
+    for (const entry of doc.articleids) {
+      const id = (entry ?? {}) as Record<string, unknown>;
+      if (id.idtype === "doi" && typeof id.value === "string" && id.value.trim() !== "") {
+        return id.value.trim();
+      }
+    }
+  }
+  const match = String(doc.elocationid ?? "").match(/^\s*doi:\s*(\S+)/i);
+  return match ? match[1] : "";
+}
+
 export function formatSummaryArticle(
   uid: string,
   doc: Record<string, unknown>
@@ -24,7 +45,7 @@ export function formatSummaryArticle(
   const authors = parseSummaryAuthors(doc.authors);
   const pubDate = String(doc.pubdate ?? "");
   const year = pubDate.match(/\d{4}/)?.[0] ?? "";
-  const doi = String(doc.elocationid ?? "").replace(/^doi:\s*/i, "");
+  const doi = doiFromSummary(doc);
 
   const status = statusFromSummary(doc);
 
