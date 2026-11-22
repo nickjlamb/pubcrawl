@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatSummaryArticle } from "../src/lib/pubmed-format.js";
+import { doiFromSummary, formatSummaryArticle } from "../src/lib/pubmed-format.js";
 
 // A representative NCBI esummary document. `sorttitle` is a normalised
 // (lowercased, de-punctuated) copy of the title that NCBI returns for sorting.
@@ -64,5 +64,42 @@ describe("formatSummaryArticle", () => {
       year: "",
       doi: "",
     });
+  });
+});
+
+describe("doiFromSummary", () => {
+  // PMID 9500320 as esummary returned it on 2026-11-22: no elocationid, DOI only in articleids.
+  const olderRecord = {
+    elocationid: "",
+    articleids: [
+      { idtype: "pubmed", idtypen: 1, value: "9500320" },
+      { idtype: "doi", idtypen: 3, value: "10.1016/s0140-6736(97)11096-0" },
+      { idtype: "pii", idtypen: 4, value: "S0140673697110960" },
+    ],
+  };
+
+  it("reads the DOI from articleids when elocationid is empty", () => {
+    expect(doiFromSummary(olderRecord)).toBe("10.1016/s0140-6736(97)11096-0");
+    expect(formatSummaryArticle("9500320", olderRecord).doi).toBe("10.1016/s0140-6736(97)11096-0");
+  });
+
+  it("prefers articleids over elocationid", () => {
+    expect(doiFromSummary({ elocationid: "doi: 10.1/other", articleids: [{ idtype: "doi", value: "10.1/real" }] })).toBe("10.1/real");
+  });
+
+  it("falls back to a doi: elocationid", () => {
+    expect(doiFromSummary({ elocationid: "doi: 10.1056/NEJMoa123456" })).toBe("10.1056/NEJMoa123456");
+    expect(doiFromSummary({ elocationid: "DOI:10.1/x", articleids: [{ idtype: "pubmed", value: "1" }] })).toBe("10.1/x");
+  });
+
+  it("never reports a non-DOI identifier as a DOI", () => {
+    expect(doiFromSummary({ elocationid: "pii: S0140-6736(10)60175-4" })).toBe("");
+    expect(doiFromSummary({ elocationid: "pii: S1", articleids: [{ idtype: "pii", value: "S1" }] })).toBe("");
+  });
+
+  it("returns an empty string when there is no DOI", () => {
+    expect(doiFromSummary({})).toBe("");
+    expect(doiFromSummary({ articleids: "nope", elocationid: null })).toBe("");
+    expect(doiFromSummary({ articleids: [null, { idtype: "doi", value: "  " }] })).toBe("");
   });
 });

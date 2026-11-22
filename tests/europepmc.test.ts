@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatEuropePmcResult } from "../src/lib/europepmc.js";
+import { formatEuropePmcResult, plainAbstract } from "../src/lib/europepmc.js";
 
 // A representative Europe PMC `core` result for a published journal article.
 const medResult = {
@@ -135,5 +135,41 @@ describe("formatEuropePmcResult — defensive defaults", () => {
       journalInfo: { yearOfPublication: 2019, journal: {} },
     });
     expect(r.year).toBe("2019");
+  });
+});
+
+describe("plainAbstract", () => {
+  it("turns structured-abstract headings into labels", () => {
+    // The start of PMID 9500320's abstract as Europe PMC returned it on 2026-11-22.
+    const html =
+      "<h4>Background</h4>We investigated a consecutive series of children.<h4>Methods</h4>12 children were referred.";
+    expect(plainAbstract(html)).toBe(
+      "Background: We investigated a consecutive series of children. Methods: 12 children were referred.",
+    );
+  });
+
+  it("strips inline markup and decodes entities", () => {
+    expect(plainAbstract("<i>BRCA1</i> &amp; H<sub>2</sub>O at 5&nbsp;mg, p&lt;0.05 &#8212; &#x3b1;-blocker")).toBe(
+      "BRCA1 & H2O at 5 mg, p<0.05 \u2014 \u03b1-blocker",
+    );
+  });
+
+  it("keeps comparisons that only look like tags", () => {
+    expect(plainAbstract("values < 5 and > 2; n<10")).toBe("values < 5 and > 2; n<10");
+  });
+
+  it("does not double a colon already in the heading and leaves plain text alone", () => {
+    expect(plainAbstract("<h4>Results:</h4> Fewer events.")).toBe("Results: Fewer events.");
+    expect(plainAbstract("Plain abstract text.")).toBe("Plain abstract text.");
+    expect(plainAbstract("")).toBe("");
+  });
+
+  it("is applied to the snippet before it is cut to 300 characters", () => {
+    const article = formatEuropePmcResult({
+      abstractText: "<h4>Background</h4>" + "x".repeat(400),
+    });
+    expect(article.abstract_snippet.startsWith("Background: xxx")).toBe(true);
+    expect(article.abstract_snippet).toHaveLength(300);
+    expect(article.abstract_snippet).not.toContain("<");
   });
 });

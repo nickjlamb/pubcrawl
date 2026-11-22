@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - CI: new `published-package` job installs the packed tarball in an empty project on Node 20 and runs `scripts/consumer-smoke.mjs`, which checks the dependency tree npm users get (cheerio's own undici 7, no override), that the stdio server starts and lists all 14 tools, and that the unread-error-body crash stays fixed there. Until now only the Node 22 + undici 8 development setup was tested.
 
+### Fixed
+- **DOIs missing from PubMed search results.** `search_pubmed`, `find_related` and `trending_papers` read the DOI only from esummary's `elocationid`, which is empty for many older records, so those results came back with `doi: ""` (PMID 9500320, for example). The DOI is now read from `articleids`, with `elocationid` as a fallback only when it is a `doi:` value; a `pii:` value there was previously returned as if it were a DOI.
+- **HTML in Europe PMC snippets.** `search_europepmc`'s `abstract_snippet` carried raw markup from structured abstracts (`<h4>Background</h4>…`). Section headings are now kept as plain labels ("Background: …"), inline tags are removed and entities decoded, before the snippet is cut to 300 characters.
+
 ## [2.9.0] — 2026-11-22
 
 ### Added

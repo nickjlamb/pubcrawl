@@ -41,6 +41,30 @@ const SORT_MAP: Record<string, string | undefined> = {
   cited: "CITED desc",
 };
 
+const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
+
+/**
+ * Europe PMC returns abstracts as HTML fragments: structured abstracts wrap each
+ * section label in `<h4>`, and inline markup such as `<i>`, `<sub>` and `<sup>` is
+ * common. Turn that into plain text, keeping section labels as "Label: ".
+ */
+export function plainAbstract(html: string): string {
+  return html
+    .replace(/<h[1-6][^>]*>\s*([\s\S]*?)\s*<\/h[1-6]>/gi, (_match, label: string) => {
+      const text = label.replace(/<[^>]*>/g, "").replace(/[:.\s]+$/, "");
+      return text ? ` ${text}: ` : " ";
+    })
+    .replace(/<\/?[a-zA-Z][^>]*>/g, "")
+    .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, code: string) => {
+      const lower = code.toLowerCase();
+      if (lower.startsWith("#x")) return String.fromCodePoint(parseInt(lower.slice(2), 16));
+      if (lower.startsWith("#")) return String.fromCodePoint(parseInt(lower.slice(1), 10));
+      return ENTITIES[lower] ?? match;
+    })
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /**
  * Build a EuropePmcArticle from a single Europe PMC `core` result object.
  *
@@ -86,7 +110,7 @@ export function formatEuropePmcResult(
     // inEPMC === "Y" means the full text is readable in Europe PMC; a PMCID is a
     // reliable fallback signal that an open full text exists.
     has_full_text: result.inEPMC === "Y" || !!result.pmcid,
-    abstract_snippet: abstractText ? abstractText.slice(0, 300) : "",
+    abstract_snippet: abstractText ? plainAbstract(abstractText).slice(0, 300) : "",
     url: source && id ? `https://europepmc.org/article/${source}/${id}` : "",
   };
 }
