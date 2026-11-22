@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { efetch, pmidToPmcid } from "../lib/ncbi.js";
+import { efetch, esummary, pmidToPmcid } from "../lib/ncbi.js";
+import { statusFromSummary, type PublicationStatus } from "../lib/publication-status.js";
 import {
   parseXml,
   parseJatsSections,
@@ -17,10 +18,22 @@ const schema = {
   sections: z.array(z.string()).optional().describe("Filter to specific section titles"),
 };
 
+/** The article's PMID from JATS `<article-id pub-id-type="pmid">`, or "" when there is none. */
+export function pmidFromArticleMeta(articleMeta: unknown): string {
+  const ids = ((articleMeta ?? {}) as Record<string, unknown>)["article-id"];
+  const list = ids === undefined || ids === null ? [] : Array.isArray(ids) ? ids : [ids];
+  for (const id of list) {
+    if (typeof id === "object" && id !== null && (id as Record<string, unknown>)["@_pub-id-type"] === "pmid") {
+      return extractText(id).trim();
+    }
+  }
+  return "";
+}
+
 export function registerFullTextTool(server: McpServer): void {
   server.tool(
     "get_full_text",
-    "Get the full text of an open-access article from PubMed Central. Returns article sections, figure/table captions, and reference count. Only works for articles available in PMC.",
+    "Get the full text of an open-access article from PubMed Central. Returns article sections, figure/table captions, and reference count. Flags the article if PubMed marks it as retracted. Only works for articles available in PMC.",
     schema,
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
@@ -93,10 +106,27 @@ export function registerFullTextTool(server: McpServer): void {
         const tableCaptions = parseTableCaptions(body);
         const referenceCount = countReferences(back);
 
+        // Retraction status lives on the PubMed record, not in the PMC XML. A failed or
+        // impossible lookup is reported as `retracted: null`, never as a clean result.
+        const statusPmid = pmid || pmidFromArticleMeta(articleMeta);
+        let status: PublicationStatus | null = null;
+        if (statusPmid) {
+          try {
+            const summary = await esummary({ id: [statusPmid] });
+            const doc = summary[statusPmid] as Record<string, unknown> | undefined;
+            if (doc && !doc.error) status = statusFromSummary(doc);
+          } catch {
+            status = null;
+          }
+        }
+
         const result: FullTextResult = {
-          pmid: pmid,
+          pmid: statusPmid,
           pmcid: pmcid!,
           title,
+          retracted: status ? status.retracted : null,
+          ...(status?.warning !== undefined && { warning: status.warning }),
+          ...(status?.notices !== undefined && { notices: status.notices }),
           sections,
           figure_captions: figureCaptions,
           table_captions: tableCaptions,

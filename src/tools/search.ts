@@ -16,7 +16,7 @@ const schema = {
 export function registerSearchTool(server: McpServer): void {
   server.tool(
     "search_pubmed",
-    "Search PubMed for biomedical literature. Returns article summaries with PMIDs, titles, authors, journals, and DOIs.",
+    "Search PubMed for biomedical literature. Returns article summaries with PMIDs, titles, authors, journals, and DOIs. Retracted articles are flagged.",
     schema,
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {

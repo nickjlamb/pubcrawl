@@ -19,6 +19,7 @@ describe("formatSummaryArticle", () => {
     expect(article).toEqual({
       pmid: "38127654",
       title: "A Randomised Trial of Semaglutide in Type 2 Diabetes.",
+      retracted: false,
       authors: ["Smith J", "Doe A"],
       journal: "New England Journal of Medicine",
       year: "2024",
@@ -57,6 +58,7 @@ describe("formatSummaryArticle", () => {
     expect(formatSummaryArticle("1", {})).toEqual({
       pmid: "1",
       title: "",
+      retracted: false,
       authors: [],
       journal: "",
       year: "",

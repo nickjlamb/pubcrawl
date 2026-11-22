@@ -2,6 +2,7 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { efetch } from "../lib/ncbi.js";
 import { parseXml, parseAuthors, extractText } from "../lib/xml-parser.js";
+import { statusFromPubmedXml } from "../lib/publication-status.js";
 
 const schema = {
   pmid: z.string().describe("PubMed ID"),
@@ -142,7 +143,7 @@ export function formatBibtex(info: ArticleInfo): string {
 export function registerCiteTool(server: McpServer): void {
   server.tool(
     "format_citation",
-    "Format a citation for a PubMed article in APA, Vancouver, Harvard, or BibTeX style.",
+    "Format a citation for a PubMed article in APA, Vancouver, Harvard, or BibTeX style. Flags the article if it has been retracted.",
     schema,
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
@@ -207,11 +208,23 @@ export function registerCiteTool(server: McpServer): void {
         };
 
         const formatted = formatters[params.style](info);
+        const status = statusFromPubmedXml(article);
 
         return {
           content: [{
             type: "text",
-            text: JSON.stringify({ pmid: params.pmid, style: params.style, citation: formatted }, null, 2),
+            text: JSON.stringify(
+              {
+                pmid: params.pmid,
+                style: params.style,
+                citation: formatted,
+                retracted: status.retracted,
+                ...(status.warning !== undefined && { warning: status.warning }),
+                ...(status.notices !== undefined && { notices: status.notices }),
+              },
+              null,
+              2,
+            ),
           }],
         };
       } catch (error) {

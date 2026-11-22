@@ -106,6 +106,7 @@ describe("formatEuropePmcResult — defensive defaults", () => {
       pmcid: "",
       doi: "",
       title: "",
+      retracted: false,
       authors: [],
       journal: "",
       year: "",
