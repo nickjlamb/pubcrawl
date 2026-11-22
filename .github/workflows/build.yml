@@ -20,6 +20,38 @@ jobs:
       - run: npm test
       - run: npm run build
 
+  # The package as npm users get it: a clean install of the packed tarball on Node 20.
+  # The jobs above run on Node 22 with cheerio's undici overridden to 8.x, but npm
+  # overrides do not reach people who install the package, so they run undici 7,
+  # usually on Node 20. This job checks that combination: the stdio server starts
+  # and lists its tools, and the unread-error-body crash of 2026-11-21 stays fixed.
+  published-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Build and pack
+        run: |
+          npm ci
+          npm run build
+          npm pack --ignore-scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install the tarball in an empty project
+        run: |
+          mkdir "$RUNNER_TEMP/consumer"
+          cd "$RUNNER_TEMP/consumer"
+          npm init -y > /dev/null
+          npm install "$GITHUB_WORKSPACE"/pharmatools-pubcrawl-*.tgz
+      - name: Smoke test on Node 20
+        run: |
+          node --version | grep -q '^v20\.'
+          node scripts/consumer-smoke.mjs "$RUNNER_TEMP/consumer"
+
   # Builds the container image and checks it serves MCP over HTTP:
   # healthy, non-root, and a client can initialise and list all 14 tools.
   container:
