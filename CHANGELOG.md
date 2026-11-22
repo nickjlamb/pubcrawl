@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Tool-call counts in the logs.** The HTTP server logs one structured JSON line per completed tool call (`event: "tool_call"`, `tool`, `ok`, `durationMs`, `todayToolCalls`, `todayForTool`, `todayErrorsForTool`), so the host's logs show which tools are used and which are failing (on Railway, filter with `@event:tool_call`, or `@event:tool_call @ok:false` for failures). No arguments, queries, results or IPs are logged, and a call is not linked to a client, since the server is stateless. Calls rejected before they reach a tool (unknown tool, invalid arguments) are not counted. `PUBCRAWL_USAGE_LOG=off` disables these lines along with the connection lines.
+
 ## [2.9.0] — 2026-11-22
 
 ### Added

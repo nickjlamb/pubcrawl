@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
@@ -7,7 +7,8 @@ import { createHttpApp, parseAllowedOrigins } from "../src/http-app.js";
 import { SERVER_VERSION } from "../src/server.js";
 
 // These tests start the real HTTP server on an ephemeral local port. They exercise
-// the transport and protocol handshake only; no tool is called, so nothing leaves the machine.
+// the transport and protocol handshake; nothing leaves the machine. The one test that
+// calls a tool replaces `fetch` for non-local hosts with a stub first.
 
 const EXPECTED_TOOLS = [
   "compare_labels",
@@ -192,5 +193,43 @@ describe("HTTP transport (usage logging)", () => {
       todayTotal: 3,
       todayForClient: 2,
     });
+  });
+
+  it("logs one line per tool call with the tool name and outcome, not its arguments", async () => {
+    // Local requests (the MCP client talking to this server) go through; anything else
+    // gets a canned upstream failure, so the tool runs for real but stays offline.
+    const realFetch = globalThis.fetch;
+    const outbound: string[] = [];
+    vi.stubGlobal("fetch", (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+      const url = input instanceof Request ? input.url : String(input);
+      if (new URL(url).hostname === "127.0.0.1") return realFetch(input, init);
+      outbound.push(url);
+      return Promise.resolve(new Response("unavailable", { status: 503, statusText: "Service Unavailable" }));
+    });
+    const before = lines.length;
+    const client = new Client({ name: "tool-count-test", version: "0.0.0" });
+    try {
+      await client.connect(new StreamableHTTPClientTransport(new URL(`${base}/mcp`)));
+      const result = await client.callTool({ name: "get_trial", arguments: { nctId: "NCT00000102" } });
+      expect(result.isError).toBe(true);
+    } finally {
+      await client.close();
+      vi.unstubAllGlobals();
+    }
+    await new Promise((r) => setTimeout(r, 50));
+    expect(outbound).toHaveLength(1);
+    const added = lines.slice(before);
+    const toolEvents = added.map((l) => JSON.parse(l)).filter((e) => e.event === "tool_call");
+    expect(toolEvents).toHaveLength(1);
+    expect(toolEvents[0]).toMatchObject({
+      level: "info",
+      tool: "get_trial",
+      ok: false,
+      todayToolCalls: 1,
+      todayForTool: 1,
+      todayErrorsForTool: 1,
+    });
+    expect(typeof toolEvents[0].durationMs).toBe("number");
+    expect(added.join("\n")).not.toContain("NCT00000102");
   });
 });
