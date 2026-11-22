@@ -1,6 +1,14 @@
+import type { PublicationNotice } from "./lib/publication-status.js";
+
 export interface PubMedArticle {
   pmid: string;
   title: string;
+  /** True when the source marks the article as retracted. Always present. */
+  retracted: boolean;
+  /** Alert for a retraction, partial retraction or expression of concern. */
+  warning?: string;
+  /** Retraction, expression-of-concern and erratum notices about this article. */
+  notices?: PublicationNotice[];
   authors: string[];
   journal: string;
   year: string;
@@ -14,6 +22,12 @@ export interface EuropePmcArticle {
   pmcid: string;
   doi: string;
   title: string;
+  /** True when the source marks the article as retracted. Always present. */
+  retracted: boolean;
+  /** Alert for a retraction, partial retraction or expression of concern. */
+  warning?: string;
+  /** Retraction, expression-of-concern and erratum notices about this article. */
+  notices?: PublicationNotice[];
   authors: string[];
   journal: string;
   year: string;
@@ -33,6 +47,12 @@ export interface AbstractSection {
 export interface FullAbstract {
   pmid: string;
   title: string;
+  /** True when the source marks the article as retracted. Always present. */
+  retracted: boolean;
+  /** Alert for a retraction, partial retraction or expression of concern. */
+  warning?: string;
+  /** Retraction, expression-of-concern and erratum notices about this article. */
+  notices?: PublicationNotice[];
   authors: string[];
   journal: string;
   year: string;
@@ -55,6 +75,16 @@ export interface FullTextResult {
   pmid: string;
   pmcid: string;
   title: string;
+  /**
+   * True when PubMed marks the article as retracted, false when it does not, and
+   * null when the status could not be checked (no PMID for this PMC record, or the
+   * PubMed lookup failed). Null is not a clean result.
+   */
+  retracted: boolean | null;
+  /** Alert for a retraction, partial retraction or expression of concern. */
+  warning?: string;
+  /** Retraction, expression-of-concern and erratum notices about this article. */
+  notices?: PublicationNotice[];
   sections: FullTextSection[];
   figure_captions: string[];
   table_captions: string[];

@@ -12,7 +12,7 @@ const schema = {
 export function registerRelatedTool(server: McpServer): void {
   server.tool(
     "find_related",
-    "Find related articles for a given PubMed article. Returns similar papers ranked by relevance score using PubMed's neighbor algorithm.",
+    "Find related articles for a given PubMed article. Returns similar papers ranked by relevance score using PubMed's neighbor algorithm. Retracted articles are flagged.",
     schema,
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {

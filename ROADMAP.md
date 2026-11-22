@@ -6,6 +6,7 @@ This is a living document, not a commitment. Priorities shift with feedback; [op
 
 ## ✅ Recently shipped
 
+- **Retraction and correction flags** — every literature result reports `retracted`, with a warning and the notices (retraction, expression of concern, erratum) when PubMed or Europe PMC records them
 - **Fidelity benchmark for labelling and trials** (`benchmark/`) — `compare_labels` gold set with verbatim-against-source checks, trial-record anchors, and a CI gate on release
 - **`compare_labels` status semantics** — a missing side is always explained (label unavailable vs section absent)
 - **`search_europepmc`** — search Europe PMC (preprints, patents, richer metadata) alongside PubMed

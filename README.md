@@ -48,6 +48,7 @@ A cardiovascular claim that is on-label in the US promotes an unlicensed indicat
 
 - 🔬 **14 tools** across literature, drug labelling, and clinical trials
 - 🧾 **Verifiable by design** — results link back to DailyMed, the eMC, PubMed, and ClinicalTrials.gov
+- 🚩 **Retraction flags** — every literature result says whether the article has been retracted, and lists retraction, expression-of-concern and erratum notices
 - 📰 **Preprints** via Europe PMC — surface work ahead of formal publication
 - 🆓 **No API keys required** (an optional free NCBI key raises PubMed rate limits)
 - 🧪 Fully **typed, tested, and CI-checked** — literature retrieval gated by [OpenGATE](https://github.com/nickjlamb/opengate), and labelling & trials by the in-repo [fidelity benchmark](benchmark/README.md), on every release
@@ -99,6 +100,8 @@ That's it. → [More examples](#-examples) · [API key & other options](#-config
 | `find_related` | Find similar articles using PubMed's neighbor algorithm, ranked by relevance score. |
 | `format_citation` | Generate a formatted citation in APA, Vancouver, Harvard, or BibTeX style. |
 | `trending_papers` | Find recent papers on a topic, with optional filtering to high-impact journals (Nature, Science, Cell, NEJM, Lancet, JAMA, etc.). |
+
+**Retraction and correction status.** Every result from these seven tools carries `retracted` (true or false). When PubMed or Europe PMC records a retraction, a partial retraction or an expression of concern, the result also has a plain-language `warning` naming the notice, and `notices` lists each notice (including errata) with its PMID and reference. A record that is itself a retraction notice is labelled as one. The status is read from the source's own record, so it is as current as PubMed and Europe PMC are; a retraction they have not yet indexed will not appear, and withdrawn preprints are not detected. `get_full_text` reports `retracted: null` when it cannot check (no PMID for the PMC record, or the lookup failed).
 
 ### 💊 Drug labelling
 

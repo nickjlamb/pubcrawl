@@ -39,7 +39,7 @@ function formatDate(date: Date): string {
 export function registerTrendingTool(server: McpServer): void {
   server.tool(
     "trending_papers",
-    "Find recent/trending papers on a topic. Sorted by date, with optional filtering to high-impact journals.",
+    "Find recent/trending papers on a topic. Sorted by date, with optional filtering to high-impact journals. Retracted articles are flagged.",
     schema,
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {

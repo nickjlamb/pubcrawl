@@ -13,7 +13,7 @@ const schema = {
 export function registerSearchEuropePmcTool(server: McpServer): void {
   server.tool(
     "search_europepmc",
-    "Search Europe PMC — a broader biomedical corpus than PubMed that also indexes preprints (bioRxiv, medRxiv), patents, and agricultural/biomedical databases. Unlike search_pubmed, each result includes an abstract snippet, citation count, open-access status, and whether a preprint. Use preprintsOnly to surface work ahead of formal publication.",
+    "Search Europe PMC — a broader biomedical corpus than PubMed that also indexes preprints (bioRxiv, medRxiv), patents, and agricultural/biomedical databases. Unlike search_pubmed, each result includes an abstract snippet, citation count, open-access status, and whether a preprint. Use preprintsOnly to surface work ahead of formal publication. Retracted articles are flagged.",
     schema,
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {

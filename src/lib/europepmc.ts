@@ -1,6 +1,7 @@
 import { cache, TTL } from "./cache.js";
 import { EuropePmcArticle } from "../types.js";
 import { discardBody } from "./discard-body.js";
+import { statusFromEuropePmc } from "./publication-status.js";
 
 const BASE_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest";
 const EMAIL = "nick@pharmatools.ai";
@@ -62,6 +63,7 @@ export function formatEuropePmcResult(
   const authors = authorString
     ? authorString.split(",").map((a) => a.trim()).filter(Boolean)
     : [];
+  const status = statusFromEuropePmc(result);
 
   return {
     id,
@@ -70,6 +72,9 @@ export function formatEuropePmcResult(
     pmcid: result.pmcid ? String(result.pmcid) : "",
     doi: result.doi ? String(result.doi) : "",
     title: String(result.title ?? ""),
+    retracted: status.retracted,
+    ...(status.warning !== undefined && { warning: status.warning }),
+    ...(status.notices !== undefined && { notices: status.notices }),
     authors,
     journal:
       String(journal.title ?? "") || String(journal.isoabbreviation ?? ""),

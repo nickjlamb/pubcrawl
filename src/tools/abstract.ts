@@ -10,6 +10,7 @@ import {
   extractText,
 } from "../lib/xml-parser.js";
 import { FullAbstract } from "../types.js";
+import { statusFromPubmedXml } from "../lib/publication-status.js";
 
 const schema = {
   pmid: z.string().describe("PubMed ID"),
@@ -19,7 +20,7 @@ const schema = {
 export function registerAbstractTool(server: McpServer): void {
   server.tool(
     "get_abstract",
-    "Get the full structured abstract and metadata for a PubMed article. Returns abstract sections (background, methods, results, conclusions), keywords, MeSH terms, and PMC ID.",
+    "Get the full structured abstract and metadata for a PubMed article. Returns abstract sections (background, methods, results, conclusions), keywords, MeSH terms, and PMC ID. Flags retracted articles and lists retraction, expression-of-concern and erratum notices.",
     schema,
     { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     async (params) => {
@@ -103,9 +104,14 @@ export function registerAbstractTool(server: McpServer): void {
         const meshTerms = parseMeshTerms(medlineCitation?.MeshHeadingList);
         const keywords = parseKeywords(medlineCitation?.KeywordList);
 
+        const status = statusFromPubmedXml(article);
+
         const result: FullAbstract = {
           pmid: params.pmid,
           title: extractText(articleData.ArticleTitle),
+          retracted: status.retracted,
+          ...(status.warning !== undefined && { warning: status.warning }),
+          ...(status.notices !== undefined && { notices: status.notices }),
           authors,
           journal: journalTitle,
           year,
