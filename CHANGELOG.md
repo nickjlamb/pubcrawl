@@ -7,8 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.9.0] — 2026-11-22
+
 ### Added
-- Server icon in `server.json` for the MCP Registry listing. It goes out with the next registry publish.
+- Server icon in `server.json` for the MCP Registry listing.
 - **Connection counts in the logs.** The HTTP server logs one structured JSON line per MCP `initialize` (`event: "initialize"`, client name and version, `todayTotal`, `todayForClient`), so daily connections per client can be read from the host's logs (on Railway, filter with `@event:initialize`). These are sessions, not unique users. No queries, arguments or IPs are logged. `PUBCRAWL_USAGE_LOG=off` disables it.
 
 ### Fixed
@@ -176,7 +178,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release: PubMed literature tools — `search_pubmed`, `get_abstract`, `get_full_text`, `find_related`, `format_citation`, and `trending_papers`.
 
-[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.8.0...HEAD
+[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.9.0...HEAD
+[2.9.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/nickjlamb/pubcrawl/releases/tag/v2.8.0
 [2.6.4]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.3...v2.6.4
 [2.6.3]: https://github.com/nickjlamb/pubcrawl/compare/v2.6.2...v2.6.3
