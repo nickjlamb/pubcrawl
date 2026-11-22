@@ -9,5 +9,6 @@ NODE_VERSION = "20"
 startCommand = "node dist/http.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
+# Always restart: with "on_failure" and a retry cap, the service stayed down once
+# the cap was used up (outage of 2026-11-21).
+restartPolicyType = "always"
