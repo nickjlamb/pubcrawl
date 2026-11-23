@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "cheerio": "^1.2.0",
-    "fast-xml-parser": "^5.11.2",
+    "fast-xml-parser": "^5.12.1",
     "typebox": "^1.1.38"
   },
   "peerDependencies": {

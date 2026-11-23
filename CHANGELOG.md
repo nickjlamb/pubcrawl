@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.1] — 2026-11-23
+
+### Security
+- **`zod` raised to `^4.6.7`.** Versions before 4.6.6 can exhaust memory while validating oversized constrained collections ([GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5)). Tool arguments are validated with zod, so this was reachable through any tool call to the HTTP server.
+- **`fast-xml-parser` raised to `^5.12.1`.** Versions up to 5.11.2 take quadratic CPU time on unterminated stop-node tags ([GHSA-474x-hrwr-fgx4](https://github.com/advisories/GHSA-474x-hrwr-fgx4), low severity).
+- The OpenClaw plugin's `fast-xml-parser` range is raised to `^5.12.1` as well; the plugin is versioned and published separately.
+- `@modelcontextprotocol/sdk` raised to `^1.32.2`, and the lockfile now resolves patched versions of its dependencies `body-parser`, `hono`, `@hono/node-server`, `fast-uri`, `ip-address` and `qs`. `npm audit --omit=dev` reports no known vulnerabilities.
+
 ## [2.10.0] — 2026-11-22
 
 ### Added
@@ -191,7 +199,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release: PubMed literature tools — `search_pubmed`, `get_abstract`, `get_full_text`, `find_related`, `format_citation`, and `trending_papers`.
 
-[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.10.0...HEAD
+[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.10.1...HEAD
+[2.10.1]: https://github.com/nickjlamb/pubcrawl/compare/v2.10.0...v2.10.1
 [2.10.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/nickjlamb/pubcrawl/releases/tag/v2.8.0
