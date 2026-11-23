@@ -1,5 +1,5 @@
 import { cache, TTL } from "./cache.js";
-import { discardBody } from "./discard-body.js";
+import { createUpstreamClient } from "./upstream.js";
 
 const BASE_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
 const TOOL = "pubcrawl";
@@ -8,7 +8,6 @@ const REQUEST_DELAY_MS = 300;
 const TIMEOUT_MS = 15000;
 
 let apiKey: string | undefined;
-let lastRequestTime = 0;
 
 export function setApiKey(key: string): void {
   apiKey = key;
@@ -26,31 +25,14 @@ function buildParams(extra: Record<string, string | undefined>): URLSearchParams
   return params;
 }
 
-async function rateLimitedFetch(url: string): Promise<Response> {
-  const minDelay = apiKey ? 100 : REQUEST_DELAY_MS;
-  const now = Date.now();
-  const elapsed = now - lastRequestTime;
-
-  if (elapsed < minDelay) {
-    await new Promise((resolve) => setTimeout(resolve, minDelay - elapsed));
-  }
-
-  lastRequestTime = Date.now();
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-  try {
-    const response = await fetch(url, { signal: controller.signal });
-    if (!response.ok) {
-      await discardBody(response);
-      throw new Error(`NCBI API error: ${response.status} ${response.statusText}`);
-    }
-    return response;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
+// Spacing, timeout and retry live in upstream.ts. NCBI allows 10 requests a second
+// with an API key and 3 without; the delay is re-read so a key set later applies.
+const rateLimitedFetch = createUpstreamClient({
+  name: "ncbi",
+  errorPrefix: "NCBI API error",
+  minDelayMs: () => (apiKey ? 100 : REQUEST_DELAY_MS),
+  timeoutMs: TIMEOUT_MS,
+});
 
 export async function esearch(params: {
   db?: string;

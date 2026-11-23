@@ -204,7 +204,8 @@ describe("HTTP transport (usage logging)", () => {
       const url = input instanceof Request ? input.url : String(input);
       if (new URL(url).hostname === "127.0.0.1") return realFetch(input, init);
       outbound.push(url);
-      return Promise.resolve(new Response("unavailable", { status: 503, statusText: "Service Unavailable" }));
+      // 404, not 503: a 503 is retried (upstream.ts), which this test is not about.
+      return Promise.resolve(new Response("not found", { status: 404, statusText: "Not Found" }));
     });
     const before = lines.length;
     const client = new Client({ name: "tool-count-test", version: "0.0.0" });

@@ -7,38 +7,19 @@ import {
   TrialArmGroup,
   TrialDesign,
 } from "../types.js";
-import { discardBody } from "./discard-body.js";
+import { createUpstreamClient } from "./upstream.js";
 
 const BASE_URL = "https://clinicaltrials.gov/api/v2";
 const REQUEST_DELAY_MS = 1200; // ~50 req/min
 const TIMEOUT_MS = 15000;
 
-let lastRequestTime = 0;
-
-async function rateLimitedFetch(url: string): Promise<Response> {
-  const now = Date.now();
-  const elapsed = now - lastRequestTime;
-
-  if (elapsed < REQUEST_DELAY_MS) {
-    await new Promise((resolve) => setTimeout(resolve, REQUEST_DELAY_MS - elapsed));
-  }
-
-  lastRequestTime = Date.now();
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-  try {
-    const response = await fetch(url, { signal: controller.signal });
-    if (!response.ok) {
-      await discardBody(response);
-      throw new Error(`ClinicalTrials.gov API error: ${response.status} ${response.statusText}`);
-    }
-    return response;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
+// Spacing, timeout and retry live in upstream.ts.
+const rateLimitedFetch = createUpstreamClient({
+  name: "clinicaltrials",
+  errorPrefix: "ClinicalTrials.gov API error",
+  minDelayMs: REQUEST_DELAY_MS,
+  timeoutMs: TIMEOUT_MS,
+});
 
 function str(value: unknown): string {
   return value != null ? String(value) : "";
