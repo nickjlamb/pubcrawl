@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Upstream requests are retried when the failure is likely to be momentary.** A 429, 500, 502, 503 or 504 from NCBI, Europe PMC, eMC, ClinicalTrials.gov or openFDA, a network error, or a response that does not arrive within the timeout is now tried again (up to two more times, with a growing pause that honours `Retry-After` up to 5 s; a timeout is retried once only). Before, one slow or rate-limited response failed the whole tool call. Other statuses (400, 404 and so on) still fail at once. Each retry logs one JSON line to stderr (`event: "upstream_retry"`, upstream name, reason, wait), with no URL or query in it.
-- Timeout errors now say what happened (`Europe PMC API error: no response within 15 s (after 2 attempts)`) instead of `This operation was aborted`.
+- **Europe PMC timeout raised from 15 s to 25 s.** Its search was answering in anything from 0.5 s to over 30 s, and about a third of `search_europepmc` calls on the hosted server were cut off at 15 s. When Europe PMC does not answer or returns a server error, the tool's error now says so and tells the model that `search_pubmed` can be used for journal articles.
+- Timeout errors now say what happened (`Europe PMC API error: no response within 25 s (after 2 attempts)`) instead of `This operation was aborted`.
 - The five API clients share one request path (`src/lib/upstream.ts`) in place of five copies. Request spacing now holds when several tool calls arrive at once on the HTTP server; before, simultaneous calls could go out together.
 
 ## [2.10.1] — 2026-11-23

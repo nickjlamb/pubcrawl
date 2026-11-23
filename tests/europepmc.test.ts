@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatEuropePmcResult, plainAbstract } from "../src/lib/europepmc.js";
+import { formatEuropePmcResult, plainAbstract, europePmcErrorText } from "../src/lib/europepmc.js";
 
 // A representative Europe PMC `core` result for a published journal article.
 const medResult = {
@@ -171,5 +171,27 @@ describe("plainAbstract", () => {
     expect(article.abstract_snippet.startsWith("Background: xxx")).toBe(true);
     expect(article.abstract_snippet).toHaveLength(300);
     expect(article.abstract_snippet).not.toContain("<");
+  });
+});
+
+describe("europePmcErrorText", () => {
+  it("points to search_pubmed when Europe PMC did not answer or failed", () => {
+    for (const message of [
+      "Europe PMC API error: no response within 25 s (after 2 attempts)",
+      "Europe PMC API error: 503 Service Unavailable (after 3 attempts)",
+      "Europe PMC API error: 429 Too Many Requests (after 3 attempts)",
+      "Europe PMC API error: network error (fetch failed) (after 3 attempts)",
+    ]) {
+      const text = europePmcErrorText(message);
+      expect(text.startsWith(`Error searching Europe PMC: ${message}`)).toBe(true);
+      expect(text).toContain("search_pubmed");
+    }
+  });
+
+  it("leaves other errors as they are", () => {
+    expect(europePmcErrorText("Europe PMC API error: 400 Bad Request")).toBe(
+      "Error searching Europe PMC: Europe PMC API error: 400 Bad Request",
+    );
+    expect(europePmcErrorText("Unexpected token < in JSON")).toBe("Error searching Europe PMC: Unexpected token < in JSON");
   });
 });
