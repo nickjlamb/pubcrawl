@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { searchEuropePmc } from "../lib/europepmc.js";
+import { europePmcErrorText, searchEuropePmc } from "../lib/europepmc.js";
 
 const schema = {
   query: z.string().describe("Search query (Europe PMC query syntax supported, e.g. field tags like AUTH, TITLE, JOURNAL)"),
@@ -29,7 +29,7 @@ export function registerSearchEuropePmcTool(server: McpServer): void {
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         return {
-          content: [{ type: "text", text: `Error searching Europe PMC: ${message}` }],
+          content: [{ type: "text", text: europePmcErrorText(message) }],
           isError: true,
         };
       }

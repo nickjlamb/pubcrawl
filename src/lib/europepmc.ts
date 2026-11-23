@@ -6,7 +6,11 @@ import { statusFromEuropePmc } from "./publication-status.js";
 const BASE_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest";
 const EMAIL = "nick@pharmatools.ai";
 const REQUEST_DELAY_MS = 200;
-const TIMEOUT_MS = 15000;
+// Europe PMC's search is slow at times: on 2026-11-23 identical searches took
+// between 0.5 s and 34 s, all of it waiting for the first byte, and about a third
+// of calls ran past the old 15 s limit. 25 s lets most slow answers arrive; with
+// the single timeout retry in upstream.ts the worst case is about 50 s.
+const TIMEOUT_MS = 25000;
 
 // Spacing, timeout and retry live in upstream.ts.
 const rateLimitedFetch = createUpstreamClient({
@@ -135,4 +139,20 @@ export async function searchEuropePmc(params: {
 
   cache.set(cacheKey, result, TTL.SEARCH);
   return result;
+}
+
+/**
+ * The text `search_europepmc` returns when a search fails. When Europe PMC itself
+ * was the problem (no answer, a 5xx, a network error), it points the model at
+ * `search_pubmed`, so the user still gets an answer for journal articles.
+ */
+export function europePmcErrorText(message: string): string {
+  const text = `Error searching Europe PMC: ${message}`;
+  const upstreamTrouble = /no response within|network error|: (429|5\d\d)\b/.test(message);
+  if (!upstreamTrouble) return text;
+  return (
+    `${text}. Europe PMC is slow or unavailable at the moment, not the query. ` +
+    "For journal articles, search_pubmed covers the same ground and can be used now; " +
+    "preprints and patents are only in Europe PMC, so retry later for those."
+  );
 }
