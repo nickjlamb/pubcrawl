@@ -10,8 +10,8 @@ doi: "10.5281/zenodo.22101559"
 repository-code: "https://github.com/nickjlamb/pubcrawl"
 url: "https://www.pharmatools.ai/pubcrawl"
 license: MIT
-version: 2.10.0
-date-released: 2026-11-22
+version: 2.10.1
+date-released: 2026-11-23
 keywords:
   - model context protocol
   - MCP server
