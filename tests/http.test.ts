@@ -192,7 +192,11 @@ describe("HTTP transport (usage logging)", () => {
       clientVersion: "1.2.3",
       todayTotal: 3,
       todayForClient: 2,
+      // All three came from this machine: one visitor, and its address is not in the log.
+      todayVisitors: 1,
+      todayVisitorsForClient: 1,
     });
+    expect(lines.join("\n")).not.toMatch(/127\.0\.0\.1|::1|::ffff/);
   });
 
   it("logs one line per tool call with the tool name and outcome, not its arguments", async () => {

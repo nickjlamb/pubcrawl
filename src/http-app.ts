@@ -2,6 +2,7 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createPubCrawlServer, SERVER_NAME, SERVER_VERSION, type ToolCallInfo } from "./server.js";
 import { UsageCounter } from "./lib/usage.js";
+import { addressFromRequest } from "./lib/visitors.js";
 
 export interface HttpAppOptions {
   /**
@@ -13,7 +14,8 @@ export interface HttpAppOptions {
   allowedOrigins: "*" | string[];
   /**
    * Where to write the one-line JSON usage records: one for each MCP `initialize`
-   * (client name, version and today's running count) and one for each tool call
+   * (client name, version, today's running count and today's distinct-visitor counts;
+   * see lib/visitors.ts) and one for each tool call
    * (tool name, outcome, duration and today's running counts). Defaults to stdout,
    * which Railway and most container hosts parse as structured logs. Pass `false`
    * to disable both.
@@ -71,7 +73,7 @@ function applyCors(req: IncomingMessage, res: ServerResponse, allowed: "*" | str
 async function handleMcp(
   req: IncomingMessage,
   res: ServerResponse,
-  onInitialize: ((name: unknown, version: unknown) => void) | undefined,
+  onInitialize: ((name: unknown, version: unknown, address: string | null) => void) | undefined,
   onToolCall: ((info: ToolCallInfo) => void) | undefined,
 ): Promise<void> {
   // Stateless mode: a fresh server and transport per request, with no session to
@@ -89,7 +91,7 @@ async function handleMcp(
   res.on("close", () => {
     // Only the instance that handled an `initialize` request knows the client.
     const client = server.server.getClientVersion();
-    if (client && onInitialize) onInitialize(client.name, client.version);
+    if (client && onInitialize) onInitialize(client.name, client.version, addressFromRequest(req));
     void transport.close();
     void server.close();
   });
@@ -110,7 +112,8 @@ export function createHttpApp(options: HttpAppOptions): Server {
   const log = options.usageLog === undefined ? (line: string) => console.log(line) : options.usageLog;
   const usage = new UsageCounter();
   const onInitialize = log
-    ? (name: unknown, version: unknown) => log(JSON.stringify(usage.record(name, version)))
+    ? (name: unknown, version: unknown, address: string | null) =>
+        log(JSON.stringify(usage.record(name, version, address)))
     : undefined;
   const onToolCall = log
     ? (info: ToolCallInfo) => log(JSON.stringify(usage.recordToolCall(info.tool, info.ok, info.durationMs)))

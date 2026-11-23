@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Distinct visitors per day in the connection log.** Each `initialize` line now carries `todayVisitors` and `todayVisitorsForClient`: how many different network addresses have connected that UTC day, overall and for that client. No address is logged or stored. Each one is turned into a short keyed hash held in memory, with a random key that is replaced at every UTC midnight and restart, and only the count is written. It is a floor on the number of people, since hosted clients such as the Claude apps connect from shared addresses. `PUBCRAWL_USAGE_LOG=off` turns it off with the rest of the usage lines. The README's data-handling section describes it.
+
 ### Changed
 - **Upstream requests are retried when the failure is likely to be momentary.** A 429, 500, 502, 503 or 504 from NCBI, Europe PMC, eMC, ClinicalTrials.gov or openFDA, a network error, or a response that does not arrive within the timeout is now tried again (up to two more times, with a growing pause that honours `Retry-After` up to 5 s; a timeout is retried once only). Before, one slow or rate-limited response failed the whole tool call. Other statuses (400, 404 and so on) still fail at once. Each retry logs one JSON line to stderr (`event: "upstream_retry"`, upstream name, reason, wait), with no URL or query in it.
 - **Europe PMC timeout raised from 15 s to 25 s.** Its search was answering in anything from 0.5 s to over 30 s, and about a third of `search_europepmc` calls on the hosted server were cut off at 15 s. When Europe PMC does not answer or returns a server error, the tool's error now says so and tells the model that `search_pubmed` can be used for journal articles.
