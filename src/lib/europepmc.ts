@@ -1,6 +1,6 @@
 import { cache, TTL } from "./cache.js";
 import { EuropePmcArticle } from "../types.js";
-import { discardBody } from "./discard-body.js";
+import { createUpstreamClient } from "./upstream.js";
 import { statusFromEuropePmc } from "./publication-status.js";
 
 const BASE_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest";
@@ -8,32 +8,13 @@ const EMAIL = "nick@pharmatools.ai";
 const REQUEST_DELAY_MS = 200;
 const TIMEOUT_MS = 15000;
 
-let lastRequestTime = 0;
-
-async function rateLimitedFetch(url: string): Promise<Response> {
-  const now = Date.now();
-  const elapsed = now - lastRequestTime;
-
-  if (elapsed < REQUEST_DELAY_MS) {
-    await new Promise((resolve) => setTimeout(resolve, REQUEST_DELAY_MS - elapsed));
-  }
-
-  lastRequestTime = Date.now();
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-  try {
-    const response = await fetch(url, { signal: controller.signal });
-    if (!response.ok) {
-      await discardBody(response);
-      throw new Error(`Europe PMC API error: ${response.status} ${response.statusText}`);
-    }
-    return response;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
+// Spacing, timeout and retry live in upstream.ts.
+const rateLimitedFetch = createUpstreamClient({
+  name: "europepmc",
+  errorPrefix: "Europe PMC API error",
+  minDelayMs: REQUEST_DELAY_MS,
+  timeoutMs: TIMEOUT_MS,
+});
 
 const SORT_MAP: Record<string, string | undefined> = {
   relevance: undefined,

@@ -24,8 +24,8 @@ PubCrawl is an MCP (Model Context Protocol) server that gives LLM clients (Claud
 Vitest unit tests live in `tests/` and cover the pure logic layers: the XML/JATS/SPL
 parsers (`xml-parser.ts`), the LRU cache (`cache.ts`), the shared esummary→article
 formatter (`pubmed-format.ts`), the Europe PMC result mapper (`europepmc.ts`),
-the citation formatters (`cite.ts`), and the ClinicalTrials.gov summary mapper
-(`clinicaltrials.ts`), plus `http.test.ts`, which starts the real HTTP app on a local port
+the citation formatters (`cite.ts`), the ClinicalTrials.gov summary mapper
+(`clinicaltrials.ts`), and the upstream client's retry and spacing (`upstream.ts`), plus `http.test.ts`, which starts the real HTTP app on a local port
 and checks the transport and handshake (it calls no tools). Tests use fixture payloads —
 no network calls. Functions that need testing are exported from their module; keep new
 parsing/formatting logic as exported pure functions so it can be unit-tested the same way.
@@ -37,9 +37,11 @@ The server has three layers:
 
 **Tools** (`src/tools/`) — Each file exports a `register*Tool(server: McpServer)` function that registers one MCP tool with a zod schema and async handler. Handlers return `{ content: [{ type: "text", text: JSON.stringify(...) }] }` on success, adding `isError: true` on failure.
 
-**NCBI Client** (`src/lib/ncbi.ts`) — Wraps the four E-utilities endpoints (`esearch`, `esummary`, `efetch`, `elink`) plus `pmidToPmcid`. All requests go through `rateLimitedFetch` (300ms delay without API key, 100ms with) with a 15s timeout. Every request includes `tool=pubcrawl` and `email=nick@pharmatools.ai`. Each function checks the cache before making a network call.
+**NCBI Client** (`src/lib/ncbi.ts`) — Wraps the four E-utilities endpoints (`esearch`, `esummary`, `efetch`, `elink`) plus `pmidToPmcid`. All requests go through `rateLimitedFetch`, an upstream client (see below) with a 300ms delay without API key, 100ms with, and a 15s timeout. Every request includes `tool=pubcrawl` and `email=nick@pharmatools.ai`. Each function checks the cache before making a network call.
 
 **XML Parser** (`src/lib/xml-parser.ts`) — Configures `fast-xml-parser` with `isArray` for elements that can appear once or multiple times in PubMed XML (Author, AbstractText, MeshHeading, Keyword, sec, fig, table-wrap, ref, etc.). This list is critical — if a new XML element needs consistent array handling, it must be added here. Provides two distinct author parsers: `parseAuthors` for efetch XML (`LastName`/`ForeName` elements) and `parseSummaryAuthors` for esummary JSON (`name` property).
+
+**Upstream client** (`src/lib/upstream.ts`) — `createUpstreamClient({ name, errorPrefix, minDelayMs, timeoutMs, headers? })` returns the `rateLimitedFetch(url)` each API client uses: request spacing (slots are reserved before waiting, so it holds under concurrent calls), a timeout per attempt, `discardBody` on every error response, and retry on 429/500/502/503/504, network errors and timeouts (two retries with backoff and capped `Retry-After`; a timeout is retried once). Retries log an `upstream_retry` JSON line to stderr, never stdout. A new API client should create its fetch here and not write its own; `fetch`, `sleep`, `now` and `random` are injectable for tests (`tests/upstream.test.ts`).
 
 **Publication status** (`src/lib/publication-status.ts`) — Pure functions that turn a source record into `{ retracted, warning?, notices? }`: `statusFromSummary` (esummary `pubtype` + `references`), `statusFromPubmedXml` (efetch `PublicationTypeList` + `CommentsCorrectionsList`) and `statusFromEuropePmc` (`pubTypeList` + `commentCorrectionList`), all funnelling into `buildPublicationStatus`. Every literature tool spreads the result into its output, with `retracted` always present; a tool that cannot check must say so (`get_full_text` returns `retracted: null`) and never default to false. Any new tool that returns articles should do the same.
 
