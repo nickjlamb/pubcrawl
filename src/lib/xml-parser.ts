@@ -272,7 +272,7 @@ function extractSplSection(
   }
 }
 
-function findAllElements(node: unknown, tagName: string): unknown[] {
+export function findAllElements(node: unknown, tagName: string): unknown[] {
   const results: unknown[] = [];
   if (!node || typeof node !== "object") return results;
 

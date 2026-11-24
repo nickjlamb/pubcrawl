@@ -11,6 +11,7 @@ import { SERVER_VERSION } from "../src/server.js";
 // calls a tool replaces `fetch` for non-local hosts with a stub first.
 
 const EXPECTED_TOOLS = [
+  "check_references",
   "compare_labels",
   "find_related",
   "format_citation",
@@ -94,7 +95,7 @@ describe("HTTP transport (any origin)", () => {
     expect(res.headers.get("access-control-allow-origin")).toBe("*");
   });
 
-  it("completes the MCP handshake and lists all 14 tools", async () => {
+  it("completes the MCP handshake and lists all 15 tools", async () => {
     const client = new Client({ name: "pubcrawl-test", version: "0.0.0" });
     await client.connect(new StreamableHTTPClientTransport(new URL(`${base}/mcp`)));
     try {
@@ -116,7 +117,7 @@ describe("HTTP transport (any origin)", () => {
     );
     try {
       const counts = await Promise.all(clients.map(async (c) => (await c.listTools()).tools.length));
-      expect(counts).toEqual([14, 14, 14]);
+      expect(counts).toEqual([15, 15, 15]);
     } finally {
       await Promise.all(clients.map((c) => c.close()));
     }
@@ -154,7 +155,7 @@ describe("HTTP transport (origin allowlist)", () => {
     const client = new Client({ name: "pubcrawl-test", version: "0.0.0" });
     await client.connect(new StreamableHTTPClientTransport(new URL(`${base}/mcp`)));
     try {
-      expect((await client.listTools()).tools).toHaveLength(14);
+      expect((await client.listTools()).tools).toHaveLength(15);
     } finally {
       await client.close();
     }

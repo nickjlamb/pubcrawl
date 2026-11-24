@@ -1,6 +1,6 @@
 """Generate docs/architecture-{light,dark}.svg for the README.
 
-Three layers: MCP transport, 14 tools in three families, shared cache and
+Three layers: MCP transport, 15 tools in three families, shared cache and
 parsers — every tool a thin deterministic wrapper over an official API.
 Hand-tuned layout; run from the repo root after editing:
     python3 docs/gen_diagram.py
@@ -34,7 +34,7 @@ def build(c: dict) -> str:
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" '
         f'font-family="{FONT}" role="img" '
         'aria-label="PubCrawl architecture: an MCP client connects over stdio or '
-        'streamable HTTP to the PubCrawl server, whose 14 tools are grouped into '
+        'streamable HTTP to the PubCrawl server, whose 15 tools are grouped into '
         'literature, drug labelling and clinical trials. Each family calls the '
         'official APIs directly — NCBI E-utilities, Europe PMC, openFDA and '
         'DailyMed, the UK eMC, and ClinicalTrials.gov — behind a shared LRU cache, '
@@ -118,7 +118,7 @@ def build(c: dict) -> str:
         f'text-anchor="middle" transform="rotate(-90 186 170)">MCP</text>'
     )
     families = [
-        (156, "Literature &#183; 7 tools", "search &#183; abstract &#183; full text &#183; cite"),
+        (156, "Literature &#183; 8 tools", "search &#183; abstract &#183; full text &#183; cite"),
         (224, "Drug labelling &#183; 5 tools", "USPI &#183; SmPC &#183; compare &#183; resolve"),
         (292, "Clinical trials &#183; 2 tools", "search &#183; full record"),
     ]

@@ -254,3 +254,66 @@ export interface ClinicalTrialDetail extends ClinicalTrialSummary {
   associated_pmids: string[];
   url: string;
 }
+
+export type ReferenceStatus = "resolved" | "wrong_identifier" | "not_found" | "not_checked";
+
+export type NotCheckedReason = "no_identifier" | "doi_outside_crossref" | "lookup_failed" | "lookup_limit";
+
+/** One reference from a paper's reference list and what its identifiers resolved to. */
+export interface ReferenceCheck {
+  /** Position in the reference list, from 1. */
+  n: number;
+  /** The label printed in the paper, when there is one. */
+  label?: string;
+  /** The reference as cited, shortened to one line. */
+  citation: string;
+  pmid?: string;
+  doi?: string;
+  /**
+   * resolved: an identifier points to a record that matches the citation.
+   * wrong_identifier: the identifiers do not match, but the cited work was found elsewhere.
+   * not_found: the identifiers do not match and no matching work was found. Not proof of fabrication.
+   * not_checked: could not be checked; never a clean result.
+   */
+  status: ReferenceStatus;
+  /** Plain-language explanation of the status. */
+  detail: string;
+  matched_by?: "pmid" | "doi";
+  not_checked_reason?: NotCheckedReason;
+  /** What each identifier that did not match actually pointed to. */
+  issues?: string[];
+  /** For wrong_identifier: the matching work that the title search found. */
+  found?: { doi: string; title: string };
+  /**
+   * True when PubMed marks the cited article as retracted, false when it does not,
+   * null when that was not checked (the reference did not resolve through PubMed).
+   */
+  retracted: boolean | null;
+  /** Alert for a retraction, partial retraction or expression of concern on the cited article. */
+  warning?: string;
+}
+
+export interface ReferenceCheckResult {
+  pmid: string;
+  pmcid: string;
+  title: string;
+  /** Retraction status of the paper itself; null when it could not be checked. */
+  retracted: boolean | null;
+  warning?: string;
+  notices?: PublicationNotice[];
+  reference_count: number;
+  summary: {
+    resolved: number;
+    wrong_identifier: number;
+    not_found: number;
+    not_checked: number;
+    /** Cited articles that PubMed marks as retracted. */
+    retracted_references: number;
+  };
+  /** Why references could not be checked, by count. Omitted when every reference was checked. */
+  not_checked_reasons?: Partial<Record<NotCheckedReason, number>>;
+  /** Which references are listed below: only the flagged ones, or all of them. */
+  listed: "flagged" | "all";
+  references: ReferenceCheck[];
+  note: string;
+}

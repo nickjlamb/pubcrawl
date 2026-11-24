@@ -25,7 +25,8 @@ Vitest unit tests live in `tests/` and cover the pure logic layers: the XML/JATS
 parsers (`xml-parser.ts`), the LRU cache (`cache.ts`), the shared esummary→article
 formatter (`pubmed-format.ts`), the Europe PMC result mapper (`europepmc.ts`),
 the citation formatters (`cite.ts`), the ClinicalTrials.gov summary mapper
-(`clinicaltrials.ts`), and the upstream client's retry and spacing (`upstream.ts`), plus `http.test.ts`, which starts the real HTTP app on a local port
+(`clinicaltrials.ts`), the upstream client's retry and spacing (`upstream.ts`), and the reference-list
+parser, matcher and check logic (`references.ts`, `check-references.ts`, with fake lookups), plus `http.test.ts`, which starts the real HTTP app on a local port
 and checks the transport and handshake (it calls no tools). Tests use fixture payloads —
 no network calls. Functions that need testing are exported from their module; keep new
 parsing/formatting logic as exported pure functions so it can be unit-tested the same way.
@@ -47,6 +48,8 @@ The server has three layers:
 
 **Europe PMC Client** (`src/lib/europepmc.ts`) — Wraps the Europe PMC REST API (`/search`, free, no auth). Covers a broader corpus than PubMed: journal articles (`source: MED`), preprints (`source: PPR`), full text in PMC (`source: PMC`), and patents. Rate-limited to one request per 200ms with cache; the timeout is 25s, longer than the other clients, because its search is slow at times. `europePmcErrorText` adds a pointer to `search_pubmed` when Europe PMC itself failed. `searchEuropePmc` requests `resultType=core` (so each hit carries `abstractText`, `citedByCount`, `isOpenAccess`, `inEPMC`) and composes optional `AND (SRC:PPR)` / `AND (OPEN_ACCESS:Y)` filters into the query. The pure `formatEuropePmcResult` helper maps one `core` result to a `EuropePmcArticle` and is unit-tested against fixtures.
 
+**Reference checks** (`src/lib/references.ts`, `src/lib/crossref.ts`, `src/tools/check-references.ts`) — `references.ts` is pure: `parseJatsReferences` turns a JATS `<back>` into `ParsedReference[]` (handles `element-citation`, `mixed-citation`, `citation-alternatives` and several copies in one `<ref>`), `compareReference` decides whether a looked-up record is the cited work (word-set title similarity, then year + first author + volume or page for translated titles), and `recordFromSummary`/`recordFromCrossref` map the two sources to one shape. `crossref.ts` wraps Crossref (`/works/{doi}`, `/works?query.bibliographic=`) and the doi.org handle API through upstream clients, with at most two requests in flight and a slower client for searches (Crossref limits those harder). `checkReferences(refs, lookups)` in the tool file holds the decision logic with the lookups injected, so it is tested with fakes: PMIDs in one batched esummary, then DOIs at Crossref, then a title search (second pass, one at a time) only for references whose identifier is wrong. Rules that must hold: a failed lookup is `not_checked`, never a verdict; `not_found` is never described as fabricated; `retracted` is `null` unless PubMed was actually asked.
+
 **ClinicalTrials.gov Client** (`src/lib/clinicaltrials.ts`) — Wraps ClinicalTrials.gov API v2 (free, no auth). Rate-limited to 1.2s between requests (~50 req/min). `searchTrials` queries `/studies` with condition/intervention/term filters and field limiting. `getTrialDetail` fetches a single study by NCT ID with full parsing of eligibility, design, arms, outcomes, and associated PMIDs. Both functions use the shared `studyToSummary` helper to parse the nested API response.
 
 **Cache** (`src/lib/cache.ts`) — Singleton LRU cache (500 entries). TTLs: search/related/summary = 1 hour, trial details = 4 hours, abstracts/fulltext/labels = 24 hours.
@@ -67,6 +70,7 @@ The server has three layers:
 | `search_europepmc` | Europe PMC `/search` (`resultType=core`), map each result via `formatEuropePmcResult` |
 | `get_abstract` | efetch rettype=xml, parse `AbstractText` with `@_Label` attributes |
 | `get_full_text` | elink (PMID→PMCID) → efetch db=pmc rettype=xml, parse JATS `<sec>` elements |
+| `check_references` | elink (PMID→PMCID) → efetch db=pmc → `parseJatsReferences` → esummary (all PMIDs) → Crossref `/works/{doi}` → doi.org handle → Crossref title search for mismatches |
 | `find_related` | elink cmd=neighbor_score → esummary |
 | `format_citation` | efetch rettype=xml, format as APA/Vancouver/Harvard/BibTeX |
 | `trending_papers` | esearch (date-sorted) → esummary |
