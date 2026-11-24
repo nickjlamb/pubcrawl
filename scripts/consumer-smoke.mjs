@@ -35,7 +35,7 @@ if (Number(undiciVersion.split(".")[0]) >= 8) {
 }
 
 // 2. The stdio server starts, reports its version and lists every tool.
-const EXPECTED_TOOLS = 14;
+const EXPECTED_TOOLS = 15;
 const frames = await new Promise((resolveFrames, reject) => {
   const child = spawn(process.execPath, [join(pkgDir, "dist", "index.js")], {
     stdio: ["pipe", "pipe", "pipe"],

@@ -6,6 +6,7 @@ import { registerSearchEuropePmcTool } from "./tools/search-europepmc.js";
 import { registerAbstractTool } from "./tools/abstract.js";
 import { registerFullTextTool } from "./tools/fulltext.js";
 import { registerRelatedTool } from "./tools/related.js";
+import { registerCheckReferencesTool } from "./tools/check-references.js";
 import { registerCiteTool } from "./tools/cite.js";
 import { registerTrendingTool } from "./tools/trending.js";
 import { registerUspiTool } from "./tools/uspi.js";
@@ -98,6 +99,7 @@ export function createPubCrawlServer(options: PubCrawlServerOptions = {}): McpSe
   registerAbstractTool(server);
   registerFullTextTool(server);
   registerRelatedTool(server);
+  registerCheckReferencesTool(server);
   registerCiteTool(server);
   registerTrendingTool(server);
   registerUspiTool(server);

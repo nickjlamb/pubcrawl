@@ -34,9 +34,9 @@ describe("compactSchema", () => {
 });
 
 describe("Agent Registry tool spec", () => {
-  it("lists all 14 tools with name, description, annotations and input schema", async () => {
+  it("lists all 15 tools with name, description, annotations and input schema", async () => {
     const { tools } = await buildToolSpec();
-    expect(tools).toHaveLength(14);
+    expect(tools).toHaveLength(15);
     for (const tool of tools) {
       expect(Object.keys(tool).sort()).toEqual(["annotations", "description", "inputSchema", "name"]);
       expect(tool.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false });

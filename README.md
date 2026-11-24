@@ -46,7 +46,7 @@ A cardiovascular claim that is on-label in the US promotes an unlicensed indicat
 
 ### Everything else
 
-- 🔬 **14 tools** across literature, drug labelling, and clinical trials
+- 🔬 **15 tools** across literature, drug labelling, and clinical trials
 - 🧾 **Verifiable by design** — results link back to DailyMed, the eMC, PubMed, and ClinicalTrials.gov
 - 🚩 **Retraction flags** — every literature result says whether the article has been retracted, and lists retraction, expression-of-concern and erratum notices
 - 📰 **Preprints** via Europe PMC — surface work ahead of formal publication
@@ -97,11 +97,14 @@ That's it. → [More examples](#-examples) · [API key & other options](#-config
 | `search_europepmc` | Search Europe PMC — a broader corpus than PubMed that also indexes preprints (bioRxiv, medRxiv) and patents. Each result includes an abstract snippet, citation count, open-access status, and a preprint flag. Filter to preprints or open-access only. |
 | `get_abstract` | Get the full structured abstract for an article — broken into labeled sections (background, methods, results, conclusions) with keywords and MeSH terms. |
 | `get_full_text` | Retrieve the full text of open-access articles from PubMed Central, with parsed sections, figure/table captions, and reference counts. |
+| `check_references` | Check the reference list of an open-access paper: looks up each reference's PMID and DOI and reports which resolve to a matching record, which carry a wrong identifier, and which match nothing. Also flags cited articles that PubMed marks as retracted. |
 | `find_related` | Find similar articles using PubMed's neighbor algorithm, ranked by relevance score. |
 | `format_citation` | Generate a formatted citation in APA, Vancouver, Harvard, or BibTeX style. |
 | `trending_papers` | Find recent papers on a topic, with optional filtering to high-impact journals (Nature, Science, Cell, NEJM, Lancet, JAMA, etc.). |
 
-**Retraction and correction status.** Every result from these seven tools carries `retracted` (true or false). When PubMed or Europe PMC records a retraction, a partial retraction or an expression of concern, the result also has a plain-language `warning` naming the notice, and `notices` lists each notice (including errata) with its PMID and reference. A record that is itself a retraction notice is labelled as one. The status is read from the source's own record, so it is as current as PubMed and Europe PMC are; a retraction they have not yet indexed will not appear, and withdrawn preprints are not detected. `get_full_text` reports `retracted: null` when it cannot check (no PMID for the PMC record, or the lookup failed).
+**Retraction and correction status.** Every article result from these tools carries `retracted` (true or false). When PubMed or Europe PMC records a retraction, a partial retraction or an expression of concern, the result also has a plain-language `warning` naming the notice, and `notices` lists each notice (including errata) with its PMID and reference. A record that is itself a retraction notice is labelled as one. The status is read from the source's own record, so it is as current as PubMed and Europe PMC are; a retraction they have not yet indexed will not appear, and withdrawn preprints are not detected. `get_full_text` reports `retracted: null` when it cannot check (no PMID for the PMC record, or the lookup failed).
+
+**Reference checks.** `check_references` reads the reference list of a paper in PubMed Central and looks up every PMID (one PubMed request for the whole list) and DOI (Crossref). Each reference comes back as `resolved` (an identifier points to a record whose title matches), `wrong_identifier` (the identifier is wrong, but a work with that title exists), `not_found` (the identifier is wrong and no work with that title was found) or `not_checked`. By default only the flagged references are listed, with counts for the rest; `include: "all"` lists every one. Three limits to keep in mind: `not_found` is a prompt to check by hand and not proof of fabrication, because books, reports, non-English journals and typing errors fail for ordinary reasons; a reference with no PMID or DOI is `not_checked` and never counted as clean; and the paper has to be in PMC, as for `get_full_text`. No accuracy figure is published for this tool yet.
 
 ### 💊 Drug labelling
 
@@ -155,7 +158,7 @@ Three layers — **tools** register the MCP interface, **lib clients** talk to e
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/architecture-dark.svg">
-  <img src="docs/architecture-light.svg" alt="PubCrawl architecture: an MCP client connects over stdio or streamable HTTP to the PubCrawl server, whose 14 tools are grouped into literature, drug labelling and clinical trials. Each family calls the official APIs directly — NCBI E-utilities, Europe PMC, openFDA and DailyMed, the UK eMC, and ClinicalTrials.gov — behind a shared LRU cache, XML/JATS/SPL parsers and rate limits. Every result returns with its own identifier: PMID, NCT or DOI. No model sits in this path; nothing is invented." width="100%">
+  <img src="docs/architecture-light.svg" alt="PubCrawl architecture: an MCP client connects over stdio or streamable HTTP to the PubCrawl server, whose 15 tools are grouped into literature, drug labelling and clinical trials. Each family calls the official APIs directly — NCBI E-utilities, Europe PMC, openFDA and DailyMed, the UK eMC, and ClinicalTrials.gov — behind a shared LRU cache, XML/JATS/SPL parsers and rate limits. Every result returns with its own identifier: PMID, NCT or DOI. No model sits in this path; nothing is invented." width="100%">
 </picture>
 
 Each tool file exports a `register*Tool(server)` function with a zod schema and an async handler. All network calls are rate-limited, cached, and time-bounded. See [`CLAUDE.md`](CLAUDE.md) for a full architecture walkthrough and [`CONTRIBUTING.md`](CONTRIBUTING.md) to add a tool.
@@ -248,7 +251,7 @@ gcloud agent-registry services create pubcrawl-mcp --project=PROJECT_ID --locati
   --interfaces=url=$URL/mcp,protocolBinding=jsonrpc
 ```
 
-After a minute or so, `gcloud agent-registry mcp-servers list --project=PROJECT_ID --location=REGION` shows `PubCrawl` with its `/mcp` URL and all 14 tools.
+After a minute or so, `gcloud agent-registry mcp-servers list --project=PROJECT_ID --location=REGION` shows `PubCrawl` with its `/mcp` URL and all 15 tools.
 
 The tool spec is generated from the server itself (`npm run build && npm run toolspec`), and a test fails if the committed file falls out of step with the code. The registry requires an input schema for every tool and caps the spec at 10 KB, so the schemas keep their types, required fields, enums, defaults and ranges but drop parameter descriptions. Clients that connect still get the complete schemas from the server.
 
@@ -281,6 +284,8 @@ PubCrawl needs outbound HTTPS to these hosts only, which is the complete list fo
 |---|---|
 | `eutils.ncbi.nlm.nih.gov` | PubMed and PubMed Central (search, abstracts, full text, related articles, citations) |
 | `www.ebi.ac.uk` | Europe PMC |
+| `api.crossref.org` | DOI records and title search, for `check_references` only |
+| `doi.org` | Whether a DOI is registered, for `check_references` only |
 | `clinicaltrials.gov` | ClinicalTrials.gov API v2 |
 | `api.fda.gov` | US prescribing information (openFDA) |
 | `rxnav.nlm.nih.gov` | US/UK drug-name resolution (RxNorm) |
@@ -292,7 +297,7 @@ PubCrawl needs outbound HTTPS to these hosts only, which is the complete list fo
 - **What is kept:** upstream responses are held in an in-memory cache (500 entries, up to 24 hours) to stay within the sources' rate limits. Nothing is written to disk, and the cache is gone when the instance stops.
 - **What is logged:** one line at startup and one at shutdown, plus one JSON line per new MCP connection with the client's self-reported name and version (e.g. `claude-ai`, `cursor`) and a running count for the UTC day and the number of distinct visitors so far that day, and one JSON line per tool call with the tool's name, whether it succeeded, how long it took and running counts for the UTC day. Queries, tool arguments, tool results and IP addresses are not logged or stored, and a tool call is not linked to a client or connection.
 - **How distinct visitors are counted:** when a connection opens, its network address (IPv6 reduced to its /64 network) is turned into a short keyed hash that is held in memory, and only the number of different hashes is logged. The key is random, never leaves the process, and is replaced at every UTC midnight and every restart, so a hash cannot be reversed, compared between days or compared between instances. The count is a floor, not a headcount: hosted clients such as the Claude apps connect from their provider's servers, and an office or VPN shares one address. Set `PUBCRAWL_USAGE_LOG=off` to turn both kinds of line off.
-- **Identification to NCBI:** per NCBI's usage policy, E-utilities requests identify the tool as `pubcrawl` with the maintainer's contact address.
+- **Identification to NCBI and Crossref:** per NCBI's usage policy, E-utilities requests identify the tool as `pubcrawl` with the maintainer's contact address. Crossref requests carry the same address, as Crossref asks of well-behaved clients.
 - **No model in the path:** every tool is a deterministic API call and parse. Nothing is generated.
 
 ---
