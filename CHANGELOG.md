@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.2] — 2026-11-28
+
 ### Added
 - **`check_references`: check a paper's reference list.** For a paper in PubMed Central, the tool reads every reference, looks up its PMID (one PubMed request for the whole list) and its DOI (Crossref), and compares the record found with the citation. Each reference is reported as `resolved`, `wrong_identifier` (the identifier is wrong, but a Crossref search finds a work with that title), `not_found` (the identifier is wrong and no work with that title was found) or `not_checked` (no PMID or DOI, a DOI registered outside Crossref, or a failed lookup). Cited articles that PubMed marks as retracted are flagged too. Only flagged references are listed by default, with counts for the rest; `include: "all"` lists every one. `not_found` is not proof of fabrication, and the result says so: books, reports, non-English journals and typing errors fail for ordinary reasons. References without an identifier are not searched for by title in this version. No accuracy figure is published yet; that waits for a benchmark. The server now also calls `api.crossref.org` and `doi.org`, for this tool only; the README's network egress table lists both.
 - **Distinct visitors per day in the connection log.** Each `initialize` line now carries `todayVisitors` and `todayVisitorsForClient`: how many different network addresses have connected that UTC day, overall and for that client. No address is logged or stored. Each one is turned into a short keyed hash held in memory, with a random key that is replaced at every UTC midnight and restart, and only the count is written. It is a floor on the number of people, since hosted clients such as the Claude apps connect from shared addresses. `PUBCRAWL_USAGE_LOG=off` turns it off with the rest of the usage lines. The README's data-handling section describes it.
@@ -210,7 +212,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release: PubMed literature tools — `search_pubmed`, `get_abstract`, `get_full_text`, `find_related`, `format_citation`, and `trending_papers`.
 
-[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.10.1...HEAD
+[Unreleased]: https://github.com/nickjlamb/pubcrawl/compare/v2.10.2...HEAD
+[2.10.2]: https://github.com/nickjlamb/pubcrawl/compare/v2.10.1...v2.10.2
 [2.10.1]: https://github.com/nickjlamb/pubcrawl/compare/v2.10.0...v2.10.1
 [2.10.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/nickjlamb/pubcrawl/compare/v2.8.0...v2.9.0
