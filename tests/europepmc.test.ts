@@ -177,7 +177,7 @@ describe("plainAbstract", () => {
 describe("europePmcErrorText", () => {
   it("points to search_pubmed when Europe PMC did not answer or failed", () => {
     for (const message of [
-      "Europe PMC API error: no response within 25 s (after 2 attempts)",
+      "Europe PMC API error: no response within 20 s (after 2 attempts)",
       "Europe PMC API error: 503 Service Unavailable (after 3 attempts)",
       "Europe PMC API error: 429 Too Many Requests (after 3 attempts)",
       "Europe PMC API error: network error (fetch failed) (after 3 attempts)",

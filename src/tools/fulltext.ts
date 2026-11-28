@@ -11,6 +11,7 @@ import {
   extractText,
 } from "../lib/xml-parser.js";
 import { FullTextResult } from "../types.js";
+import { nothingFound } from "../lib/outcome.js";
 
 const schema = {
   pmid: z.string().optional().describe("PubMed ID"),
@@ -52,13 +53,13 @@ export function registerFullTextTool(server: McpServer): void {
         if (!pmcid && pmid) {
           pmcid = await pmidToPmcid(pmid);
           if (!pmcid) {
-            return {
+            return nothingFound({
               content: [{
                 type: "text",
                 text: `No PMC full text available for PMID ${pmid}. The article may not be open access.`,
               }],
               isError: true,
-            };
+            });
           }
         }
 

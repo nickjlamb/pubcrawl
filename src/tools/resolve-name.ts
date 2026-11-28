@@ -2,6 +2,7 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { resolveName, type ResolveResult } from "@pharmatools/drug-data";
 import { cache, TTL } from "../lib/cache.js";
+import { nothingFound } from "../lib/outcome.js";
 
 const schema = {
   drug: z
@@ -37,11 +38,9 @@ export function registerResolveNameTool(server: McpServer): void {
     async (params) => {
       try {
         const result = await buildResolveResult(params.drug);
-        const isError = "error" in result;
-        return {
-          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-          ...(isError ? { isError: true } : {}),
-        };
+        const response = { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        // The only { error } these builders return is "the source has no such drug".
+        return "error" in result ? nothingFound({ ...response, isError: true }) : response;
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         return {

@@ -3,6 +3,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { efetch } from "../lib/ncbi.js";
 import { parseXml, parseAuthors, extractText } from "../lib/xml-parser.js";
 import { statusFromPubmedXml } from "../lib/publication-status.js";
+import { nothingFound } from "../lib/outcome.js";
 
 const schema = {
   pmid: z.string().describe("PubMed ID"),
@@ -153,10 +154,10 @@ export function registerCiteTool(server: McpServer): void {
 
         const articles = parsed.PubmedArticleSet?.PubmedArticle;
         if (!articles || (Array.isArray(articles) && articles.length === 0)) {
-          return {
+          return nothingFound({
             content: [{ type: "text", text: `No article found for PMID ${params.pmid}` }],
             isError: true,
-          };
+          });
         }
 
         const article = Array.isArray(articles) ? articles[0] : articles;
@@ -164,10 +165,10 @@ export function registerCiteTool(server: McpServer): void {
         const articleData = medlineCitation?.Article;
 
         if (!articleData) {
-          return {
+          return nothingFound({
             content: [{ type: "text", text: `No article data for PMID ${params.pmid}` }],
             isError: true,
-          };
+          });
         }
 
         const authors = parseAuthors(articleData.AuthorList);

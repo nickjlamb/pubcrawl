@@ -10,6 +10,7 @@ import {
   MAX_SECTION_CHARS,
 } from "../lib/paging.js";
 import { USPIResult } from "../types.js";
+import { nothingFound } from "../lib/outcome.js";
 
 const schema = {
   drug: z.string().describe("Drug name to look up (e.g., 'metformin', 'atorvastatin')"),
@@ -90,11 +91,9 @@ export function registerUspiTool(server: McpServer): void {
           offset: params.offset,
           maxChars: params.max_chars,
         });
-        const isError = "error" in result;
-        return {
-          content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-          ...(isError ? { isError: true } : {}),
-        };
+        const response = { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+        // The only { error } these builders return is "the source has no such drug".
+        return "error" in result ? nothingFound({ ...response, isError: true }) : response;
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         return {

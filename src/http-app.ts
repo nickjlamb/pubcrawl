@@ -116,7 +116,7 @@ export function createHttpApp(options: HttpAppOptions): Server {
         log(JSON.stringify(usage.record(name, version, address)))
     : undefined;
   const onToolCall = log
-    ? (info: ToolCallInfo) => log(JSON.stringify(usage.recordToolCall(info.tool, info.ok, info.durationMs)))
+    ? (info: ToolCallInfo) => log(JSON.stringify(usage.recordToolCall(info.tool, info.ok, info.durationMs, info.nothingFound)))
     : undefined;
 
   return createServer((req, res) => {

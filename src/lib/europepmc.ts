@@ -8,9 +8,12 @@ const EMAIL = "nick@pharmatools.ai";
 const REQUEST_DELAY_MS = 200;
 // Europe PMC's search is slow at times: on 2026-11-23 identical searches took
 // between 0.5 s and 34 s, all of it waiting for the first byte, and about a third
-// of calls ran past the old 15 s limit. 25 s lets most slow answers arrive; with
-// the single timeout retry in upstream.ts the worst case is about 50 s.
-const TIMEOUT_MS = 25000;
+// of calls ran past the old 15 s limit. At 25 s (24-28 Nov) failures fell to 1.5-9%,
+// but a request that had not answered by then was usually stuck: the retry often came
+// back within two seconds, and one call in nine took over 40 s. 20 s gives up on a
+// stuck request sooner and, with the single timeout retry in upstream.ts, caps the
+// worst case at about 40 s, inside the 60 s limit some MCP clients apply.
+const TIMEOUT_MS = 20000;
 
 // Spacing, timeout and retry live in upstream.ts.
 const rateLimitedFetch = createUpstreamClient({

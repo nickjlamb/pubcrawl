@@ -48,16 +48,21 @@ describe("UsageCounter tool calls", () => {
       event: "tool_call",
       tool: "search_pubmed",
       ok: false,
+      outcome: "error",
       durationMs: 3,
       day: "2026-11-22",
       todayToolCalls: 3,
       todayForTool: 2,
       todayErrorsForTool: 1,
+      todayNothingFoundForTool: 0,
     });
     expect(counter.toolSnapshot()).toEqual({
       day: "2026-11-22",
       total: 3,
-      tools: { search_pubmed: { calls: 2, errors: 1 }, get_abstract: { calls: 1, errors: 1 } },
+      tools: {
+        search_pubmed: { calls: 2, errors: 1, nothingFound: 0 },
+        get_abstract: { calls: 1, errors: 1, nothingFound: 0 },
+      },
     });
 
     now = new Date("2026-11-23T00:01:00Z");
@@ -83,3 +88,24 @@ describe("UsageCounter tool calls", () => {
     expect(counter.recordToolCall("get_trial", true, -4).durationMs).toBe(0);
   });
 });
+
+describe("UsageCounter outcomes", () => {
+  it("counts 'nothing found' apart from errors", () => {
+    const counter = new UsageCounter(() => new Date("2026-11-28T12:00:00Z"));
+    counter.recordToolCall("get_full_text", true, 500);
+    const missing = counter.recordToolCall("get_full_text", false, 200, true);
+    expect(missing).toMatchObject({
+      ok: false,
+      outcome: "nothing_found",
+      todayForTool: 2,
+      todayErrorsForTool: 0,
+      todayNothingFoundForTool: 1,
+    });
+    const failed = counter.recordToolCall("get_full_text", false, 15000);
+    expect(failed).toMatchObject({ outcome: "error", todayErrorsForTool: 1, todayNothingFoundForTool: 1 });
+    expect(counter.recordToolCall("get_full_text", true, 1).outcome).toBe("ok");
+    // A successful call is never "nothing found", whatever the flag says.
+    expect(counter.recordToolCall("get_full_text", true, 1, true).outcome).toBe("ok");
+  });
+});
+

@@ -3,6 +3,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { searchByIndication, OpenFdaDrug } from "../lib/openfda.js";
 import { searchEmc, EmcSearchResult } from "../lib/emc.js";
 import { DrugApprovalEntry, IndicationSearchResult } from "../types.js";
+import { nothingFound } from "../lib/outcome.js";
 
 const MAX_CONCURRENT_EMC = 5;
 
@@ -69,7 +70,7 @@ export function registerSearchIndicationTool(server: McpServer): void {
         );
 
         if (fdaDrugs.length === 0) {
-          return {
+          return nothingFound({
             content: [{
               type: "text",
               text: JSON.stringify({
@@ -77,7 +78,7 @@ export function registerSearchIndicationTool(server: McpServer): void {
               }, null, 2),
             }],
             isError: true,
-          };
+          });
         }
 
         // Step 2: For each unique generic name, check eMC for UK availability

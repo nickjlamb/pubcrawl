@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getTrialDetail } from "../lib/clinicaltrials.js";
+import { nothingFound } from "../lib/outcome.js";
 
 const schema = {
   nctId: z
@@ -29,7 +30,7 @@ export function registerTrialDetailTool(server: McpServer): void {
         const message = error instanceof Error ? error.message : String(error);
 
         if (message.includes("404")) {
-          return {
+          return nothingFound({
             content: [{
               type: "text",
               text: JSON.stringify(
@@ -39,7 +40,7 @@ export function registerTrialDetailTool(server: McpServer): void {
               ),
             }],
             isError: true,
-          };
+          });
         }
 
         return {

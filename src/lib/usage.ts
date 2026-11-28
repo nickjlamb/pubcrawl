@@ -44,11 +44,18 @@ export interface ToolCallEvent {
   tool: string;
   /** False when the tool returned `isError` or threw. */
   ok: boolean;
+  /**
+   * "ok", "nothing_found" (the tool ran but the source had nothing for the request:
+   * no PMC full text, no label for that name) or "error" (PubCrawl or an upstream failed).
+   */
+  outcome: "ok" | "nothing_found" | "error";
   durationMs: number;
   day: string;
   todayToolCalls: number;
   todayForTool: number;
+  /** Calls today whose outcome was "error". Does not include "nothing_found". */
   todayErrorsForTool: number;
+  todayNothingFoundForTool: number;
 }
 
 const MAX_LEN = 64;
@@ -65,7 +72,7 @@ export class UsageCounter {
   private total = 0;
   private perClient = new Map<string, number>();
   private toolCalls = 0;
-  private perTool = new Map<string, { calls: number; errors: number }>();
+  private perTool = new Map<string, { calls: number; errors: number; nothingFound: number }>();
 
   constructor(
     private readonly now: () => Date = () => new Date(),
@@ -90,12 +97,14 @@ export class UsageCounter {
    * Count one completed tool call. `tool` must be a registered tool's name (the
    * caller guarantees this), so the set of names in the logs stays fixed.
    */
-  recordToolCall(tool: string, ok: boolean, durationMs: number): ToolCallEvent {
+  recordToolCall(tool: string, ok: boolean, durationMs: number, nothingFound = false): ToolCallEvent {
     const day = this.rollDay();
     this.toolCalls += 1;
-    const entry = this.perTool.get(tool) ?? { calls: 0, errors: 0 };
+    const entry = this.perTool.get(tool) ?? { calls: 0, errors: 0, nothingFound: 0 };
+    const outcome = ok ? "ok" : nothingFound ? "nothing_found" : "error";
     entry.calls += 1;
-    if (!ok) entry.errors += 1;
+    if (outcome === "error") entry.errors += 1;
+    if (outcome === "nothing_found") entry.nothingFound += 1;
     this.perTool.set(tool, entry);
     return {
       message: `mcp tool_call tool=${tool} ok=${ok}`,
@@ -103,11 +112,13 @@ export class UsageCounter {
       event: "tool_call",
       tool,
       ok,
+      outcome,
       durationMs: Math.max(0, Math.round(durationMs)),
       day,
       todayToolCalls: this.toolCalls,
       todayForTool: entry.calls,
       todayErrorsForTool: entry.errors,
+      todayNothingFoundForTool: entry.nothingFound,
     };
   }
 
@@ -143,8 +154,8 @@ export class UsageCounter {
   }
 
   /** Today's tool-call counts, for tests and debugging. */
-  toolSnapshot(): { day: string; total: number; tools: Record<string, { calls: number; errors: number }> } {
-    const tools: Record<string, { calls: number; errors: number }> = {};
+  toolSnapshot(): { day: string; total: number; tools: Record<string, { calls: number; errors: number; nothingFound: number }> } {
+    const tools: Record<string, { calls: number; errors: number; nothingFound: number }> = {};
     for (const [name, entry] of this.perTool) tools[name] = { ...entry };
     return { day: this.day, total: this.toolCalls, tools };
   }
