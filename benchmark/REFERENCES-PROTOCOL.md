@@ -158,4 +158,6 @@ weekly gate as a regression check, under the existing draft/verified rule.
 
 ## Deviations
 
-None yet. Any departure from this protocol is listed here with its date and reason.
+Any departure from this protocol is listed here with its date and reason.
+
+- **28 November 2026, clarification of the population (recorded when the sample was drawn, before any reference was checked).** "Population" above says the PMC Open Access subset. The sampling script (`benchmark/references/sample.mjs`) does not test a paper's licence. It keeps any PMC record that meets the three listed criteria, the third of which requires a reference list in the XML that PMC serves. Records whose XML carries no reference list were skipped and logged as `no_reference_list` (17 of 192 draws). The population is therefore "PMC papers whose reference list is available as XML", which is also the set of papers `check_references` can read. The three sampling criteria themselves were applied as written.

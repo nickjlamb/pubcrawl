@@ -1,0 +1,1848 @@
+{
+  "protocol": "benchmark/REFERENCES-PROTOCOL.md",
+  "registered_sample": true,
+  "drawn_on": "2026-11-28T12:20:05.799Z",
+  "commit": "00838533be73c89aaf91006567799d00a6432aeb",
+  "criteria": {
+    "seed": 20261124,
+    "pmcid_min": 4000000,
+    "pmcid_max": 9000000,
+    "year_min": 2015,
+    "year_max": 2021,
+    "article_types": [
+      "research-article",
+      "review-article"
+    ],
+    "min_references": 10,
+    "target": 100,
+    "development": 30
+  },
+  "complete": true,
+  "draws_made": 192,
+  "skipped_by_reason": {
+    "article_type": 30,
+    "year_out_of_range": 39,
+    "no_such_record": 5,
+    "no_reference_list": 17,
+    "too_few_references": 1
+  },
+  "development": [
+    "PMC7168781",
+    "PMC8569790",
+    "PMC8159405",
+    "PMC7694214",
+    "PMC7261840",
+    "PMC6514828",
+    "PMC4360933",
+    "PMC8384169",
+    "PMC5540297",
+    "PMC6791867",
+    "PMC8432139",
+    "PMC6700474",
+    "PMC8281164",
+    "PMC6497061",
+    "PMC5308238",
+    "PMC6878652",
+    "PMC8417970",
+    "PMC4485521",
+    "PMC6699855",
+    "PMC5411362",
+    "PMC5843597",
+    "PMC6357551",
+    "PMC7721165",
+    "PMC8733675",
+    "PMC7876098",
+    "PMC5868159",
+    "PMC6480199",
+    "PMC7500803",
+    "PMC6505892",
+    "PMC4397076"
+  ],
+  "held_out": [
+    "PMC6838437",
+    "PMC8140968",
+    "PMC7842363",
+    "PMC5520683",
+    "PMC5052800",
+    "PMC7192592",
+    "PMC6330399",
+    "PMC4532992",
+    "PMC4988781",
+    "PMC8436034",
+    "PMC8000147",
+    "PMC5041071",
+    "PMC6403234",
+    "PMC8028099",
+    "PMC8570589",
+    "PMC8460824",
+    "PMC6763553",
+    "PMC4349114",
+    "PMC4355496",
+    "PMC6508989",
+    "PMC7604954",
+    "PMC6119583",
+    "PMC8719398",
+    "PMC8246770",
+    "PMC7132808",
+    "PMC6389248",
+    "PMC8065821",
+    "PMC4574729",
+    "PMC4363464",
+    "PMC8541095",
+    "PMC7580289",
+    "PMC7903971",
+    "PMC6657699",
+    "PMC5984385",
+    "PMC7051919",
+    "PMC8015056",
+    "PMC8395006",
+    "PMC8581295",
+    "PMC7822893",
+    "PMC4823114",
+    "PMC4570656",
+    "PMC5018171",
+    "PMC8035204",
+    "PMC8278773",
+    "PMC8656573",
+    "PMC7256935",
+    "PMC8805813",
+    "PMC7882979",
+    "PMC7760686",
+    "PMC5333052",
+    "PMC5296667",
+    "PMC6444534",
+    "PMC5880660",
+    "PMC4974642",
+    "PMC6104449",
+    "PMC4521100",
+    "PMC5712851",
+    "PMC6688545",
+    "PMC8210885",
+    "PMC4882048",
+    "PMC5101143",
+    "PMC6769976",
+    "PMC6951229",
+    "PMC7349689",
+    "PMC4897905",
+    "PMC6539311",
+    "PMC8326515",
+    "PMC7854415",
+    "PMC6924535",
+    "PMC5859733"
+  ],
+  "draws": [
+    {
+      "draw": 1,
+      "pmcid": "PMC4919281",
+      "article_type": "case-report",
+      "year": 2016,
+      "references": 12,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 2,
+      "pmcid": "PMC8822444",
+      "article_type": "editorial",
+      "year": 2020,
+      "references": 20,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 3,
+      "pmcid": "PMC7168781",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 26,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 4,
+      "pmcid": "PMC8569790",
+      "article_type": "review-article",
+      "year": 2021,
+      "references": 82,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 5,
+      "pmcid": "PMC8159405",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 20,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 6,
+      "pmcid": "PMC7694214",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 13,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 7,
+      "pmcid": "PMC5196592",
+      "article_type": "news",
+      "year": 1888,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 8,
+      "pmcid": "PMC7261840",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 67,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 9,
+      "pmcid": "PMC6514828",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 88,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 10,
+      "pmcid": "PMC7944135",
+      "article_type": "correction",
+      "year": 2021,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 11,
+      "pmcid": "PMC4360933",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 42,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 12,
+      "pmcid": "PMC8384169",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 106,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 13,
+      "pmcid": "PMC5540297",
+      "article_type": "research-article",
+      "year": 2017,
+      "references": 52,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 14,
+      "pmcid": "PMC6791867",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 62,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 15,
+      "pmcid": "PMC8432139",
+      "article_type": "review-article",
+      "year": 2021,
+      "references": 89,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 16,
+      "pmcid": "PMC6700474",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 37,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 17,
+      "pmcid": "PMC8281164",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 20,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 18,
+      "pmcid": "PMC6401982",
+      "article_type": "case-report",
+      "year": 2019,
+      "references": 14,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 19,
+      "pmcid": "PMC6497061",
+      "article_type": "research-article",
+      "year": 2017,
+      "references": 28,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 20,
+      "pmcid": "PMC6253814",
+      "article_type": "abstract",
+      "year": 2018,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 21,
+      "pmcid": "PMC5308238",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 73,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 22,
+      "pmcid": "PMC4132054",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 101,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 23,
+      "pmcid": "PMC5919303",
+      "article_type": "research-article",
+      "year": 1993,
+      "references": 33,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 24,
+      "pmcid": "PMC7784457",
+      "kept": false,
+      "reason": "no_such_record"
+    },
+    {
+      "draw": 25,
+      "pmcid": "PMC6878652",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 55,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 26,
+      "pmcid": "PMC7227975",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 27,
+      "pmcid": "PMC4612031",
+      "article_type": "research-article",
+      "year": 2003,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 28,
+      "pmcid": "PMC8417970",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 51,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 29,
+      "pmcid": "PMC4485521",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 66,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 30,
+      "pmcid": "PMC4676392",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 31,
+      "pmcid": "PMC6699855",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 57,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 32,
+      "pmcid": "PMC5411362",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 48,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 33,
+      "pmcid": "PMC7091296",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 80,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 34,
+      "pmcid": "PMC5843597",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 45,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 35,
+      "pmcid": "PMC6357551",
+      "article_type": "research-article",
+      "year": 2017,
+      "references": 50,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 36,
+      "pmcid": "PMC8646300",
+      "article_type": "brief-report",
+      "year": 2021,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 37,
+      "pmcid": "PMC7721165",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 58,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 38,
+      "pmcid": "PMC8733675",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 38,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 39,
+      "pmcid": "PMC7876098",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 52,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 40,
+      "pmcid": "PMC5868159",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 25,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 41,
+      "pmcid": "PMC6480199",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 35,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 42,
+      "pmcid": "PMC7500803",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 38,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 43,
+      "pmcid": "PMC7452263",
+      "kept": false,
+      "reason": "no_such_record"
+    },
+    {
+      "draw": 44,
+      "pmcid": "PMC6505892",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 52,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 45,
+      "pmcid": "PMC8784767",
+      "article_type": "brief-report",
+      "year": 2022,
+      "references": 14,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 46,
+      "pmcid": "PMC4397076",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 28,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 47,
+      "pmcid": "PMC6109836",
+      "article_type": "other",
+      "year": 2018,
+      "references": 3,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 48,
+      "pmcid": "PMC6838437",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 51,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 49,
+      "pmcid": "PMC4028541",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 25,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 50,
+      "pmcid": "PMC8140968",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 40,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 51,
+      "pmcid": "PMC7842363",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 59,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 52,
+      "pmcid": "PMC8559254",
+      "article_type": "abstract",
+      "year": 2021,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 53,
+      "pmcid": "PMC4369030",
+      "article_type": "case-report",
+      "year": 2015,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 54,
+      "pmcid": "PMC8211999",
+      "article_type": "case-report",
+      "year": 2021,
+      "references": 8,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 55,
+      "pmcid": "PMC4091766",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 16,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 56,
+      "pmcid": "PMC4065012",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 56,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 57,
+      "pmcid": "PMC7861505",
+      "article_type": "review-article",
+      "year": 2021,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 58,
+      "pmcid": "PMC6865238",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 59,
+      "pmcid": "PMC5228982",
+      "article_type": "book-review",
+      "year": 1914,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 60,
+      "pmcid": "PMC5940630",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 61,
+      "pmcid": "PMC5520683",
+      "article_type": "research-article",
+      "year": 2017,
+      "references": 37,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 62,
+      "pmcid": "PMC5052800",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 68,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 63,
+      "pmcid": "PMC7192592",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 44,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 64,
+      "pmcid": "PMC6330399",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 122,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 65,
+      "pmcid": "PMC4532992",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 35,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 66,
+      "pmcid": "PMC4988781",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 36,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 67,
+      "pmcid": "PMC7875759",
+      "article_type": "other",
+      "year": 2020,
+      "references": 10,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 68,
+      "pmcid": "PMC4135512",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 45,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 69,
+      "pmcid": "PMC7705247",
+      "article_type": "methods-article",
+      "year": 2020,
+      "references": 49,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 70,
+      "pmcid": "PMC8436034",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 15,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 71,
+      "pmcid": "PMC4865568",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 72,
+      "pmcid": "PMC8237974",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 73,
+      "pmcid": "PMC7856709",
+      "kept": false,
+      "reason": "no_such_record"
+    },
+    {
+      "draw": 74,
+      "pmcid": "PMC8000147",
+      "article_type": "review-article",
+      "year": 2021,
+      "references": 168,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 75,
+      "pmcid": "PMC5041071",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 68,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 76,
+      "pmcid": "PMC6403234",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 51,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 77,
+      "pmcid": "PMC7023923",
+      "article_type": "meeting-report",
+      "year": 2020,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 78,
+      "pmcid": "PMC5454419",
+      "article_type": "letter",
+      "year": 2017,
+      "references": 23,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 79,
+      "pmcid": "PMC7939816",
+      "article_type": "admin",
+      "year": 1936,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 80,
+      "pmcid": "PMC8028099",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 28,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 81,
+      "pmcid": "PMC8981914",
+      "article_type": "research-article",
+      "year": 2022,
+      "references": 47,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 82,
+      "pmcid": "PMC6292750",
+      "kept": false,
+      "reason": "no_such_record"
+    },
+    {
+      "draw": 83,
+      "pmcid": "PMC8570589",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 23,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 84,
+      "pmcid": "PMC8968726",
+      "article_type": "case-report",
+      "year": 2022,
+      "references": 35,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 85,
+      "pmcid": "PMC8460824",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 97,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 86,
+      "pmcid": "PMC6763553",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 37,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 87,
+      "pmcid": "PMC8900381",
+      "article_type": "research-article",
+      "year": 2022,
+      "references": 48,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 88,
+      "pmcid": "PMC4349114",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 30,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 89,
+      "pmcid": "PMC4355496",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 42,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 90,
+      "pmcid": "PMC4526148",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 50,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 91,
+      "pmcid": "PMC6508989",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 55,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 92,
+      "pmcid": "PMC7604954",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 22,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 93,
+      "pmcid": "PMC6119583",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 28,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 94,
+      "pmcid": "PMC5050665",
+      "article_type": "book-review",
+      "year": 1890,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 95,
+      "pmcid": "PMC8719398",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 58,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 96,
+      "pmcid": "PMC4237968",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 48,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 97,
+      "pmcid": "PMC8445245",
+      "article_type": "correction",
+      "year": 2018,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 98,
+      "pmcid": "PMC8246770",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 58,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 99,
+      "pmcid": "PMC4094002",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 100,
+      "pmcid": "PMC7132808",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 38,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 101,
+      "pmcid": "PMC6389248",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 44,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 102,
+      "pmcid": "PMC6833440",
+      "article_type": "discussion",
+      "year": 2019,
+      "references": 15,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 103,
+      "pmcid": "PMC8065821",
+      "article_type": "review-article",
+      "year": 2021,
+      "references": 151,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 104,
+      "pmcid": "PMC4048043",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 30,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 105,
+      "pmcid": "PMC4574729",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 44,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 106,
+      "pmcid": "PMC4363464",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 22,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 107,
+      "pmcid": "PMC8541095",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 17,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 108,
+      "pmcid": "PMC7580289",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 20,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 109,
+      "pmcid": "PMC6393093",
+      "article_type": "case-report",
+      "year": 2018,
+      "references": 12,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 110,
+      "pmcid": "PMC7903971",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 44,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 111,
+      "pmcid": "PMC6370448",
+      "article_type": "research-article",
+      "year": 2017,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 112,
+      "pmcid": "PMC6657699",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 62,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 113,
+      "pmcid": "PMC8049362",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 114,
+      "pmcid": "PMC5984385",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 36,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 115,
+      "pmcid": "PMC7051919",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 38,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 116,
+      "pmcid": "PMC8015056",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 64,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 117,
+      "pmcid": "PMC8395006",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 57,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 118,
+      "pmcid": "PMC8581295",
+      "article_type": "review-article",
+      "year": 2021,
+      "references": 117,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 119,
+      "pmcid": "PMC7822893",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 57,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 120,
+      "pmcid": "PMC4823114",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 27,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 121,
+      "pmcid": "PMC4570656",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 14,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 122,
+      "pmcid": "PMC7777761",
+      "article_type": "abstract",
+      "year": 2020,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 123,
+      "pmcid": "PMC5185801",
+      "article_type": "book-review",
+      "year": 1931,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 124,
+      "pmcid": "PMC5026140",
+      "article_type": "editorial",
+      "year": 2016,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 125,
+      "pmcid": "PMC4964647",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 126,
+      "pmcid": "PMC5018171",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 38,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 127,
+      "pmcid": "PMC5248262",
+      "article_type": "other",
+      "year": 1921,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 128,
+      "pmcid": "PMC4290953",
+      "article_type": "letter",
+      "year": 2014,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 129,
+      "pmcid": "PMC4910810",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 130,
+      "pmcid": "PMC8035204",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 79,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 131,
+      "pmcid": "PMC5906345",
+      "article_type": "editorial",
+      "year": 2018,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 132,
+      "pmcid": "PMC8278773",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 42,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 133,
+      "pmcid": "PMC6012846",
+      "article_type": "abstract",
+      "year": 2018,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 134,
+      "pmcid": "PMC4122866",
+      "article_type": "abstract",
+      "year": 2014,
+      "references": 3,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 135,
+      "pmcid": "PMC6153235",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 136,
+      "pmcid": "PMC8656573",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 41,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 137,
+      "pmcid": "PMC5113300",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 138,
+      "pmcid": "PMC7256935",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 45,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 139,
+      "pmcid": "PMC7323163",
+      "article_type": "letter",
+      "year": 2020,
+      "references": 6,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 140,
+      "pmcid": "PMC4921078",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 141,
+      "pmcid": "PMC6578563",
+      "article_type": "other",
+      "year": 1996,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 142,
+      "pmcid": "PMC4162966",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 39,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 143,
+      "pmcid": "PMC7943107",
+      "article_type": "research-article",
+      "year": 1934,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 144,
+      "pmcid": "PMC8805813",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 26,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 145,
+      "pmcid": "PMC5204780",
+      "article_type": "other",
+      "year": 1889,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 146,
+      "pmcid": "PMC7882979",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 70,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 147,
+      "pmcid": "PMC7760686",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 45,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 148,
+      "pmcid": "PMC5333052",
+      "article_type": "review-article",
+      "year": 2017,
+      "references": 91,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 149,
+      "pmcid": "PMC4386436",
+      "article_type": "case-report",
+      "year": 2015,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 150,
+      "pmcid": "PMC4581064",
+      "article_type": "review-article",
+      "year": 2014,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 151,
+      "pmcid": "PMC5296667",
+      "article_type": "review-article",
+      "year": 2017,
+      "references": 59,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 152,
+      "pmcid": "PMC7732930",
+      "article_type": "case-report",
+      "year": 2020,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 153,
+      "pmcid": "PMC6444534",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 85,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 154,
+      "pmcid": "PMC5880660",
+      "article_type": "research-article",
+      "year": 2017,
+      "references": 32,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 155,
+      "pmcid": "PMC4155837",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 13,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 156,
+      "pmcid": "PMC4974642",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 61,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 157,
+      "pmcid": "PMC4161548",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 158,
+      "pmcid": "PMC6104449",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 50,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 159,
+      "pmcid": "PMC5654503",
+      "article_type": "research-article",
+      "year": 2007,
+      "references": 37,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 160,
+      "pmcid": "PMC4521100",
+      "article_type": "research-article",
+      "year": 2015,
+      "references": 30,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 161,
+      "pmcid": "PMC5155593",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 43,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 162,
+      "pmcid": "PMC8857205",
+      "article_type": "research-article",
+      "year": 2022,
+      "references": 90,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 163,
+      "pmcid": "PMC5712851",
+      "article_type": "research-article",
+      "year": 2017,
+      "references": 31,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 164,
+      "pmcid": "PMC5397598",
+      "article_type": "case-report",
+      "year": 2017,
+      "references": 5,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 165,
+      "pmcid": "PMC5232349",
+      "article_type": "research-article",
+      "year": 2017,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 166,
+      "pmcid": "PMC6688545",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 34,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 167,
+      "pmcid": "PMC4238925",
+      "article_type": "research-article",
+      "year": 2013,
+      "references": 52,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 168,
+      "pmcid": "PMC6628784",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 169,
+      "pmcid": "PMC4877693",
+      "article_type": "research-article",
+      "year": 2011,
+      "references": 29,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 170,
+      "pmcid": "PMC8210885",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 29,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 171,
+      "pmcid": "PMC4882048",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 44,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 172,
+      "pmcid": "PMC5101143",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 45,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 173,
+      "pmcid": "PMC6769976",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 40,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 174,
+      "pmcid": "PMC6951229",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 40,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 175,
+      "pmcid": "PMC7077614",
+      "article_type": "case-report",
+      "year": 2020,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 176,
+      "pmcid": "PMC4277235",
+      "kept": false,
+      "reason": "no_such_record"
+    },
+    {
+      "draw": 177,
+      "pmcid": "PMC4050544",
+      "article_type": "research-article",
+      "year": 2014,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 178,
+      "pmcid": "PMC5484880",
+      "article_type": "research-article",
+      "year": 1879,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 179,
+      "pmcid": "PMC4903242",
+      "article_type": "abstract",
+      "year": 2016,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 180,
+      "pmcid": "PMC7205636",
+      "article_type": "review-article",
+      "year": 2020,
+      "references": 9,
+      "kept": false,
+      "reason": "too_few_references"
+    },
+    {
+      "draw": 181,
+      "pmcid": "PMC7099516",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 0,
+      "kept": false,
+      "reason": "no_reference_list"
+    },
+    {
+      "draw": 182,
+      "pmcid": "PMC7349689",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 36,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 183,
+      "pmcid": "PMC7680214",
+      "article_type": "letter",
+      "year": 2020,
+      "references": 24,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 184,
+      "pmcid": "PMC4897905",
+      "article_type": "research-article",
+      "year": 2016,
+      "references": 22,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 185,
+      "pmcid": "PMC6539311",
+      "article_type": "research-article",
+      "year": 2019,
+      "references": 38,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 186,
+      "pmcid": "PMC6659806",
+      "article_type": "research-article",
+      "year": 1849,
+      "references": 0,
+      "kept": false,
+      "reason": "year_out_of_range"
+    },
+    {
+      "draw": 187,
+      "pmcid": "PMC8326515",
+      "article_type": "research-article",
+      "year": 2021,
+      "references": 59,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 188,
+      "pmcid": "PMC7854415",
+      "article_type": "research-article",
+      "year": 2020,
+      "references": 76,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 189,
+      "pmcid": "PMC6846054",
+      "article_type": "abstract",
+      "year": 2019,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 190,
+      "pmcid": "PMC6924535",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 57,
+      "kept": true,
+      "reason": "kept"
+    },
+    {
+      "draw": 191,
+      "pmcid": "PMC8574667",
+      "article_type": "abstract",
+      "year": 2021,
+      "references": 0,
+      "kept": false,
+      "reason": "article_type"
+    },
+    {
+      "draw": 192,
+      "pmcid": "PMC5859733",
+      "article_type": "research-article",
+      "year": 2018,
+      "references": 45,
+      "kept": true,
+      "reason": "kept"
+    }
+  ]
+}
