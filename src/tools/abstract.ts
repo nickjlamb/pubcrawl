@@ -11,6 +11,7 @@ import {
 } from "../lib/xml-parser.js";
 import { FullAbstract } from "../types.js";
 import { statusFromPubmedXml } from "../lib/publication-status.js";
+import { nothingFound } from "../lib/outcome.js";
 
 const schema = {
   pmid: z.string().describe("PubMed ID"),
@@ -30,10 +31,10 @@ export function registerAbstractTool(server: McpServer): void {
 
         const articles = parsed.PubmedArticleSet?.PubmedArticle;
         if (!articles || (Array.isArray(articles) && articles.length === 0)) {
-          return {
+          return nothingFound({
             content: [{ type: "text", text: `No article found for PMID ${params.pmid}` }],
             isError: true,
-          };
+          });
         }
 
         const article = Array.isArray(articles) ? articles[0] : articles;
@@ -42,10 +43,10 @@ export function registerAbstractTool(server: McpServer): void {
         const pubmedData = article.PubmedData;
 
         if (!articleData) {
-          return {
+          return nothingFound({
             content: [{ type: "text", text: `No article data found for PMID ${params.pmid}` }],
             isError: true,
-          };
+          });
         }
 
         // Extract authors

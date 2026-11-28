@@ -15,6 +15,7 @@ import {
 } from "../lib/references.js";
 import { pmidFromArticleMeta } from "./fulltext.js";
 import type { NotCheckedReason, ReferenceCheck, ReferenceCheckResult } from "../types.js";
+import { nothingFound } from "../lib/outcome.js";
 
 const schema = {
   pmid: z.string().optional().describe("PubMed ID of the paper whose reference list to check"),
@@ -283,13 +284,13 @@ export function registerCheckReferencesTool(server: McpServer): void {
         if (!pmcid && pmid) {
           pmcid = await pmidToPmcid(pmid);
           if (!pmcid) {
-            return {
+            return nothingFound({
               content: [{
                 type: "text",
                 text: `No PMC full text available for PMID ${pmid}, so its reference list cannot be read. The article may not be open access.`,
               }],
               isError: true,
-            };
+            });
           }
         }
         pmcid = `PMC${pmcid!.replace(/^PMC/i, "")}`;

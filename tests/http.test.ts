@@ -231,9 +231,12 @@ describe("HTTP transport (usage logging)", () => {
       level: "info",
       tool: "get_trial",
       ok: false,
+      // The canned 404 means "no such trial": nothing found, not a failure.
+      outcome: "nothing_found",
       todayToolCalls: 1,
       todayForTool: 1,
-      todayErrorsForTool: 1,
+      todayErrorsForTool: 0,
+      todayNothingFoundForTool: 1,
     });
     expect(typeof toolEvents[0].durationMs).toBe("number");
     expect(added.join("\n")).not.toContain("NCT00000102");

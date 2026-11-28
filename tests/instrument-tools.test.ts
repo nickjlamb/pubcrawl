@@ -3,6 +3,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { nothingFound } from "../src/lib/outcome.js";
 import { instrumentTools, type ToolCallInfo } from "../src/server.js";
 
 /** A bare server with three stand-in tools, so no PubCrawl tool (and no network) is involved. */
@@ -16,6 +17,9 @@ async function connect(onToolCall: (info: ToolCallInfo) => void) {
     content: [{ type: "text", text: "upstream said no" }],
     isError: true,
   }));
+  server.tool("empty", "Looks and finds nothing", {}, async () =>
+    nothingFound({ content: [{ type: "text" as const, text: "No PMC full text available" }], isError: true }),
+  );
   server.tool("throws", "Throws", {}, async () => {
     throw new Error("boom");
   });
@@ -44,7 +48,7 @@ describe("instrumentTools", () => {
       ["throws", false],
     ]);
     for (const call of calls) {
-      expect(Object.keys(call).sort()).toEqual(["durationMs", "ok", "tool"]);
+      expect(Object.keys(call).sort()).toEqual(["durationMs", "nothingFound", "ok", "tool"]);
       expect(call.durationMs).toBeGreaterThanOrEqual(0);
     }
     expect(JSON.stringify(calls)).not.toContain("secret query");
@@ -75,3 +79,26 @@ describe("instrumentTools", () => {
     }
   });
 });
+
+describe("instrumentTools outcomes", () => {
+  it("reports 'nothing found' without changing what the client receives", async () => {
+    const calls: ToolCallInfo[] = [];
+    const { client, close } = await connect((info) => calls.push(info));
+    try {
+      const empty = await client.callTool({ name: "empty", arguments: {} });
+      expect(empty.isError).toBe(true);
+      expect(empty.content).toEqual([{ type: "text", text: "No PMC full text available" }]);
+      expect(Object.keys(empty).sort()).toEqual(["content", "isError"]);
+      await client.callTool({ name: "fails", arguments: {} });
+      await client.callTool({ name: "echo", arguments: { text: "x" } });
+    } finally {
+      await close();
+    }
+    expect(calls.map((c) => [c.tool, c.ok, c.nothingFound])).toEqual([
+      ["empty", false, true],
+      ["fails", false, false],
+      ["echo", true, false],
+    ]);
+  });
+});
+

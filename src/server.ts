@@ -16,6 +16,7 @@ import { registerSearchIndicationTool } from "./tools/search-indication.js";
 import { registerResolveNameTool } from "./tools/resolve-name.js";
 import { registerTrialsSearchTool } from "./tools/trials-search.js";
 import { registerTrialDetailTool } from "./tools/trials-detail.js";
+import { isNothingFound } from "./lib/outcome.js";
 
 // package.json sits one level above both src/ (tests) and dist/ (runtime),
 // and npm always ships it, so the reported version can't drift from the release.
@@ -37,6 +38,8 @@ export interface ToolCallInfo {
   tool: string;
   /** False when the tool returned `isError` or threw. */
   ok: boolean;
+  /** True when the tool ran but the source had nothing for the request (see lib/outcome.ts). */
+  nothingFound: boolean;
   durationMs: number;
 }
 
@@ -64,13 +67,15 @@ export function instrumentTools(server: McpServer, onToolCall: (info: ToolCallIn
       args[args.length - 1] = async (...handlerArgs: unknown[]) => {
         const started = performance.now();
         let ok = false;
+        let nothingFound = false;
         try {
           const result = (await (handler as AnyFn)(...handlerArgs)) as { isError?: boolean } | undefined;
           ok = result?.isError !== true;
+          nothingFound = isNothingFound(result);
           return result;
         } finally {
           try {
-            onToolCall({ tool: name, ok, durationMs: performance.now() - started });
+            onToolCall({ tool: name, ok, nothingFound, durationMs: performance.now() - started });
           } catch {
             // Counting must never change the outcome of a tool call.
           }
